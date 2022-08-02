@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoForm", "AutoForm\AutoForm.csproj", "{E52E5F28-9A47-4613-A41F-C67DA29BBF5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{42BB8E79-586A-47B9-A516-1EE7F116946E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E52E5F28-9A47-4613-A41F-C67DA29BBF5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E52E5F28-9A47-4613-A41F-C67DA29BBF5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E52E5F28-9A47-4613-A41F-C67DA29BBF5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E52E5F28-9A47-4613-A41F-C67DA29BBF5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42BB8E79-586A-47B9-A516-1EE7F116946E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42BB8E79-586A-47B9-A516-1EE7F116946E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42BB8E79-586A-47B9-A516-1EE7F116946E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42BB8E79-586A-47B9-A516-1EE7F116946E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F1B931E-E512-4401-BC44-815C8BD08864}
+	EndGlobalSection
+EndGlobal
