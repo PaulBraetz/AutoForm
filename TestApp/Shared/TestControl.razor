@@ -1,0 +1,7 @@
+﻿<input @bind-value="Value"/>
+@code{
+	[Parameter]
+	public String? Value{ get; set; }
+	[Parameter]
+	public EventCallback<String?> ValueChanged{ get; set; }
+}

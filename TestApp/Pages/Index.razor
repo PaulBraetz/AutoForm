@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using TestApp.Data
+@using TestApp.Models.NestedNamespace
 
 <PageTitle>Index</PageTitle>
 
@@ -8,4 +10,17 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<Component1 />
+<EditForm Model="_model">
+	<DataAnnotationsValidator />
+	<AutoControl @bind-Value="_model" />
+</EditForm>
+
+<input @bind-value="@_model.Name" />
+
+<h5>
+	@_model.Name
+</h5>
+
+@code {
+	private Models.NestedNamespace.MyModel _model = new();
+}
