@@ -14,8 +14,11 @@ namespace AutoForm.Generate
 
         private const String CONTROL_INDEX = "{" + nameof(CONTROL_INDEX) + "}";
         private const String CONTROL_TYPE = "{" + nameof(CONTROL_TYPE) + "}";
-        private const String CONTROL_TYPE_IDENTIFIER_TEMPLATE = "{" + nameof(CONTROL_TYPE_IDENTIFIER_TEMPLATE) + "}";
+        private const String CONTROL_TYPE_IDENTIFIER = "{" + nameof(CONTROL_TYPE_IDENTIFIER) + "}";
 
+        private const String SUB_CONTROL_PROPERTY_IDENTIFIER = "{" + nameof(SUB_CONTROL_PROPERTY_IDENTIFIER) + "}";
+        private const String SUB_CONTROL_PROPERTY = "{" + nameof(SUB_CONTROL_PROPERTY) + "}";
+        private const String SUB_CONTROL_PROPERTIES = "{" + nameof(SUB_CONTROL_PROPERTIES) + "}";
         private const String SUB_CONTROL_LINE_INDEX = "{" + nameof(SUB_CONTROL_LINE_INDEX) + "}";
         private const String SUB_CONTROL_TYPE = "{" + nameof(SUB_CONTROL_TYPE) + "}";
 
@@ -256,11 +259,26 @@ namespace AutoForm.Generate
         {
             var controlTypeIdentifierTemplate = GetControlTypeIdentifierTemplate();
             var subControlTemplates = GetSubControlTemplates(model, controls);
+            var subControlPropertyTemplates = GetSubControlPropertyTemplates(model);
 
             return new ControlTemplate()
                 .WithModelType(model.Type)
                 .WithControlTypeIdentifierTemplate(controlTypeIdentifierTemplate)
-                .WithSubControlTemplates(subControlTemplates);
+                .WithSubControlTemplates(subControlTemplates)
+                .WithSubControlPropertyTemplates(subControlPropertyTemplates);
+        }
+        private static IEnumerable<SubControlPropertyTemplate> GetSubControlPropertyTemplates(ModelModel model)
+        {
+            return model.Properties.Select(GetSubControlPropertyTemplate);
+        }
+        private static SubControlPropertyTemplate GetSubControlPropertyTemplate(PropertyModel property)
+        {
+            var subControlPropertyIdentifierTemplate = GetSubControlPropertyIdentifierTemplate(property);
+
+            return new SubControlPropertyTemplate()
+                .WithSubControlPropertyIdentifierTemplate(subControlPropertyIdentifierTemplate)
+                .WithPropertyIdentifier(property.Identifier)
+                .WithPropertyType(property.Type);
         }
         private static ControlTypeIdentifierTemplate GetControlTypeIdentifierTemplate()
         {
@@ -299,11 +317,20 @@ namespace AutoForm.Generate
                 throw new Exception($"Unable to locate control for {property.Identifier}. Make sure a control for {property.Type} is registered.");
             }
 
+            var subControlPropertyIdentifierTemplate = GetSubControlPropertyIdentifierTemplate(property);
+
             return new SubControlTemplate()
                 .WithModelType(model.Type)
                 .WithPropertyIdentifier(property.Identifier)
                 .WithPropertyType(property.Type)
-                .WithSubControlType(controlType);
+                .WithSubControlType(controlType)
+                .WithSubControlPropertyIdentifierTemplate(subControlPropertyIdentifierTemplate);
+        }
+
+        private static SubControlPropertyIdentifierTemplate GetSubControlPropertyIdentifierTemplate(PropertyModel property)
+        {
+            return new SubControlPropertyIdentifierTemplate()
+                .WithPropertyIdentifier(property.Identifier);
         }
 
         private static IEnumerable<ControlModel> GetConcatenatedControlModels(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)

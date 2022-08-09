@@ -46,7 +46,7 @@ namespace AutoForm
 		{
 			builder.OpenComponent(0, _controlType);
 			builder.AddAttribute(1, "Value", RuntimeHelpers.TypeCheck(Value));
-			builder.AddAttribute(2, "ValueChanged", RuntimeHelpers.TypeCheck(EventCallback.Factory.Create(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => Value = __value, Value))));
+			builder.AddAttribute(2, "ValueChanged", RuntimeHelpers.TypeCheck(ValueChanged));
 			builder.CloseComponent();
 		}
 	}

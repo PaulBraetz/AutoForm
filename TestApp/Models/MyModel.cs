@@ -6,7 +6,6 @@
 		public class MyModel
 		{
 			public String? Name { get; set; }
-			//public Int32? ID { get; set; }
 		}
 	}
 }

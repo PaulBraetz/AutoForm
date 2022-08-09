@@ -1,0 +1,20 @@
+﻿<QuickInputText @bind-Value="__Name" />
+@code {
+	[Parameter]
+	public MyModel? Value { get; set; }
+	[Parameter]
+	public EventCallback<MyModel?> ValueChanged { get; set; }
+
+	private String? __Name
+	{
+		get
+		{
+			return Value!.Name;
+		}
+		set
+		{
+			Value!.Name = value;
+			ValueChanged.InvokeAsync(Value);
+		}
+	}
+}

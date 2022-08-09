@@ -12,10 +12,9 @@ Welcome to your new app.
 
 <EditForm Model="_model">
 	<DataAnnotationsValidator />
+	<QuickControl @bind-Value="_model"/>
 	<AutoControl @bind-Value="_model" />
 </EditForm>
-
-<input @bind-value="@_model.Name" />
 
 <h5>
 	@_model.Name
