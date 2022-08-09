@@ -100,11 +100,7 @@ namespace AutoForm.Generate
 				return template;
 			}
 
-			public override String ToString()
-			{
-				Int32 subControlIndex = 0;
-				return Build(ref subControlIndex);
-			}
+
 		}
 	}
 

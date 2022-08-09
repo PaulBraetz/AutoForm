@@ -11,7 +11,6 @@ namespace AutoForm.Generate
 		private const String DEFAULT_CONTROLS = "{" + nameof(DEFAULT_CONTROLS) + "}";
 		private const String CONTROLS = "{" + nameof(CONTROLS) + "}";
 
-		private const String CONTROL_INDEX = "{" + nameof(CONTROL_INDEX) + "}";
 		private const String CONTROL_TYPE = "{" + nameof(CONTROL_TYPE) + "}";
 		private const String CONTROL_TYPE_IDENTIFIER = "{" + nameof(CONTROL_TYPE_IDENTIFIER) + "}";
 
@@ -252,21 +251,23 @@ namespace AutoForm.Generate
 
 		private static IEnumerable<ControlTemplate> GetControlTemplates(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
 		{
-			var allControls = GetConcatenatedControlModels(models, controls);
-			var modelsWithMissingControl = GetModelModelsWithMissingControlModel(models, controls);
+			IEnumerable<ControlModel> allControlModels = GetConcatenatedControlModels(models, controls);
+			IEnumerable<ModelModel> modelsWithMissingControl = GetModelModelsWithMissingControlModel(models, controls);
+
 			var result = new List<ControlTemplate>();
 			var exceptions = new List<Exception>();
-
+			var controlIndex = 0;
 			foreach (var model in modelsWithMissingControl)
 			{
 				try
 				{
-					result.Add(GetControlTemplate(model, allControls));
+					result.Add(GetControlTemplate(model, allControlModels));
 				}
 				catch (Exception ex)
 				{
 					exceptions.Add(ex);
 				}
+
 			}
 
 			if (exceptions.Any())
@@ -279,7 +280,7 @@ namespace AutoForm.Generate
 		}
 		private static ControlTemplate GetControlTemplate(ModelModel model, IEnumerable<ControlModel> controls)
 		{
-			var controlTypeIdentifierTemplate = GetControlTypeIdentifierTemplate();
+			var controlTypeIdentifierTemplate = GetControlTypeIdentifierTemplate(model);
 			var subControlTemplates = GetSubControlTemplates(model, controls);
 			var subControlPropertyTemplates = GetSubControlPropertyTemplates(model);
 
@@ -302,9 +303,10 @@ namespace AutoForm.Generate
 				.WithPropertyIdentifier(property.Identifier)
 				.WithPropertyType(property.Type);
 		}
-		private static ControlTypeIdentifierTemplate GetControlTypeIdentifierTemplate()
+		private static ControlTypeIdentifierTemplate GetControlTypeIdentifierTemplate(ModelModel model)
 		{
-			return new ControlTypeIdentifierTemplate();
+			return new ControlTypeIdentifierTemplate()
+				.WithModelType(model.Type);
 		}
 		private static IEnumerable<SubControlTemplate> GetSubControlTemplates(ModelModel model, IEnumerable<ControlModel> controls)
 		{
@@ -357,18 +359,26 @@ namespace AutoForm.Generate
 
 		private static IEnumerable<ControlModel> GetConcatenatedControlModels(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
 		{
-			Int32 controlIndex = 0;
-			return controls
-				.Concat(GetModelModelsWithMissingControlModel(models, controls)
-					.Select(m => GetControlModel(ref controlIndex, m)));
+			foreach(var control in controls)
+			{
+				yield return control;
+			}
+
+			IEnumerable<ModelModel> modelModelsWithMissingControlModels = GetModelModelsWithMissingControlModel(models, controls);
+			
+			foreach(var model in modelModelsWithMissingControlModels)
+			{
+				yield return GetControlModel(model);
+			}
 		}
 		private static IEnumerable<ModelModel> GetModelModelsWithMissingControlModel(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
 		{
 			return models.Where(m => !controls.Any(c => c.ModelType == m.Type));
 		}
-		private static ControlModel GetControlModel(ref Int32 controlIndex, ModelModel model)
+		private static ControlModel GetControlModel(ModelModel model)
 		{
-			return new ControlModel(new ControlTypeIdentifierTemplate().Build(ref controlIndex), model.Type);
+			ControlTypeIdentifierTemplate controlIdentifierTemplate = GetControlTypeIdentifierTemplate(model);
+			return new ControlModel(controlIdentifierTemplate.Build(), model.Type);
 		}
 	}
 }

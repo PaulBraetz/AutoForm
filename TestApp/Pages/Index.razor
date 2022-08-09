@@ -1,6 +1,4 @@
 ﻿@page "/"
-@using TestApp.Data
-@using TestApp.Models.NestedNamespace
 
 <PageTitle>Index</PageTitle>
 
@@ -10,22 +8,12 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<div class="d-block flex-column">
-	<AutoControl @bind-Value="_models" />
-	<button class="btn btn-outline-primary" @onclick="()=>_models.Add(new MyModel())">
-		More
-	</button>
-</div>
+<EditForm Model="Person">
+	<AutoControl @bind-Value="Person" />
+</EditForm>
 
-<ul>
-	@foreach (var model in _models)
-	{
-		<li>
-			@model
-		</li>
-	}
-</ul>
+@Person
 
 @code {
-	private List<MyModel> _models = new List<MyModel>();
+	private Person Person { get; set; } = new Person();
 }

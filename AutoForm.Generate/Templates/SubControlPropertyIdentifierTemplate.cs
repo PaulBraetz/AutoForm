@@ -25,11 +25,6 @@ namespace AutoForm.Generate
 				return TEMPLATE
 					.Replace(PROPERTY_IDENTIFIER, _propertyIdentifier);
 			}
-
-			public override String ToString()
-			{
-				return Build();
-			}
 		}
 	}
 

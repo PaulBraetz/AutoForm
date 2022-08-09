@@ -33,10 +33,7 @@ namespace AutoForm.Generate
 					.Replace(ERROR_MESSAGE, _message);
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+
 		}
 	}
 }

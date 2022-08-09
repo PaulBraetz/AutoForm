@@ -75,10 +75,7 @@ namespace AutoForm.Generate
 				return String.Join("\n\n", controls);
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+
 		}
 	}
 

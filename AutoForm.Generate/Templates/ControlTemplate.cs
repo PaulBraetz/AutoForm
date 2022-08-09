@@ -70,24 +70,20 @@ namespace AutoForm.Generate
 				return new ControlTemplate(_modelType, _subControlTemplates, _controlTypeIdentifierTemplate, subControlPropertyTemplates);
 			}
 
-			public String Build(ref Int32 controlIndex)
+			public String Build()
 			{
 				Int32 subControlLineIndex = 0;
 				var subControls = String.Join("\n\n", _subControlTemplates.Select(t => t.Build(ref subControlLineIndex)));
 
 				var subControlProperties = String.Join("\n\n", _subControlPropertyTemplates.Select(t => t.Build()));
 
-				return TEMPLATE
+				var result = TEMPLATE
 					.Replace(MODEL_TYPE, _modelType)
 					.Replace(SUB_CONTROL_PROPERTIES, subControlProperties)
 					.Replace(SUB_CONTROLS, subControls)
-					.Replace(CONTROL_TYPE_IDENTIFIER, _controlTypeIdentifierTemplate.Build(ref controlIndex));
-			}
-
-			public override String ToString()
-			{
-				Int32 controlIndex = 0;
-				return Build(ref controlIndex);
+					.Replace(CONTROL_TYPE_IDENTIFIER, _controlTypeIdentifierTemplate.Build());
+				
+				return result;
 			}
 		}
 

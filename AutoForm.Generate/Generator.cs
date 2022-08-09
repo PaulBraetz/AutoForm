@@ -38,9 +38,9 @@ namespace AutoForm.Generate
 		private String GetControls(Compilation compilation)
 		{
 			var models = GetModelModels(compilation);
-			var modelControlPairs = GetControlModels(compilation);
+			var controls = GetControlModels(compilation);
 
-			return Source.GetControls(models, modelControlPairs);
+			return Source.GetControls(models, controls);
 		}
 
 		private IEnumerable<Source.ModelModel> GetModelModels(Compilation compilation)

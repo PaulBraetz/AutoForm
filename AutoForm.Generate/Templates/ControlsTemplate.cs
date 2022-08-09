@@ -64,21 +64,21 @@ namespace AutoForm.Generate
 
 			public String Build()
 			{
-				Int32 controlIndex = 0;
-				var controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build(ref controlIndex)));
+				var controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build()));
 				var modelControlPairs = String.Join(",\n", _modelControlPairTemplates.Select(t => t.Build()));
 				var defaultControls = String.Join("\n\n", _defaultControlsTemplate.Build());
 
-				return TEMPLATE
+				var template = TEMPLATE
 					.Replace(MODEL_CONTROL_PAIRS, modelControlPairs)
 					.Replace(DEFAULT_CONTROLS, defaultControls)
 					.Replace(CONTROLS, controls);
+
+				template = ControlTypeIdentifierTemplate.Sanitize(template);
+
+				return template;
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+
 		}
 	}
 

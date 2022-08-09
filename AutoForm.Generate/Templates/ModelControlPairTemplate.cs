@@ -34,10 +34,7 @@ namespace AutoForm.Generate
 					.Replace(CONTROL_TYPE, ControlType);
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+
 		}
 	}
 
