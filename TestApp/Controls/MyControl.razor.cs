@@ -1,6 +1,6 @@
 ﻿namespace TestApp.Controls
 {
-	[AutoControl(typeof(System.String))]
+	//[AutoControl(typeof(System.String))]
 	public partial class MyControl
 	{
 

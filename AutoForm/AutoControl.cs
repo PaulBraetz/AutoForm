@@ -13,7 +13,7 @@ namespace AutoForm
 				.GetType("AutoForm.Generate.Controls");
 			if (type == null)
 			{
-				throw new Exception("Unable to locate AutoForm.Generate.Controls. Make sure that the AutoForm.Generate.Gneerator has run.");
+				throw new Exception("Unable to locate AutoForm.Generate.Controls. Make sure that the AutoForm.Generate.Generator has run.");
 			}
 
 			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(type.TypeHandle);
@@ -23,7 +23,7 @@ namespace AutoForm
 
 			if (field == null)
 			{
-				throw new Exception("Unable to locate AutoForm.Generate.Controls.ModelControlMap. Make sure that the AutoForm.Generate.Gneerator has run.");
+				throw new Exception("Unable to locate ModelControlMap in AutoForm.Generate.Controls. Make sure that the AutoForm.Generate.Generator has run.");
 			}
 
 			ModelControlMap = (IDictionary<Type, Type>)field.GetValue(null)!;

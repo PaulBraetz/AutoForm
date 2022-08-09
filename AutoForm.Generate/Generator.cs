@@ -13,9 +13,27 @@ namespace AutoForm.Generate
 	{
 		public void Execute(GeneratorExecutionContext context)
 		{
-			var source = GetControls(context.Compilation) ?? String.Empty;
-			context.AddSource($"Controls.g", source);
+			var source = String.Empty;
+			try
+			{
+				source = GetControls(context.Compilation) ?? String.Empty;
+            }
+            catch(Exception ex)
+            {
+				source = GetError(ex);
+				//throw;
+            }
+            finally
+			{
+				context.AddSource($"Controls.g", source);
+			}
 		}
+
+		private String GetError(Exception exception)
+        {
+			var model = new Source.ErrorModel(exception.Message);
+			return Source.GetError(model);
+        }
 
 		private String GetControls(Compilation compilation)
 		{

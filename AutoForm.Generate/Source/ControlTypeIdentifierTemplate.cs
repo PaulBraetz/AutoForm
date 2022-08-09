@@ -15,7 +15,12 @@ namespace AutoForm.Generate
 				controlIndex++;
 				return result;
 			}
-		}
+
+            public override String ToString()
+			{
+				return TEMPLATE;
+			}
+        }
 	}
 
 }

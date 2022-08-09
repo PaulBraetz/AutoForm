@@ -33,7 +33,12 @@ namespace AutoForm.Generate
 					.Replace(MODEL_TYPE, ModelType)
 					.Replace(CONTROL_TYPE, ControlType);
 			}
-		}
+
+            public override String ToString()
+            {
+				return Build();
+            }
+        }
 	}
 
 }
