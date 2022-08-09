@@ -21,7 +21,7 @@ namespace AutoForm.Generate
             private readonly String _subControlType;
 
             private const String TEMPLATE =
-@"					//SubControl for property " + MODEL_TYPE + @"." + PROPERTY_IDENTIFIER + @"
+@"					//SubControl for " + PROPERTY_IDENTIFIER + @"
 					builder.OpenComponent<" + SUB_CONTROL_TYPE + @">(" + SUB_CONTROL_LINE_INDEX + @");
 					builder.AddAttribute(" + SUB_CONTROL_LINE_INDEX + @", ""Value"", RuntimeHelpers.TypeCheck<" + PROPERTY_TYPE + @">(Value." + PROPERTY_IDENTIFIER + @"));
 					builder.AddAttribute(" + SUB_CONTROL_LINE_INDEX + @", ""ValueChanged"", RuntimeHelpers.TypeCheck(EventCallback.Factory.Create(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => Value." + PROPERTY_IDENTIFIER + @" = __value, Value." + PROPERTY_IDENTIFIER + @"))));

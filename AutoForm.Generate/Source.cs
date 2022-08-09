@@ -39,7 +39,7 @@ namespace AutoForm.Generate
                 Message = message;
             }
 
-            public override Boolean Equals(Object? obj)
+            public override Boolean Equals(Object obj)
             {
                 return obj is ErrorModel model && Equals(model);
             }

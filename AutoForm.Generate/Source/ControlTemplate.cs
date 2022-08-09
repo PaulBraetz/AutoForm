@@ -55,7 +55,7 @@ namespace AutoForm.Generate
 			public String Build(ref Int32 controlIndex)
 			{
 				Int32 subControlLineIndex = 0;
-				var subControls = String.Join("\n", SubControlTemplates.Select(t => t.Build(ref subControlLineIndex)));
+				var subControls = String.Join("\n\n", SubControlTemplates.Select(t => t.Build(ref subControlLineIndex)));
 
 				return TEMPLATE
 					.Replace(CONTROL_TYPE_IDENTIFIER_TEMPLATE, ControlTypeIdentifierTemplate.Build(ref controlIndex))
