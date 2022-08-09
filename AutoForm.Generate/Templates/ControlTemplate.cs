@@ -9,8 +9,8 @@ namespace AutoForm.Generate
 		private readonly struct ControlTemplate
 		{
 			private ControlTemplate(String modelType,
-                           IEnumerable<SubControlTemplate> subControlTemplates,
-                           ControlTypeIdentifierTemplate controlTypeIdentifierTemplate,
+						   IEnumerable<SubControlTemplate> subControlTemplates,
+						   ControlTypeIdentifierTemplate controlTypeIdentifierTemplate,
 						   IEnumerable<SubControlPropertyTemplate> subControlPropertyTemplates)
 			{
 				_modelType = modelType;
@@ -45,10 +45,11 @@ namespace AutoForm.Generate
 
 			[global::Microsoft.AspNetCore.Components.Parameter]
 			public " + MODEL_TYPE + @" Value { get; set; }
+
 			[global::Microsoft.AspNetCore.Components.Parameter]
 			public global::Microsoft.AspNetCore.Components.EventCallback<" + MODEL_TYPE + @"> ValueChanged { get; set; }
 
-"+SUB_CONTROL_PROPERTIES+@"
+" + SUB_CONTROL_PROPERTIES + @"
 		}
 #nullable restore";
 
@@ -83,12 +84,12 @@ namespace AutoForm.Generate
 					.Replace(CONTROL_TYPE_IDENTIFIER, _controlTypeIdentifierTemplate.Build(ref controlIndex));
 			}
 
-            public override String ToString()
+			public override String ToString()
 			{
 				Int32 controlIndex = 0;
 				return Build(ref controlIndex);
 			}
-        }
+		}
 
 	}
 }

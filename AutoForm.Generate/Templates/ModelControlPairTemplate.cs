@@ -31,9 +31,10 @@ namespace AutoForm.Generate
 			{
 				return TEMPLATE
 					.Replace(MODEL_TYPE, ModelType)
-					.Replace(CONTROL_TYPE, ControlType);}
+					.Replace(CONTROL_TYPE, ControlType);
+			}
 
-            public override String ToString()
+			public override String ToString()
 			{
 				return Build();
 			}

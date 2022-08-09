@@ -1,0 +1,12 @@
+﻿@if (Value != null)
+{
+	@foreach (MyModel model in Value)
+	{
+		<EditForm Model="model">
+			<DataAnnotationsValidator />
+			<AutoControl TModel="MyModel"
+				Value="model"
+				ValueChanged="ModelChanged"/>
+		</EditForm>
+	}
+}

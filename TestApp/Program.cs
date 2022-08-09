@@ -1,5 +1,10 @@
-using System.Reflection;
+using AutoForm;
 using TestApp.Data;
+
+if(!Initialization.TryInitialize(out Exception? exception))
+{
+	Console.WriteLine(exception);
+}
 
 var builder = WebApplication.CreateBuilder(args);
 

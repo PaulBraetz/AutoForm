@@ -10,16 +10,22 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<EditForm Model="_model">
-	<DataAnnotationsValidator />
-	<QuickControl @bind-Value="_model"/>
-	<AutoControl @bind-Value="_model" />
-</EditForm>
+<div class="d-block flex-column">
+	<AutoControl @bind-Value="_models" />
+	<button class="btn btn-outline-primary" @onclick="()=>_models.Add(new MyModel())">
+		More
+	</button>
+</div>
 
-<h5>
-	@_model.Name
-</h5>
+<ul>
+	@foreach (var model in _models)
+	{
+		<li>
+			@model
+		</li>
+	}
+</ul>
 
 @code {
-	private Models.NestedNamespace.MyModel _model = new();
+	private List<MyModel> _models = new List<MyModel>();
 }

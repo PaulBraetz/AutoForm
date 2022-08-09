@@ -17,23 +17,23 @@ namespace AutoForm.Generate
 			try
 			{
 				source = GetControls(context.Compilation) ?? String.Empty;
-            }
-            catch(Exception ex)
-            {
+			}
+			catch (Exception ex)
+			{
 				source = GetError(ex);
 				//throw;
-            }
-            finally
+			}
+			finally
 			{
 				context.AddSource($"Controls.g", source);
 			}
 		}
 
 		private String GetError(Exception exception)
-        {
+		{
 			var model = new Source.ErrorModel(exception.Message);
 			return Source.GetError(model);
-        }
+		}
 
 		private String GetControls(Compilation compilation)
 		{
