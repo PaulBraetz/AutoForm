@@ -29,10 +29,9 @@ namespace AutoForm.Generate
 @"		///<summary>
 		///Generated control for models of type <cref see=""" + MODEL_TYPE + @"""/>.
 		///</summary>
-#nullable disable
 		private sealed class " + CONTROL_TYPE_IDENTIFIER + @" : global::Microsoft.AspNetCore.Components.ComponentBase
 		{
-#pragma warning disable 1998
+			#pragma warning disable 1998
 			protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
 			{	
 					if(Value != null)
@@ -41,7 +40,6 @@ namespace AutoForm.Generate
 					}
 			}
 #pragma warning restore 1998
-#nullable restore       
 
 			[global::Microsoft.AspNetCore.Components.Parameter]
 			public " + MODEL_TYPE + @" Value { get; set; }
@@ -50,8 +48,7 @@ namespace AutoForm.Generate
 			public global::Microsoft.AspNetCore.Components.EventCallback<" + MODEL_TYPE + @"> ValueChanged { get; set; }
 
 " + SUB_CONTROL_PROPERTIES + @"
-		}
-#nullable restore";
+		}";
 
 			public ControlTemplate WithModelType(String modelType)
 			{

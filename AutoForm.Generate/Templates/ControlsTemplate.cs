@@ -28,7 +28,6 @@ namespace AutoForm.Generate
 {	
 	public static class Controls
 	{
-#nullable enable
 #region ModelControlMap
 		public static readonly IDictionary<Type, Type> ModelControlMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
 		{
@@ -43,11 +42,9 @@ namespace AutoForm.Generate
 #region Generated Controls
 " + CONTROLS + @"
 #endregion
-#nullable restore
 	}
 }
 #pragma warning restore 1591";
-
 
 			public ControlsTemplate WithModelControlPairTemplates(IEnumerable<ModelControlPairTemplate> modelControlPairTemplates)
 			{
@@ -64,11 +61,11 @@ namespace AutoForm.Generate
 
 			public String Build()
 			{
-				var controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build()));
-				var modelControlPairs = String.Join(",\n", _modelControlPairTemplates.Select(t => t.Build()));
-				var defaultControls = String.Join("\n\n", _defaultControlsTemplate.Build());
+				String controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build()));
+				String modelControlPairs = String.Join(",\n", _modelControlPairTemplates.Select(t => t.Build()));
+				String defaultControls = String.Join("\n\n", _defaultControlsTemplate.Build());
 
-				var template = TEMPLATE
+				String template = TEMPLATE
 					.Replace(MODEL_CONTROL_PAIRS, modelControlPairs)
 					.Replace(DEFAULT_CONTROLS, defaultControls)
 					.Replace(CONTROLS, controls);
@@ -77,9 +74,6 @@ namespace AutoForm.Generate
 
 				return template;
 			}
-
-
 		}
 	}
-
 }

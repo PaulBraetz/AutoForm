@@ -30,11 +30,7 @@ namespace AutoForm.Generate
 			private const String TEMPLATE =
 @"					    //SubControl for " + PROPERTY_IDENTIFIER + @"
                         __builder.OpenComponent<" + SUB_CONTROL_TYPE + @">(" + SUB_CONTROL_LINE_INDEX + @");
-                        __builder.AddAttribute(" + SUB_CONTROL_LINE_INDEX + @", ""Value"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<" + PROPERTY_TYPE + @">(
-#nullable restore
-                            " + SUB_CONTROL_PROPERTY_IDENTIFIER + @"
-#nullable disable
-                        ));
+                        __builder.AddAttribute(" + SUB_CONTROL_LINE_INDEX + @", ""Value"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<" + PROPERTY_TYPE + @">(" + SUB_CONTROL_PROPERTY_IDENTIFIER + @"));
                         __builder.AddAttribute(" + SUB_CONTROL_LINE_INDEX + @", ""ValueChanged"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::Microsoft.AspNetCore.Components.EventCallback<" + PROPERTY_TYPE + @">>(global::Microsoft.AspNetCore.Components.EventCallback.Factory.Create<" + PROPERTY_TYPE + @">(this, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.CreateInferredEventCallback(this, __value => { " + SUB_CONTROL_PROPERTY_IDENTIFIER + @" = __value; return ValueChanged.InvokeAsync(Value);}, " + SUB_CONTROL_PROPERTY_IDENTIFIER + @"))));
                         __builder.CloseComponent();";
 

@@ -34,11 +34,7 @@ namespace AutoForm.Generate
 			protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
 			{
 				__builder.OpenElement(0, ""input"");
-				__builder.AddAttribute(1, ""value"", global::Microsoft.AspNetCore.Components.BindConverter.FormatValue(
-				#nullable restore
-					__Value
-				#nullable disable
-				));
+				__builder.AddAttribute(1, ""value"", global::Microsoft.AspNetCore.Components.BindConverter.FormatValue(__Value));
 				__builder.AddAttribute(2, ""oninput"", global::Microsoft.AspNetCore.Components.EventCallback.Factory.CreateBinder(this, __value => __Value = __value, __Value));
 				__builder.SetUpdatesAttributeName(""value"");
 				__builder.CloseElement();
@@ -46,11 +42,11 @@ namespace AutoForm.Generate
 			#pragma warning restore 1998
 
 			[Parameter]
-			public global::System.String? Value { get; set; }
+			public global::System.String Value { get; set; }
 			[Parameter]
-			public EventCallback<global::System.String?> ValueChanged { get; set; }
+			public EventCallback<global::System.String> ValueChanged { get; set; }
 
-			private global::System.String? __Value
+			private global::System.String __Value
 			{
 				get => Value;
 				set
@@ -70,13 +66,10 @@ namespace AutoForm.Generate
 
 			public String Build()
 			{
-				var controls = _requiredDefaultControls
+				IEnumerable<String> controls = _requiredDefaultControls
 					.Select(c => AvailableDefaultControlTemplates[c]);
 				return String.Join("\n\n", controls);
 			}
-
-
 		}
 	}
-
 }

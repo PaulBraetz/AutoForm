@@ -219,14 +219,14 @@ namespace AutoForm.Generate
 
 		private static DefaultControlsTemplate GetDefaultControlsTemplate(IEnumerable<ControlModel> controls)
 		{
-			var requiredDefaulControlTypes = GetRequiredDefaultControlTypes(controls);
+			IEnumerable<String> requiredDefaulControlTypes = GetRequiredDefaultControlTypes(controls);
 
 			return new DefaultControlsTemplate()
 				.WithRequiredDefaultControls(requiredDefaulControlTypes);
 		}
 		private static IEnumerable<ModelControlPairTemplate> GetModelControlPairTemplates(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
 		{
-			var requiredDefaulControlTypes = GetRequiredDefaultControlTypes(controls);
+			IEnumerable<String> requiredDefaulControlTypes = GetRequiredDefaultControlTypes(controls);
 
 			return requiredDefaulControlTypes.Select(GetModelControlPairTemplate)
 				.Concat(GetConcatenatedControlModels(models, controls)
@@ -256,7 +256,6 @@ namespace AutoForm.Generate
 
 			var result = new List<ControlTemplate>();
 			var exceptions = new List<Exception>();
-			var controlIndex = 0;
 			foreach (var model in modelsWithMissingControl)
 			{
 				try
@@ -267,7 +266,6 @@ namespace AutoForm.Generate
 				{
 					exceptions.Add(ex);
 				}
-
 			}
 
 			if (exceptions.Any())
@@ -296,7 +294,7 @@ namespace AutoForm.Generate
 		}
 		private static SubControlPropertyTemplate GetSubControlPropertyTemplate(PropertyModel property)
 		{
-			var subControlPropertyIdentifierTemplate = GetSubControlPropertyIdentifierTemplate(property);
+			SubControlPropertyIdentifierTemplate subControlPropertyIdentifierTemplate = GetSubControlPropertyIdentifierTemplate(property);
 
 			return new SubControlPropertyTemplate()
 				.WithSubControlPropertyIdentifierTemplate(subControlPropertyIdentifierTemplate)
