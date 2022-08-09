@@ -229,9 +229,28 @@ namespace AutoForm.Generate
         private static IEnumerable<ControlTemplate> GetControlTemplates(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
         {
             var allControls = GetConcatenatedControlModels(models, controls);
+            var modelsWithMissingControl = GetModelModelsWithMissingControlModel(models, controls);
+            var result = new List<ControlTemplate>();
+            var exceptions = new List<Exception>();
 
-            return GetModelModelsWithMissingControlModel(models, controls)
-                .Select(m => GetControlTemplate(m, allControls));
+            foreach(var model in modelsWithMissingControl)
+            {
+                try
+                {
+                    result.Add(GetControlTemplate(model, allControls));
+                }catch(Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
+
+            if (exceptions.Any())
+            {
+                var message = String.Join("\n\n", exceptions.Select(e => e.Message));
+                throw new AggregateException(message, exceptions);
+            }
+
+            return result;
         }
         private static ControlTemplate GetControlTemplate(ModelModel model, IEnumerable<ControlModel> controls)
         {
@@ -265,7 +284,7 @@ namespace AutoForm.Generate
 
             if (exceptions.Any())
             {
-                var message = String.Join("\n", exceptions.Select(e => e.Message));
+                var message = $"Error while generating control for {model.Type}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
                 throw new AggregateException(message, exceptions);
             }
 
@@ -277,7 +296,7 @@ namespace AutoForm.Generate
 
             if (controlType == null)
             {
-                throw new Exception($"Unable to locate control for {model.Type}.{property.Identifier}. Make sure a control for {property.Type} is regeistered.");
+                throw new Exception($"Unable to locate control for {property.Identifier}. Make sure a control for {property.Type} is registered.");
             }
 
             return new SubControlTemplate()
