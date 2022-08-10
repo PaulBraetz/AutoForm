@@ -8,13 +8,17 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<AutoControl @bind-Value="Person" />
+<AutoControl @bind-Value="Person" Attributes="_attributes"/>
 
 @Person
 
 <TestControl/>
 
 @code {
+	private readonly Dictionary<String, Object> _attributes = new()
+	{
+		{"class", "form-group"}
+	};
 
 	private Person Person { get; set; } = new Person();
 }
