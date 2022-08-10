@@ -40,7 +40,7 @@ namespace AutoForm.Generate
 
                     if(Attributes != null)
 				    {                        
-				        __builder.AddMultipleAttributes(1, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, object>>>(Attributes));
+				        __builder.AddMultipleAttributes(1, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));
                     }
 
 " + SUB_CONTROLS + @"
@@ -75,7 +75,7 @@ namespace AutoForm.Generate
                 Int32 subControlLineIndex = 2;
                 var subControls = String.Join("\n\n", _subControlTemplates.Select(t => t.Build(ref subControlLineIndex)));
 
-                var subControlProperties = String.Join("\n\n", _subControlPropertyTemplates.Select(t => t.Build()));
+                var subControlProperties = String.Empty;//String.Join("\n\n", _subControlPropertyTemplates.Select(t => t.Build()));
 
                 var result = TEMPLATE
                     .Replace(MODEL_TYPE, _modelType)

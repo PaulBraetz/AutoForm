@@ -1,7 +1,13 @@
-﻿<input @attributes="@attributes"/>
+﻿<input type="checkbox" @bind="Value" @bind:event="oninput"/>
 @code {
-	private static Dictionary<String, Object> attributes = new Dictionary<string, object>()
+	private Boolean _value;
+	public Boolean Value
 	{
-		{"class", "class-1 class-2"}
-	};
+		get => _value;
+		set
+		{
+			_value = value;
+			Console.WriteLine(Value);
+		}
+	}
 }

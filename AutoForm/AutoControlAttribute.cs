@@ -1,6 +1,6 @@
 ﻿using Fort;
 
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class AutoControlAttribute : Attribute
 {
 	public AutoControlAttribute(Type modelType)

@@ -77,7 +77,7 @@ namespace AutoForm.Generate
                 String controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build()));
                 String modelControlPairs = String.Join(",\n", _modelControlPairTemplates.Select(t => t.Build()));
                 String defaultControls = String.Join("\n\n", _defaultControlsTemplate.Build());
-                String generatedDate = DateTimeOffset.UtcNow.ToString();
+                String generatedDate = DateTimeOffset.Now.ToString();
 
                 String template = TEMPLATE
                     .Replace(GENERATED_DATE, generatedDate)

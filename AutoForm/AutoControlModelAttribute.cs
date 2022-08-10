@@ -1,4 +1,4 @@
-﻿[AttributeUsage(AttributeTargets.Class)]
+﻿[AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class AutoControlModelAttribute : Attribute
 {
 }

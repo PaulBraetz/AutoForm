@@ -18,7 +18,7 @@ namespace AutoForm.Generate
 			private readonly SubControlPropertyIdentifierTemplate _subControlPropertyIdentifierTemplate;
 
 			private const String TEMPLATE =
-@"          private " + PROPERTY_TYPE + @" " + SUB_CONTROL_PROPERTY_IDENTIFIER + @"
+@"            private " + PROPERTY_TYPE + @" " + SUB_CONTROL_PROPERTY_IDENTIFIER + @"
             {
                 get => Value!." + PROPERTY_IDENTIFIER + @";
                 set

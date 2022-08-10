@@ -8,11 +8,11 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<EditForm Model="Person">
-	<AutoControl @bind-Value="Person" />
-</EditForm>
-<span hidden>My Personal COmment</span>
+<AutoControl @bind-Value="Person" />
+
 @Person
+
+<TestControl/>
 
 @code {
 
