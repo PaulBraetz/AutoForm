@@ -11,9 +11,10 @@ Welcome to your new app.
 <EditForm Model="Person">
 	<AutoControl @bind-Value="Person" />
 </EditForm>
-
+<span hidden>My Personal COmment</span>
 @Person
 
 @code {
+
 	private Person Person { get; set; } = new Person();
 }

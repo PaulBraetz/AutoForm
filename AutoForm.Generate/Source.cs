@@ -7,6 +7,7 @@ namespace AutoForm.Generate
 	internal static partial class Source
 	{
 		#region Placeholders
+		private const String GENERATED_DATE = "{" + nameof(GENERATED_DATE) + "}";
 		private const String MODEL_CONTROL_PAIRS = "{" + nameof(MODEL_CONTROL_PAIRS) + "}";
 		private const String DEFAULT_CONTROLS = "{" + nameof(DEFAULT_CONTROLS) + "}";
 		private const String CONTROLS = "{" + nameof(CONTROLS) + "}";
@@ -18,6 +19,7 @@ namespace AutoForm.Generate
 		private const String SUB_CONTROL_PROPERTY = "{" + nameof(SUB_CONTROL_PROPERTY) + "}";
 		private const String SUB_CONTROL_PROPERTIES = "{" + nameof(SUB_CONTROL_PROPERTIES) + "}";
 		private const String SUB_CONTROL_LINE_INDEX = "{" + nameof(SUB_CONTROL_LINE_INDEX) + "}";
+		private const String SUB_CONTROL_PASS_ATTRIBUTES = "{" + nameof(SUB_CONTROL_PASS_ATTRIBUTES) + "}";
 		private const String SUB_CONTROL_TYPE = "{" + nameof(SUB_CONTROL_TYPE) + "}";
 
 		private const String MODEL_TYPE = "{" + nameof(MODEL_TYPE) + "}";
@@ -26,6 +28,8 @@ namespace AutoForm.Generate
 
 		private const String PROPERTY_TYPE = "{" + nameof(PROPERTY_TYPE) + "}";
 		private const String PROPERTY_IDENTIFIER = "{" + nameof(PROPERTY_IDENTIFIER) + "}";
+
+		private const String ATTRIBUTES_PROVIDER_IDENTIFIER = "{" + nameof(ATTRIBUTES_PROVIDER_IDENTIFIER) + "}";
 
 		private const String ERROR_MESSAGE = "{" + nameof(ERROR_MESSAGE) + "}";
 		#endregion
@@ -107,45 +111,49 @@ namespace AutoForm.Generate
 			}
 		}
 		public readonly struct ModelModel : IEquatable<ModelModel>
-		{
+        {
 			public readonly String Type;
+			public readonly String AttributesProviderIdentifier;
 			public readonly IEnumerable<PropertyModel> Properties;
 
-			public ModelModel(String modelType, IEnumerable<PropertyModel> properties)
+			public ModelModel(String modelType, String attributesProviderIDentifier, IEnumerable<PropertyModel> properties)
 			{
 				Type = modelType;
+				AttributesProviderIdentifier = attributesProviderIDentifier;
 				Properties = properties;
 			}
 
-			public override Boolean Equals(Object obj)
-			{
-				return obj is ModelModel model && Equals(model);
-			}
+            public override Boolean Equals(Object obj)
+            {
+                return obj is ModelModel model && Equals(model);
+            }
 
-			public Boolean Equals(ModelModel other)
-			{
-				return Type == other.Type &&
-					   EqualityComparer<IEnumerable<PropertyModel>>.Default.Equals(Properties, other.Properties);
-			}
+            public Boolean Equals(ModelModel other)
+            {
+                return Type == other.Type &&
+                       AttributesProviderIdentifier == other.AttributesProviderIdentifier &&
+                       EqualityComparer<IEnumerable<PropertyModel>>.Default.Equals(Properties, other.Properties);
+            }
 
-			public override Int32 GetHashCode()
-			{
-				Int32 hashCode = 1934847142;
-				hashCode = hashCode * -1521134295 + EqualityComparer<String>.Default.GetHashCode(Type);
-				hashCode = hashCode * -1521134295 + EqualityComparer<IEnumerable<PropertyModel>>.Default.GetHashCode(Properties);
-				return hashCode;
-			}
+            public override Int32 GetHashCode()
+            {
+                Int32 hashCode = 178281109;
+                hashCode = hashCode * -1521134295 + EqualityComparer<String>.Default.GetHashCode(Type);
+                hashCode = hashCode * -1521134295 + EqualityComparer<String>.Default.GetHashCode(AttributesProviderIdentifier);
+                hashCode = hashCode * -1521134295 + EqualityComparer<IEnumerable<PropertyModel>>.Default.GetHashCode(Properties);
+                return hashCode;
+            }
 
-			public static Boolean operator ==(ModelModel left, ModelModel right)
-			{
-				return left.Equals(right);
-			}
+            public static Boolean operator ==(ModelModel left, ModelModel right)
+            {
+                return left.Equals(right);
+            }
 
-			public static Boolean operator !=(ModelModel left, ModelModel right)
-			{
-				return !(left == right);
-			}
-		}
+            public static Boolean operator !=(ModelModel left, ModelModel right)
+            {
+                return !(left == right);
+            }
+        }
 		public readonly struct PropertyModel : IEquatable<PropertyModel>
 		{
 			public readonly String Type;
@@ -187,9 +195,10 @@ namespace AutoForm.Generate
 			}
 		}
 
-		#endregion
+        #endregion
 
-		public static String GetError(ErrorModel error)
+        #region Methods
+        public static String GetError(ErrorModel error)
 		{
 			return GetErrorTemplate(error).Build();
 		}
@@ -339,6 +348,7 @@ namespace AutoForm.Generate
 				throw new Exception($"Unable to locate control for {property.Identifier}. Make sure a control for {property.Type} is registered.");
 			}
 
+			var subControlPassAttributesTemplate = GetSubControlPassAttributesTemplate(model);
 			var subControlPropertyIdentifierTemplate = GetSubControlPropertyIdentifierTemplate(property);
 
 			return new SubControlTemplate()
@@ -346,8 +356,15 @@ namespace AutoForm.Generate
 				.WithPropertyIdentifier(property.Identifier)
 				.WithPropertyType(property.Type)
 				.WithSubControlType(controlType)
+				.WithSubControlPassAttributesTemplate(subControlPassAttributesTemplate)
 				.WithSubControlPropertyIdentifierTemplate(subControlPropertyIdentifierTemplate);
 		}
+
+		private static SubControlPassAttributesTemplate GetSubControlPassAttributesTemplate(ModelModel model)
+        {
+			return new SubControlPassAttributesTemplate()
+				.WithAttributesProviderIdentifier(model.AttributesProviderIdentifier);
+        }
 
 		private static SubControlPropertyIdentifierTemplate GetSubControlPropertyIdentifierTemplate(PropertyModel property)
 		{
@@ -378,5 +395,6 @@ namespace AutoForm.Generate
 			ControlTypeIdentifierTemplate controlIdentifierTemplate = GetControlTypeIdentifierTemplate(model);
 			return new ControlModel(controlIdentifierTemplate.Build(), model.Type);
 		}
-	}
+        #endregion
+    }
 }

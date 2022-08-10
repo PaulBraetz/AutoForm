@@ -28,7 +28,7 @@ namespace AutoForm.Generate
 @"		///<summary>
 		///Default control for System.String
 		///</summary>
-		public class " + INPUT_TEXT_IDENTIFIER + @" : global::Microsoft.AspNetCore.Components.ComponentBase
+		private sealed class " + INPUT_TEXT_IDENTIFIER + @" : __ControlBase<global::System.String>
 		{
 			#pragma warning disable 1998
 			protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
@@ -36,15 +36,14 @@ namespace AutoForm.Generate
 				__builder.OpenElement(0, ""input"");
 				__builder.AddAttribute(1, ""value"", global::Microsoft.AspNetCore.Components.BindConverter.FormatValue(__Value));
 				__builder.AddAttribute(2, ""oninput"", global::Microsoft.AspNetCore.Components.EventCallback.Factory.CreateBinder(this, __value => __Value = __value, __Value));
+				if(Attributes != null)
+				{
+					__builder.AddMultipleAttributes(3, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, object>>>(Attributes));
+				}
 				__builder.SetUpdatesAttributeName(""value"");
 				__builder.CloseElement();
 			}
 			#pragma warning restore 1998
-
-			[Parameter]
-			public global::System.String Value { get; set; }
-			[Parameter]
-			public EventCallback<global::System.String> ValueChanged { get; set; }
 
 			private global::System.String __Value
 			{
