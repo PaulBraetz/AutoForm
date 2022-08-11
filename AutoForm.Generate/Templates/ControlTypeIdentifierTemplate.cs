@@ -78,6 +78,11 @@ namespace AutoForm.Generate
 				return TEMPLATE
 					.Replace(MODEL_TYPE, _identifier);
 			}
-		}
+
+            public override String ToString()
+            {
+                return Build();
+            }
+        }
 	}
 }

@@ -148,6 +148,11 @@ namespace AutoForm.Generate
 					.Replace(STRING_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(String).FullName])
 					.Replace(BOOLEAN_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(Boolean).FullName]);
 			}
-		}
+
+            public override String ToString()
+            {
+				return Build();
+            }
+        }
 	}
 }

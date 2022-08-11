@@ -87,7 +87,9 @@ namespace AutoForm.Generate
             var attributesProvider = properties.SingleOrDefault(d => d.AttributeLists.Any(al => al.Attributes.Any(a => a.Name.ToString() == "AutoControlAttributesProvider")));
 
             IEnumerable<Source.PropertyModel> propertyModels = properties
-                                                                .Where(d => !d.AttributeLists.Any(al => al.Attributes.Any(a => a.Name.ToString() == "AutoControlAttributesProvider")))
+                                                                .Where(d => !d.AttributeLists.Any(al => al.Attributes
+                                                                    .Any(a => a.Name.ToString() == "AutoControlAttributesProvider" ||
+                                                                              a.Name.ToString() == "AutoControlModelExclude")))
                                                                 .Select(d => GetPropertyModel(d, semanticModel));
 
             String modelType = GetFullTypeName(classDeclaration, semanticModel);
@@ -99,15 +101,36 @@ namespace AutoForm.Generate
         {
             String propertyIdentifier = propertyDeclaration.Identifier.ToString();
             String propertyType = GetFullTypeName(propertyDeclaration, semanticModel);
+            String propertyControlType = GetPropertyControlType(propertyDeclaration, semanticModel);
 
-            return new Source.PropertyModel(propertyIdentifier, propertyType);
+            return new Source.PropertyModel(propertyType, propertyIdentifier, propertyControlType);
         }
+        private string GetPropertyControlType(PropertyDeclarationSyntax propertyDeclaration, SemanticModel semanticModel)
+        {
+            var attribute = propertyDeclaration.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .SingleOrDefault(a => a.Name.ToString() == "AutoControlModelProperty");
 
+            if (attribute != null)
+            {
+                var typeSyntax = attribute.ArgumentList
+                                    .Arguments
+                                    .Single()
+                                    .DescendantNodes()
+                                    .OfType<TypeOfExpressionSyntax>()
+                                    .Single()
+                                    .Type;
+
+                return GetFullTypeName(typeSyntax, semanticModel);
+            }
+
+            return null;
+        }
         private String GetTargetModel(ClassDeclarationSyntax declaration, SemanticModel semanticModel)
         {
-            var modelType = declaration.AttributeLists
+            var typeSyntax = declaration.AttributeLists
                 .SelectMany(als => als.Attributes)
-                .Single(a => a.Name.ToString() == "AutoControl")?
+                .Single(a => a.Name.ToString() == "AutoControl")
                 .ArgumentList
                 .Arguments
                 .Single()
@@ -116,9 +139,7 @@ namespace AutoForm.Generate
                 .Single()
                 .Type;
 
-            var fullModelType = GetFullTypeName(modelType, semanticModel);
-
-            return fullModelType;
+            return GetFullTypeName(typeSyntax, semanticModel);
         }
 
         private IEnumerable<ClassDeclarationSyntax> GetModelDeclarations(SyntaxTree syntaxTree)
@@ -144,7 +165,7 @@ namespace AutoForm.Generate
 
         private String GetFullTypeName(TypeSyntax type, SemanticModel semanticModel)
         {
-            var symbol = semanticModel.GetTypeInfo(type).Type;
+            var symbol = semanticModel.GetDeclaredSymbol(type) as ITypeSymbol ?? semanticModel.GetTypeInfo(type).Type;
             return GetFullTypeName(symbol);
         }
         private String GetFullTypeName(PropertyDeclarationSyntax property, SemanticModel semanticModel)
@@ -161,9 +182,21 @@ namespace AutoForm.Generate
         private String GetFullTypeName(ITypeSymbol symbol)
         {
             var identifier = GetTypeName(symbol);
-            var containingNamespace = GetNamespace(symbol);
-            return containingNamespace != null ? $"{containingNamespace}.{identifier}" : identifier;
+            var containingNamespace = GetNamespace(symbol.ContainingSymbol);
+            return $"{containingNamespace}.{identifier}";
         }
+
+        private String GetNamespace(ISymbol symbol)
+        {
+            if(symbol is null || symbol.Name == String.Empty)
+            {
+                return String.Empty;
+            }
+            var containingNamespace = GetNamespace(symbol.ContainingSymbol);
+            var containingNamespaceValue = containingNamespace != String.Empty ? $"{containingNamespace}." : String.Empty;
+            return $"{containingNamespaceValue}{symbol.Name}";
+        }
+
         private String GetTypeName(ITypeSymbol symbol)
         {
             var builder = new StringBuilder();
@@ -187,24 +220,6 @@ namespace AutoForm.Generate
             }
 
             return builder.ToString();
-        }
-        private String GetNamespace(ISymbol symbol)
-        {
-            return getNamespace(symbol.ContainingSymbol);
-            String getNamespace(ISymbol containingSymbol)
-            {
-                String symbolName = containingSymbol?.Name;
-                if (String.IsNullOrEmpty(symbolName))
-                {
-                    return null;
-                }
-                if (containingSymbol is INamespaceOrTypeSymbol typeOrNamespaceSymbol)
-                {
-                    String parentNamespace = getNamespace(typeOrNamespaceSymbol.ContainingNamespace);
-                    return parentNamespace != null ? $"{parentNamespace}.{symbolName}" : symbolName;
-                }
-                return getNamespace(containingSymbol.ContainingSymbol);
-            }
         }
 
         public void Initialize(GeneratorInitializationContext context)

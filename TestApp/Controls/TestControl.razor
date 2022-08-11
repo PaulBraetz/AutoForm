@@ -1,13 +1,11 @@
-﻿<input type="checkbox" @bind="Value" @bind:event="oninput"/>
+﻿@typeparam T
+@foreach(var control in Value)
+{
+	@control
+}
 @code {
-	private Boolean _value;
-	public Boolean Value
-	{
-		get => _value;
-		set
-		{
-			_value = value;
-			Console.WriteLine(Value);
-		}
-	}
+	[Parameter]
+	public ICollection<T> Value{ get; set; }
+	[Parameter]
+	public EventCallback<ICollection<T>> ValueChanged{ get; set; }
 }

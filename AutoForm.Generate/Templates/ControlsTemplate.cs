@@ -89,6 +89,11 @@ namespace AutoForm.Generate
 
                 return template;
             }
+
+            public override String ToString()
+            {
+                return Build();
+            }
         }
     }
 }

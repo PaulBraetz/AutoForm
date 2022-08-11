@@ -1,25 +1,8 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace AutoForm
 {
-	public static class Initialization
-	{
-		public static Boolean TryInitialize(out Exception? exception)
-		{
-			try
-			{
-				RuntimeHelpers.RunClassConstructor(typeof(Controls).TypeHandle);
-			}catch(Exception ex)
-			{
-				exception = ex;
-				return false;
-			}
-			exception = null;
-			return true;
-		}
-	}
-	public static class Controls
+    public static class Controls
 	{
 		static Controls()
 		{

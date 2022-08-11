@@ -29,6 +29,11 @@ namespace AutoForm.Generate
                         .Replace(ATTRIBUTES_PROVIDER_IDENTIFIER, _attributesProviderIdentifier) :
                     String.Empty;
             }
+
+            public override String ToString()
+            {
+                return Build();
+            }
         }
     }
 

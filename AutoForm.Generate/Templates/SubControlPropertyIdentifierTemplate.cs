@@ -26,6 +26,11 @@ namespace AutoForm.Generate
                     TEMPLATE.Replace(PROPERTY_IDENTIFIER, _propertyIdentifier) :
                     null;
             }
+
+            public override String ToString()
+            {
+                return Build();
+            }
         }
     }
 

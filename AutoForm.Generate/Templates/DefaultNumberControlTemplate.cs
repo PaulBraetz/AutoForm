@@ -65,6 +65,11 @@ namespace AutoForm.Generate
 					.Replace(MODEL_TYPE, _modelType)
 					.Replace(CONTROL_TYPE_IDENTIFIER, controlTypeIdentifier);
 			}
-		}
+
+            public override String ToString()
+            {
+				return Build();
+            }
+        }
 	}
 }

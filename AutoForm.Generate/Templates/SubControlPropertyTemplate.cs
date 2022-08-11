@@ -51,8 +51,11 @@ namespace AutoForm.Generate
 					.Replace(SUB_CONTROL_PROPERTY_IDENTIFIER, subControlPropertyIdentifier);
 			}
 
-
-		}
+            public override String ToString()
+            {
+                return Build();
+            }
+        }
 	}
 
 }

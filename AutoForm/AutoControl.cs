@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AutoForm
 {
+	
 	public sealed class AutoControl<TModel> : ComponentBase
 	{
 		private static readonly Type _controlType = Controls.ModelControlMap.TryGetValue(typeof(TModel), out Type? controlType) ?
