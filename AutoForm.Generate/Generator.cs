@@ -81,7 +81,7 @@ namespace AutoForm.Generate
         private Source.ModelModel GetModelModel(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
         {
             IEnumerable<PropertyDeclarationSyntax> properties = classDeclaration
-                                                                    .DescendantNodes()
+                                                                    .ChildNodes()
                                                                     .OfType<PropertyDeclarationSyntax>();
 
             var attributesProvider = properties.SingleOrDefault(d => d.AttributeLists.Any(al => al.Attributes.Any(a => a.Name.ToString() == "AutoControlAttributesProvider")));
