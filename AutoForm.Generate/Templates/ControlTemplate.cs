@@ -36,16 +36,18 @@ namespace AutoForm.Generate
 			{	
 				if(Value != null)
 				{
-                    __builder.OpenElement(0, ""div"");
-
                     if(Attributes != null)
-				    {                        
+				    {
+                        __builder.OpenElement(0, ""div"");
 				        __builder.AddMultipleAttributes(1, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));
                     }
 
 " + SUB_CONTROLS + @"
 
-                    __builder.CloseElement();
+                    if(Attributes != null)
+				    {
+                        __builder.CloseElement();
+                    }
 				}
 			}
             #pragma warning restore 1998

@@ -8,6 +8,5 @@ public sealed class AutoControlModelPropertyAttribute : Attribute
 	{
 		ControlType = controlType;
 	}
-
 	public Type ControlType { get; set; }
 }

@@ -87,9 +87,14 @@ namespace AutoForm.Generate
             var attributesProvider = properties.SingleOrDefault(d => d.AttributeLists.Any(al => al.Attributes.Any(a => a.Name.ToString() == "AutoControlAttributesProvider")));
 
             IEnumerable<Source.PropertyModel> propertyModels = properties
-                                                                .Where(d => !d.AttributeLists.Any(al => al.Attributes
-                                                                    .Any(a => a.Name.ToString() == "AutoControlAttributesProvider" ||
-                                                                              a.Name.ToString() == "AutoControlModelExclude")))
+                                                                .Where(d => !d.AttributeLists
+                                                                    .Any(al => al.Attributes
+                                                                        .Any(a => a.Name.ToString() == "AutoControlAttributesProvider" ||
+                                                                                  a.Name.ToString() == "AutoControlModelExclude")))
+                                                                .OrderBy(d=>Int32.Parse(d.AttributeLists
+                                                                    .SelectMany(l => l.Attributes)
+                                                                    .SingleOrDefault(a => a.Name.ToString() == "AutoControlPropertyPosition")?
+                                                                    .ArgumentList.Arguments.Single().ToString() ?? "0"))
                                                                 .Select(d => GetPropertyModel(d, semanticModel));
 
             String modelType = GetFullTypeName(classDeclaration, semanticModel);
@@ -183,7 +188,8 @@ namespace AutoForm.Generate
         {
             var identifier = GetTypeName(symbol);
             var containingNamespace = GetNamespace(symbol.ContainingSymbol);
-            return $"{containingNamespace}.{identifier}";
+            var containingNamespaceString = containingNamespace != String.Empty ? $"{containingNamespace}." : String.Empty;
+            return $"{containingNamespaceString}{identifier}";
         }
 
         private String GetNamespace(ISymbol symbol)

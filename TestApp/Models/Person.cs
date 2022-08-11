@@ -17,16 +17,34 @@ namespace TestApp.Models
 
         public Person()
         {
-            Location = new();
+            Location1 = new();
+            Location2 = new();
         }
-        [AutoControlModelProperty(typeof(AddressControl))]
-        public Address Location { get; set; }
-        [AutoControlModelProperty(typeof(Controls.PersonControl))]
+        [AutoControlPropertyPosition(1)]
+        public Address Location1 { get; set; }
+        [AutoControlModelProperty(typeof(TestApp.Controls.AddressControl))]
+        public Address Location2 { get; set; }
+        [AutoControlModelProperty(typeof(TestApp.Controls.PersonControl))]
         public Person? Dad { get; set; }
+        [AutoControlPropertyPosition(-1)]
         [AutoControlModelProperty(typeof(TestApp.Controls.PersonControl))]
         public Person? Mom { get; set; }
-    }
 
+		[AutoControlAttributesProvider]
+        public PersonAttributesProvider AttributeProvider { get; } = new();
+    }
+    public sealed class PersonAttributesProvider
+	{
+        private readonly Dictionary<String, Object> _default = new()
+		{
+            {"class", "input-group" }
+		};
+
+        public Dictionary<String, Object> GetLocation1Attributes() => _default;
+        public Dictionary<String, Object> GetLocation2Attributes() => _default;
+        public Dictionary<String, Object> GetDadAttributes() => _default;
+        public Dictionary<String, Object> GetMomAttributes() => _default;
+    }
     public sealed class AddressAttributesProvider
     {
         private static readonly Dictionary<String, Object> _streetAttributes = new()

@@ -1,5 +1,9 @@
-﻿<span>@nameof(Person)</span>
-<AutoControl Value="Value" ValueChanged="ValueChanged" Attributes="Attributes" />
+﻿<div class="input-group">
+	<div class="input-group-text">
+		@typeof(Person).Name
+	</div>
+	<AutoControl Value="Value" ValueChanged="ValueChanged" Attributes="Attributes" />
+</div>
 @code {
 	[Parameter]
 	public Person Value { get; set; }
