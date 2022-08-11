@@ -2,26 +2,28 @@
 
 namespace TestApp.Models
 {
-    [AutoControlModel]
-    public sealed class Address
-    {
-        public String? Street { get; set; }
-        public String? City { get; set; }
-        [AutoControlAttributesProvider]
-        public AddressAttributesProvider AttributesProvider { get; } = new();
-    }
+    
     [AutoControlModel]
     public sealed class Person
     {
+        [AutoControlModel]
+        public sealed class Address
+        {
+            public String? Street { get; set; }
+            public String? City { get; set; }
+            [AutoControlAttributesProvider]
+            public AddressAttributesProvider AttributesProvider { get; } = new();
+        }
+
         public Person()
         {
-            Address = new();
+            Location = new();
         }
         [AutoControlModelProperty(typeof(AddressControl))]
-        public Address Address { get; set; }
-        [AutoControlModelProperty(typeof(PersonControl))]
+        public Address Location { get; set; }
+        [AutoControlModelProperty(typeof(Controls.PersonControl))]
         public Person? Dad { get; set; }
-        [AutoControlModelProperty(typeof(PersonControl))]
+        [AutoControlModelProperty(typeof(TestApp.Controls.PersonControl))]
         public Person? Mom { get; set; }
     }
 
@@ -29,11 +31,11 @@ namespace TestApp.Models
     {
         private static readonly Dictionary<String, Object> _streetAttributes = new()
         {
-            {"placeholder", nameof(Address.Street) }
+            {"placeholder", nameof(Person.Address.Street) }
         };
         private static readonly Dictionary<String, Object> _cityAttributes = new()
         {
-            {"placeholder", nameof(Address.City) }
+            {"placeholder", nameof(Person.Address.City) }
         };
 
         public Dictionary<String, Object> GetStreetAttributes()

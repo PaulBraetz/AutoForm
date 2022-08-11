@@ -1,10 +1,10 @@
-﻿<span>@nameof(Address)</span>
+﻿<span>@nameof(Person.Address)</span>
 <AutoControl Value="Value" ValueChanged="ValueChanged" Attributes="Attributes" />
 @code {
 	[Parameter]
-	public Address Value { get; set; }
+	public Person.Address Value { get; set; }
 	[Parameter]
-	public EventCallback<Address> ValueChanged { get; set; }
+	public EventCallback<Person.Address> ValueChanged { get; set; }
 	[Parameter]
 	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 }
