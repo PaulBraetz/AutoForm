@@ -36,7 +36,7 @@ namespace AutoForm.Generate
 			{	
 				if(Value != null)
 				{
-                    if(Attributes != null)
+                    if(Attributes?.Any() ?? false)
 				    {
                         __builder.OpenElement(0, ""div"");
 				        __builder.AddMultipleAttributes(1, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));

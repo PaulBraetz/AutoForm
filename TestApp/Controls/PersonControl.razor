@@ -1,9 +1,27 @@
-﻿<div class="input-group">
-	<div class="input-group-text">
-		@typeof(Person).Name
+﻿@if (Value != null)
+{
+	<div @attributes="Attributes">
+		<label for="@_id" class="form-label">@(Attributes?.SingleOrDefault(kvp=>kvp.Key == "label").Value ?? typeof(Person).Name)</label>
+		<AutoControl @bind-Value="Value" Attributes="_attributes" />
+		@if (Value.Dad == null || Value.Mom == null)
+		{
+			<div class="btn-group">
+				@if (Value.Dad == null)
+				{
+					<button class="btn btn-outline-primary" @onclick="()=>Value.Dad = new()">
+						Add Dad
+					</button>
+				}
+				@if (Value.Mom == null)
+				{
+					<button class="btn btn-outline-primary" @onclick="()=>Value.Mom = new()">
+						Add Mom
+					</button>
+				}
+			</div>
+		}
 	</div>
-	<AutoControl Value="Value" ValueChanged="ValueChanged" Attributes="Attributes" />
-</div>
+}
 @code {
 	[Parameter]
 	public Person Value { get; set; }
@@ -11,4 +29,10 @@
 	public EventCallback<Person> ValueChanged { get; set; }
 	[Parameter]
 	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+
+	private static readonly String _id = Guid.NewGuid().ToString();
+	private static readonly Dictionary<String, Object> _attributes = new()
+	{
+		{"id", _id }
+	};
 }

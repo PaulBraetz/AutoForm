@@ -1,8 +1,8 @@
-﻿<div class="input-group">
-	<div class="input-group-text">
-		@typeof(Person.Address).Name
-	</div>
-	<AutoControl Value="Value" ValueChanged="ValueChanged" Attributes="Attributes" />
+﻿<div class="input-group mb-3" @attributes="Attributes">
+	<span class="input-group-text">
+		@(Attributes?.SingleOrDefault(kvp=>kvp.Key == "label").Value ?? typeof(Person.Address).Name)
+	</span>
+	<AutoControl Value="Value" ValueChanged="ValueChanged" />
 </div>
 @code {
 	[Parameter]
