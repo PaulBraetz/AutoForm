@@ -74,7 +74,7 @@ namespace AutoForm.Generate
 			#pragma warning disable 1998
 			protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
 			{
-				__builder.OpenElement(0, ""input"");
+				__builder.OpenElement(0, (__Value?.Length ?? 0) > 128 ? ""textarea"" : ""input"");
 				__builder.AddAttribute(1, ""value"", global::Microsoft.AspNetCore.Components.BindConverter.FormatValue(__Value));
 				__builder.AddAttribute(2, ""oninput"", global::Microsoft.AspNetCore.Components.EventCallback.Factory.CreateBinder(this, __value => __Value = __value, __Value));
 				if(Attributes != null)
