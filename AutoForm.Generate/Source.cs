@@ -73,12 +73,12 @@ namespace AutoForm.Generate
         public readonly struct ControlModel : IEquatable<ControlModel>
         {
             public readonly String Type;
-            public readonly String ModelType;
+            public readonly IEnumerable<String> ModelTypes;
 
-            public ControlModel(String controlType, String modelType)
+            public ControlModel(String controlType, IEnumerable<String> modelTypes)
             {
                 Type = controlType;
-                ModelType = modelType;
+                ModelTypes = modelTypes;
             }
 
             public override Boolean Equals(Object obj)
@@ -89,14 +89,14 @@ namespace AutoForm.Generate
             public Boolean Equals(ControlModel other)
             {
                 return Type == other.Type &&
-                       ModelType == other.ModelType;
+                       EqualityComparer<IEnumerable<String>>.Default.Equals(ModelTypes, other.ModelTypes);
             }
 
             public override Int32 GetHashCode()
             {
-                Int32 hashCode = -1719137624;
+                Int32 hashCode = -2134558400;
                 hashCode = hashCode * -1521134295 + EqualityComparer<String>.Default.GetHashCode(Type);
-                hashCode = hashCode * -1521134295 + EqualityComparer<String>.Default.GetHashCode(ModelType);
+                hashCode = hashCode * -1521134295 + EqualityComparer<IEnumerable<String>>.Default.GetHashCode(ModelTypes);
                 return hashCode;
             }
 
@@ -243,7 +243,7 @@ namespace AutoForm.Generate
 
             return requiredDefaulControlTypes.Select(GetModelControlPairTemplate)
                 .Concat(GetConcatenatedControlModels(models, controls)
-                .Select(GetModelControlPairTemplate));
+                .SelectMany(GetModelControlPairTemplates));
         }
         private static ModelControlPairTemplate GetModelControlPairTemplate(String requiredDefaultControlType)
         {
@@ -253,13 +253,14 @@ namespace AutoForm.Generate
         }
         private static IEnumerable<String> GetRequiredDefaultControlTypes(IEnumerable<ControlModel> controls)
         {
-            return DefaultControlsTemplate.AvailableDefaultControls.Keys.Except(controls.Select(c => c.ModelType));
+            return DefaultControlsTemplate.AvailableDefaultControls.Keys.Except(controls.SelectMany(c => c.ModelTypes));
         }
-        private static ModelControlPairTemplate GetModelControlPairTemplate(ControlModel control)
+        private static IEnumerable<ModelControlPairTemplate> GetModelControlPairTemplates(ControlModel control)
         {
-            return new ModelControlPairTemplate()
-                        .WithModelType(control.ModelType)
-                        .WithControlType(control.Type);
+            return control.ModelTypes
+                    .Select(t => new ModelControlPairTemplate()
+                        .WithModelType(t)
+                        .WithControlType(control.Type));
         }
 
         private static IEnumerable<ControlTemplate> GetControlTemplates(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
@@ -345,7 +346,7 @@ namespace AutoForm.Generate
         }
         private static SubControlTemplate GetSubControlTemplate(ModelModel model, PropertyModel property, IEnumerable<ControlModel> controls)
         {
-            var controlType = String.IsNullOrWhiteSpace(property.ControlType) ? controls.SingleOrDefault(c => c.ModelType == property.Type).Type : property.ControlType;
+            var controlType = String.IsNullOrWhiteSpace(property.ControlType) ? controls.SingleOrDefault(c => c.ModelTypes.Contains(property.Type)).Type : property.ControlType;
 
             if (controlType == null && !DefaultControlsTemplate.AvailableDefaultControls.TryGetValue(property.Type, out controlType))
             {
@@ -392,12 +393,12 @@ namespace AutoForm.Generate
         }
         private static IEnumerable<ModelModel> GetModelModelsWithMissingControlModel(IEnumerable<ModelModel> models, IEnumerable<ControlModel> controls)
         {
-            return models.Where(m => !controls.Any(c => c.ModelType == m.Type));
+            return models.Where(m => !controls.Any(c => c.ModelTypes.Contains(m.Type)));
         }
         private static ControlModel GetControlModel(ModelModel model)
         {
             ControlTypeIdentifierTemplate controlIdentifierTemplate = GetControlTypeIdentifierTemplate(model);
-            return new ControlModel(controlIdentifierTemplate.Build(), model.Type);
+            return new ControlModel(controlIdentifierTemplate.Build(), new[] { model.Type });
         }
         #endregion
     }

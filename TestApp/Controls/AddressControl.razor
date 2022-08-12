@@ -1,14 +1,14 @@
 ﻿<div class="input-group mb-3" @attributes="Attributes">
 	<span class="input-group-text">
-		@(Attributes?.SingleOrDefault(kvp=>kvp.Key == "label").Value ?? typeof(Person.Address).Name)
+		@(Attributes?.SingleOrDefault(kvp=>kvp.Key == "label").Value ?? typeof(PersonList.Address).Name)
 	</span>
 	<AutoControl Value="Value" ValueChanged="ValueChanged" />
 </div>
 @code {
 	[Parameter]
-	public Person.Address Value { get; set; }
+	public PersonList.Address Value { get; set; }
 	[Parameter]
-	public EventCallback<Person.Address> ValueChanged { get; set; }
+	public EventCallback<PersonList.Address> ValueChanged { get; set; }
 	[Parameter]
 	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 }

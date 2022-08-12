@@ -49,7 +49,7 @@ namespace AutoForm.Generate
             foreach (var syntaxTree in syntaxTrees)
             {
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var modelModels = GetModelDeclarations(syntaxTree).Select(d => GetModelModel(d, semanticModel));
+                var modelModels = GetModelDeclarations(syntaxTree).Select(d => GetModelModel(d, compilation));
                 foreach (var modelModel in modelModels)
                 {
                     yield return modelModel;
@@ -62,7 +62,7 @@ namespace AutoForm.Generate
             foreach (var syntaxTree in syntaxTrees)
             {
                 var semanticModel = compilation.GetSemanticModel(syntaxTree);
-                var controlModels = GetControlDeclarations(syntaxTree).Select(d => GetControlModel(d, semanticModel));
+                var controlModels = GetControlDeclarations(syntaxTree).Select(d => GetControlModel(d, compilation));
                 foreach (var controlModel in controlModels)
                 {
                     yield return controlModel;
@@ -70,15 +70,15 @@ namespace AutoForm.Generate
             }
         }
 
-        private Source.ControlModel GetControlModel(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+        private Source.ControlModel GetControlModel(ClassDeclarationSyntax classDeclaration, Compilation compilation)
         {
-            String controlType = GetFullTypeName(classDeclaration, semanticModel);
-            String modelType = GetTargetModel(classDeclaration, semanticModel);
+            String controlType = GetFullTypeName(classDeclaration, compilation);
+            IEnumerable< String> modelTypes = GetTargetModelTypes(classDeclaration, compilation);
 
-            return new Source.ControlModel(controlType, modelType);
+            return new Source.ControlModel(controlType, modelTypes);
         }
 
-        private Source.ModelModel GetModelModel(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+        private Source.ModelModel GetModelModel(ClassDeclarationSyntax classDeclaration, Compilation compilation)
         {
             IEnumerable<PropertyDeclarationSyntax> properties = classDeclaration
                                                                     .ChildNodes()
@@ -95,22 +95,22 @@ namespace AutoForm.Generate
                                                                     .SelectMany(l => l.Attributes)
                                                                     .SingleOrDefault(a => a.Name.ToString() == "AutoControlPropertyPosition")?
                                                                     .ArgumentList.Arguments.Single().ToString() ?? "0"))
-                                                                .Select(d => GetPropertyModel(d, semanticModel));
+                                                                .Select(d => GetPropertyModel(d, compilation));
 
-            String modelType = GetFullTypeName(classDeclaration, semanticModel);
+            String modelType = GetFullTypeName(classDeclaration, compilation);
 
             return new Source.ModelModel(modelType, attributesProvider?.Identifier.ToString(), propertyModels);
         }
 
-        private Source.PropertyModel GetPropertyModel(PropertyDeclarationSyntax propertyDeclaration, SemanticModel semanticModel)
+        private Source.PropertyModel GetPropertyModel(PropertyDeclarationSyntax propertyDeclaration, Compilation compilation)
         {
             String propertyIdentifier = propertyDeclaration.Identifier.ToString();
-            String propertyType = GetFullTypeName(propertyDeclaration, semanticModel);
-            String propertyControlType = GetPropertyControlType(propertyDeclaration, semanticModel);
+            String propertyType = GetFullTypeName(propertyDeclaration, compilation);
+            String propertyControlType = GetPropertyControlType(propertyDeclaration, compilation);
 
             return new Source.PropertyModel(propertyType, propertyIdentifier, propertyControlType);
         }
-        private string GetPropertyControlType(PropertyDeclarationSyntax propertyDeclaration, SemanticModel semanticModel)
+        private string GetPropertyControlType(PropertyDeclarationSyntax propertyDeclaration, Compilation compilation)
         {
             var attribute = propertyDeclaration.AttributeLists
                 .SelectMany(al => al.Attributes)
@@ -126,25 +126,26 @@ namespace AutoForm.Generate
                                     .Single()
                                     .Type;
 
-                return GetFullTypeName(typeSyntax, semanticModel);
+                return GetFullTypeName(typeSyntax, compilation);
             }
 
             return null;
         }
-        private String GetTargetModel(ClassDeclarationSyntax declaration, SemanticModel semanticModel)
+        private IEnumerable<String> GetTargetModelTypes(ClassDeclarationSyntax declaration, Compilation compilation)
         {
-            var typeSyntax = declaration.AttributeLists
+            var types = declaration.AttributeLists
                 .SelectMany(als => als.Attributes)
-                .Single(a => a.Name.ToString() == "AutoControl")
-                .ArgumentList
-                .Arguments
-                .Single()
-                .DescendantNodes()
-                .OfType<TypeOfExpressionSyntax>()
-                .Single()
-                .Type;
+                .Where(a => a.Name.ToString() == "AutoControl")
+                .Select(a=>a.ArgumentList
+                    .Arguments
+                    .Single()
+                    .DescendantNodes()
+                    .OfType<TypeOfExpressionSyntax>()
+                    .Single()
+                    .Type)
+                .Select(s=> GetFullTypeName(s, compilation));
 
-            return GetFullTypeName(typeSyntax, semanticModel);
+            return types;
         }
 
         private IEnumerable<ClassDeclarationSyntax> GetModelDeclarations(SyntaxTree syntaxTree)
@@ -168,18 +169,21 @@ namespace AutoForm.Generate
             return Array.Empty<ClassDeclarationSyntax>();
         }
 
-        private String GetFullTypeName(TypeSyntax type, SemanticModel semanticModel)
+        private String GetFullTypeName(TypeSyntax type, Compilation compilation)
         {
+            var semanticModel = compilation.GetSemanticModel(type.SyntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(type) as ITypeSymbol ?? semanticModel.GetTypeInfo(type).Type;
             return GetFullTypeName(symbol);
         }
-        private String GetFullTypeName(PropertyDeclarationSyntax property, SemanticModel semanticModel)
+        private String GetFullTypeName(PropertyDeclarationSyntax property, Compilation compilation)
         {
+            var semanticModel = compilation.GetSemanticModel(property.SyntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(property).Type;
             return GetFullTypeName(symbol);
         }
-        private String GetFullTypeName(BaseTypeDeclarationSyntax declaration, SemanticModel semanticModel)
+        private String GetFullTypeName(BaseTypeDeclarationSyntax declaration, Compilation compilation)
         {
+            var semanticModel = compilation.GetSemanticModel(declaration.SyntaxTree);
             var symbol = semanticModel.GetDeclaredSymbol(declaration);
             return GetFullTypeName(symbol);
         }

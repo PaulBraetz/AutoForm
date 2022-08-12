@@ -1,12 +1,12 @@
 ﻿/// <summary>
-/// Denotes  the target property to be rendered using a specific control.
+/// Denotes in what order the control is to be rendered.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property, Inherited =false)]
-public sealed class AutoControlPropertyPositionAttribute : Attribute
+public sealed class AutoControlPropertyOrderAttribute : Attribute
 {
-	public AutoControlPropertyPositionAttribute(Int32 position)
+	public AutoControlPropertyOrderAttribute(Int32 position)
 	{
-		Position = position;
+		Order = position;
 	}
-	public Int32 Position { get; set; }
+	public Int32 Order { get; set; }
 }

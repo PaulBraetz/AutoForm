@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Denotes the target type as a control for the model type provided.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class AutoControlAttribute : Attribute
 {
 	public AutoControlAttribute(Type modelType)
