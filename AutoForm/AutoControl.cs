@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AutoForm.Attributes;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.CompilerServices;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AutoForm
 {
-	
+
 	public sealed class AutoControl<TModel> : ComponentBase
 	{
 		private static readonly Type _controlType = Controls.ModelControlMap.TryGetValue(typeof(TModel), out Type? controlType) ?
@@ -15,7 +16,7 @@ namespace AutoForm
 		public TModel? Value { get; set; }
 		[Parameter]
 		public EventCallback<TModel?> ValueChanged { get; set; }
-        [Parameter]
+		[Parameter]
 		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
 
 		protected override void BuildRenderTree(RenderTreeBuilder builder)

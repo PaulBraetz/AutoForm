@@ -12,7 +12,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<!--<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.Blazor.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
+		<ProjectReference Include="..\ConsoleGenerator\DebugGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\AutoForm\AutoForm.csproj" />
 	</ItemGroup>
 	

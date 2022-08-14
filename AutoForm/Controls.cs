@@ -2,7 +2,7 @@
 
 namespace AutoForm
 {
-    public static class Controls
+	public static class Controls
 	{
 		static Controls()
 		{

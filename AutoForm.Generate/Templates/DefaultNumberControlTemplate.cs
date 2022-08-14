@@ -1,18 +1,16 @@
 ﻿using System;
 
-namespace AutoForm.Generate
+namespace AutoForm.Generate.Blazor.Templates
 {
-	internal static partial class Source
+	internal readonly struct DefaultNumberControlTemplate
 	{
-		private readonly struct DefaultNumberControlTemplate
+		private DefaultNumberControlTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate, String modelType)
 		{
-			private DefaultNumberControlTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate, String modelType)
-			{
-				_controlTypeIdentifierTemplate = controlTypeIdentifierTemplate;
-				_modelType = modelType;
-			}
+			_controlTypeIdentifierTemplate = controlTypeIdentifierTemplate;
+			_modelType = modelType;
+		}
 
-			private const String TEMPLATE =
+		private const String TEMPLATE =
 @"		///<summary>
 		///Default control for System." + MODEL_TYPE + @"
 		///</summary>
@@ -45,31 +43,30 @@ namespace AutoForm.Generate
 			#pragma warning restore 1998
 		}";
 
-			private readonly ControlTypeIdentifierTemplate _controlTypeIdentifierTemplate;
-			private readonly String _modelType;
+		private readonly ControlTypeIdentifierTemplate _controlTypeIdentifierTemplate;
+		private readonly String _modelType;
 
-			public DefaultNumberControlTemplate WithControlTypeIdentifierTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
-			{
-				return new DefaultNumberControlTemplate(controlTypeIdentifierTemplate, _modelType);
-			}
-			public DefaultNumberControlTemplate WithModelType(String modelType)
-			{
-				return new DefaultNumberControlTemplate(_controlTypeIdentifierTemplate, modelType);
-			}
+		public DefaultNumberControlTemplate WithControlTypeIdentifierTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
+		{
+			return new DefaultNumberControlTemplate(controlTypeIdentifierTemplate, _modelType);
+		}
+		public DefaultNumberControlTemplate WithModelType(String modelType)
+		{
+			return new DefaultNumberControlTemplate(_controlTypeIdentifierTemplate, modelType);
+		}
 
-			public String Build()
-			{
-				String controlTypeIdentifier = _controlTypeIdentifierTemplate.Build();
+		public String Build()
+		{
+			String controlTypeIdentifier = _controlTypeIdentifierTemplate.Build();
 
-				return TEMPLATE
-					.Replace(MODEL_TYPE, _modelType)
-					.Replace(CONTROL_TYPE_IDENTIFIER, controlTypeIdentifier);
-			}
+			return TEMPLATE
+				.Replace(MODEL_TYPE, _modelType)
+				.Replace(CONTROL_TYPE_IDENTIFIER, controlTypeIdentifier);
+		}
 
-            public override String ToString()
-            {
-				return Build();
-            }
-        }
+		public override String ToString()
+		{
+			return Build();
+		}
 	}
 }

@@ -2,30 +2,14 @@
 {
 	<div @attributes="Attributes" class="flex-column d-flex">
 		<label for="@_id" class="form-label">@(Attributes?.SingleOrDefault(kvp=>kvp.Key == "label").Value ?? "Person")</label>
-		@if (Value.Previous != null)
-		{
-			<div class="d-flex">
-				<button class="btn btn-sm btn-outline-danger" @onclick="()=>Value.Previous.Next = Value.Next">
-					Remove Person
-				</button>
-			</div>
-		}
 		<AutoControl @bind-Value="Value" Attributes="_attributes" />
-		@if (Value.Next == null)
-		{
-			<div class="d-flex">
-				<button class="btn btn-sm btn-outline-primary" @onclick="()=>Value.Next = new(Value)">
-					Add Person
-				</button>
-			</div>
-		}
 	</div>
 }
 @code {
 	[Parameter]
-	public PersonList Value { get; set; }
+	public Person Value { get; set; }
 	[Parameter]
-	public EventCallback<PersonList> ValueChanged { get; set; }
+	public EventCallback<Person> ValueChanged { get; set; }
 	[Parameter]
 	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 

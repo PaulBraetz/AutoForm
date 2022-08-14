@@ -1,12 +1,15 @@
-﻿/// <summary>
-/// Denotes the target type as a control for the model type provided.
-/// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class AutoControlAttribute : Attribute
+﻿namespace AutoForm.Attributes
 {
-	public AutoControlAttribute(Type modelType)
+	/// <summary>
+	/// Denotes the target type as a control for the model type provided.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	public sealed class AutoControlAttribute : Attribute
 	{
-		ModelType = modelType;
+		public AutoControlAttribute(Type modelType)
+		{
+			ModelType = modelType;
+		}
+		public Type ModelType { get; }
 	}
-	public Type ModelType { get; private set; }
 }

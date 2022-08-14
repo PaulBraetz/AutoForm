@@ -2,7 +2,7 @@ using AutoForm;
 using System.Reflection;
 using TestApp.Data;
 
-if(!Initialization.TryInitialize(Assembly.GetExecutingAssembly(),out Exception? exception))
+if (!Initialization.TryInitialize(Assembly.GetExecutingAssembly(), out Exception? exception))
 {
 	Console.WriteLine(exception);
 }

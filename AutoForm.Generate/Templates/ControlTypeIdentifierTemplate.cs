@@ -5,84 +5,81 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AutoForm.Generate
+namespace AutoForm.Generate.Blazor.Templates
 {
-	internal static partial class Source
+	internal readonly struct ControlTypeIdentifierTemplate
 	{
-		private readonly struct ControlTypeIdentifierTemplate
+		private sealed class EqualityComparer : IEqualityComparer<ControlTypeIdentifierTemplate>
 		{
-			private sealed class EqualityComparer : IEqualityComparer<ControlTypeIdentifierTemplate>
+			private EqualityComparer()
 			{
-				private EqualityComparer()
-				{
 
-				}
-
-				public static readonly EqualityComparer Instance = new EqualityComparer();
-
-				public Boolean Equals(ControlTypeIdentifierTemplate x, ControlTypeIdentifierTemplate y)
-				{
-					return x._identifier == y._identifier;
-				}
-
-				public Int32 GetHashCode(ControlTypeIdentifierTemplate obj)
-				{
-					return EqualityComparer<String>.Default.GetHashCode(obj._identifier);
-				}
 			}
 
-			private ControlTypeIdentifierTemplate(String identifier)
+			public static readonly EqualityComparer Instance = new EqualityComparer();
+
+			public Boolean Equals(ControlTypeIdentifierTemplate x, ControlTypeIdentifierTemplate y)
 			{
-				_identifier = identifier; ;
+				return x._identifier == y._identifier;
 			}
 
-			private const String TEMPLATE = "__Control_" + MODEL_TYPE;
-
-			private readonly String _identifier;
-
-			public ControlTypeIdentifierTemplate WithModelType(String modelType)
+			public Int32 GetHashCode(ControlTypeIdentifierTemplate obj)
 			{
-				var sha = SHA1.Create();
-				Byte[] modelTypeBytes = Encoding.UTF8.GetBytes(modelType);
-				Byte[] modelTypeHashBytes = sha.ComputeHash(modelTypeBytes);
-				String modelTypeHash = Convert.ToBase64String(modelTypeHashBytes) + "__";
-
-				return new ControlTypeIdentifierTemplate(modelTypeHash);
+				return EqualityComparer<String>.Default.GetHashCode(obj._identifier);
 			}
-			private ControlTypeIdentifierTemplate WithIdentifier(String identifier)
+		}
+
+		private ControlTypeIdentifierTemplate(String identifier)
+		{
+			_identifier = identifier; ;
+		}
+
+		private const String TEMPLATE = "__Control_" + MODEL_TYPE;
+
+		private readonly String _identifier;
+
+		public ControlTypeIdentifierTemplate WithModelType(String modelType)
+		{
+			var sha = SHA1.Create();
+			Byte[] modelTypeBytes = Encoding.UTF8.GetBytes(modelType);
+			Byte[] modelTypeHashBytes = sha.ComputeHash(modelTypeBytes);
+			String modelTypeHash = Convert.ToBase64String(modelTypeHashBytes) + "__";
+
+			return new ControlTypeIdentifierTemplate(modelTypeHash);
+		}
+		private ControlTypeIdentifierTemplate WithIdentifier(String identifier)
+		{
+			return new ControlTypeIdentifierTemplate(identifier);
+		}
+
+		public static String Sanitize(String built)
+		{
+			IEnumerable<ControlTypeIdentifierTemplate> invalidIdentifiers = Regex.Matches(built, @"(?<=__Control_).*__")
+				.OfType<Match>()
+				.Select(m => m.Value)
+				.Select(new ControlTypeIdentifierTemplate().WithIdentifier)
+				.Distinct(EqualityComparer.Instance);
+
+			Int32 index = 0;
+			foreach (var invalidIdentifier in invalidIdentifiers)
 			{
-				return new ControlTypeIdentifierTemplate(identifier);
+				built = built
+					.Replace(invalidIdentifier.Build(), new ControlTypeIdentifierTemplate().WithIdentifier(index.ToString()).Build());
+				index++;
 			}
 
-			public static String Sanitize(String built)
-			{
-				IEnumerable<ControlTypeIdentifierTemplate> invalidIdentifiers = Regex.Matches(built, @"(?<=__Control_).*__")
-					.OfType<Match>()
-					.Select(m => m.Value)
-					.Select(new ControlTypeIdentifierTemplate().WithIdentifier)
-					.Distinct(EqualityComparer.Instance);
+			return built;
+		}
 
-				Int32 index = 0;
-				foreach (var invalidIdentifier in invalidIdentifiers)
-				{
-					built = built
-						.Replace(invalidIdentifier.Build(), new ControlTypeIdentifierTemplate().WithIdentifier(index.ToString()).Build());
-					index++;
-				}
+		public String Build()
+		{
+			return TEMPLATE
+				.Replace(MODEL_TYPE, _identifier);
+		}
 
-				return built;
-			}
-
-			public String Build()
-			{
-				return TEMPLATE
-					.Replace(MODEL_TYPE, _identifier);
-			}
-
-            public override String ToString()
-            {
-                return Build();
-            }
-        }
+		public override String ToString()
+		{
+			return Build();
+		}
 	}
 }

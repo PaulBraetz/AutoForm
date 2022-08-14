@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace AutoForm.Generate
+namespace AutoForm.Generate.Blazor.Templates
 {
-	internal static partial class Source
+	internal readonly struct DefaultControlsTemplate
 	{
-		private readonly struct DefaultControlsTemplate
+		private DefaultControlsTemplate(IEnumerable<String> requiredDefaultControls)
 		{
-			private DefaultControlsTemplate(IEnumerable<String> requiredDefaultControls)
-			{
-				_requiredDefaultControls = requiredDefaultControls;
-			}
+			_requiredDefaultControls = requiredDefaultControls;
+		}
 
-			public readonly static IDictionary<String, String> AvailableDefaultControls = new ReadOnlyDictionary<String, String>(new Dictionary<String, String>()
+		public readonly static IDictionary<String, String> AvailableDefaultControls = new ReadOnlyDictionary<String, String>(new Dictionary<String, String>()
 			{
 				{typeof(String).FullName, GetNumberControlIdentifier(typeof(String)) },
 				{typeof(Boolean).FullName, GetNumberControlIdentifier(typeof(Boolean)) },
@@ -30,7 +28,7 @@ namespace AutoForm.Generate
 				{typeof(Double).FullName, GetNumberControlIdentifier(typeof(Double)) },
 				{typeof(Decimal).FullName, GetNumberControlIdentifier(typeof(Decimal)) }
 			});
-			private readonly static IDictionary<String, String> AvailableDefaultControlTemplates = new ReadOnlyDictionary<String, String>(new Dictionary<String, String>()
+		private readonly static IDictionary<String, String> AvailableDefaultControlTemplates = new ReadOnlyDictionary<String, String>(new Dictionary<String, String>()
 			{
 				{typeof(String).FullName, STRING_CONTROL },
 				{typeof(Boolean).FullName, BOOLEAN_CONTROL},
@@ -47,25 +45,25 @@ namespace AutoForm.Generate
 				{typeof(Decimal).FullName, GetNumberControl(typeof(Decimal)) }
 			});
 
-			private static String GetNumberControlIdentifier(Type modelType)
-			{
-				return new ControlTypeIdentifierTemplate()
-					.WithModelType(modelType.FullName)
-					.Build();
-			}
-			private static String GetNumberControl(Type modelType)
-			{
-				var controlIdentifierTemplate = new ControlTypeIdentifierTemplate()
-														.WithModelType(modelType.FullName);
+		private static String GetNumberControlIdentifier(Type modelType)
+		{
+			return new ControlTypeIdentifierTemplate()
+				.WithModelType(modelType.FullName)
+				.Build();
+		}
+		private static String GetNumberControl(Type modelType)
+		{
+			var controlIdentifierTemplate = new ControlTypeIdentifierTemplate()
+													.WithModelType(modelType.FullName);
 
-				return new DefaultNumberControlTemplate()
-					.WithModelType(modelType.FullName)
-					.WithControlTypeIdentifierTemplate(controlIdentifierTemplate)
-					.Build();
-			}
+			return new DefaultNumberControlTemplate()
+				.WithModelType(modelType.FullName)
+				.WithControlTypeIdentifierTemplate(controlIdentifierTemplate)
+				.Build();
+		}
 
-			private const String STRING_CONTROL_IDENTIFIER = "{" + nameof(STRING_CONTROL_IDENTIFIER) + "}";
-			private const String STRING_CONTROL =
+		private const String STRING_CONTROL_IDENTIFIER = "{" + nameof(STRING_CONTROL_IDENTIFIER) + "}";
+		private const String STRING_CONTROL =
 @"		///<summary>
 		///Default control for System.String
 		///</summary>
@@ -97,8 +95,8 @@ namespace AutoForm.Generate
 			#pragma warning restore 1998
 		}";
 
-			private const String BOOLEAN_CONTROL_IDENTIFIER = "{" + nameof(BOOLEAN_CONTROL_IDENTIFIER) + "}";
-			private const String BOOLEAN_CONTROL =
+		private const String BOOLEAN_CONTROL_IDENTIFIER = "{" + nameof(BOOLEAN_CONTROL_IDENTIFIER) + "}";
+		private const String BOOLEAN_CONTROL =
 @"		///<summary>
 		///Default control for System.Boolean
 		///</summary>
@@ -132,27 +130,26 @@ namespace AutoForm.Generate
 		}
 ";
 
-			private readonly IEnumerable<String> _requiredDefaultControls;
+		private readonly IEnumerable<String> _requiredDefaultControls;
 
-			public DefaultControlsTemplate WithRequiredDefaultControls(IEnumerable<String> requiredDefaultControls)
-			{
-				return new DefaultControlsTemplate(requiredDefaultControls);
-			}
+		public DefaultControlsTemplate WithRequiredDefaultControls(IEnumerable<String> requiredDefaultControls)
+		{
+			return new DefaultControlsTemplate(requiredDefaultControls);
+		}
 
-			public String Build()
-			{
-				IEnumerable<String> controls = _requiredDefaultControls
-					.Select(c => AvailableDefaultControlTemplates[c]);
+		public String Build()
+		{
+			IEnumerable<String> controls = _requiredDefaultControls
+				.Select(c => AvailableDefaultControlTemplates[c]);
 
-				return String.Join("\n\n", controls)
-					.Replace(STRING_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(String).FullName])
-					.Replace(BOOLEAN_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(Boolean).FullName]);
-			}
+			return String.Join("\n\n", controls)
+				.Replace(STRING_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(String).FullName])
+				.Replace(BOOLEAN_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(Boolean).FullName]);
+		}
 
-            public override String ToString()
-            {
-				return Build();
-            }
-        }
+		public override String ToString()
+		{
+			return Build();
+		}
 	}
 }
