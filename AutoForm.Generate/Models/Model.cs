@@ -17,9 +17,9 @@ namespace AutoForm.Generate.Models
 			Properties = properties;
 			AttributesProviderIdentifier = attributesProvider;
 
-			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Name), Name),
-												Json.KeyValuePair(nameof(AttributesProviderIdentifier), AttributesProviderIdentifier),
-												Json.KeyValuePair(nameof(Properties), Properties));
+			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Name), Name.ToJson()),
+												Json.KeyValuePair(nameof(AttributesProviderIdentifier), AttributesProviderIdentifier.ToJson()),
+												Json.KeyValuePair(nameof(Properties), Properties.Select(p => p.ToJson())));
 		}
 
 		public static Model Create(TypeIdentifier identifier, PropertyIdentifier attributesProvider)
@@ -56,7 +56,11 @@ namespace AutoForm.Generate.Models
 
 		public override String ToString()
 		{
-			return _stringRepresentation ?? String.Empty;
+			return ToJson();
+		}
+		public String ToJson()
+		{
+			return _stringRepresentation ?? "null";
 		}
 
 		public static Boolean operator ==(Model left, Model right)

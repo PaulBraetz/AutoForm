@@ -70,9 +70,13 @@ namespace AutoForm.Generate.Models
 		{
 			return new IdentifierPart(PartKind.Comma);
 		}
-		public override String ToString()
+		public String ToJson()
 		{
 			return _stringRepresentation ?? String.Empty;
+		}
+		public override String ToString()
+		{
+			return ToJson();
 		}
 	}
 }

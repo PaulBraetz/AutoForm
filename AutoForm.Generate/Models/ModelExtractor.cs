@@ -211,8 +211,8 @@ namespace AutoForm.Generate.Models
 
 			Boolean equals(AttributeSyntax attributeSyntax)
 			{
-				return attributeSyntax.Name.ToString() == attributeIdentifier.ToEscapedString() ||
-					usingAutoForm && attributeSyntax.Name.ToString() == attributeIdentifier.Name.ToEscapedString();
+				return attributeSyntax.Name.ToString() == attributeIdentifier.ToString() ||
+					usingAutoForm && attributeSyntax.Name.ToString() == attributeIdentifier.Name.ToString();
 
 			}
 		}

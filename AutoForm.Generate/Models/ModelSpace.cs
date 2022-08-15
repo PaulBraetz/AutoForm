@@ -12,9 +12,9 @@ namespace AutoForm.Generate.Models
 
 		private ModelSpace(IEnumerable<Model> models, IEnumerable<Control> controls, IEnumerable<Template> templates)
 		{
-			models.ThrowOnDuplicate(TypeIdentifierName.AutoControlModelAttribute.ToEscapedString());
-			controls.ThrowOnDuplicate(TypeIdentifierName.AutoControlAttribute.ToEscapedString());
-			templates.ThrowOnDuplicate(TypeIdentifierName.AutoControlTemplateAttribute.ToEscapedString());
+			models.ThrowOnDuplicate(TypeIdentifierName.AutoControlModelAttribute.ToString());
+			controls.ThrowOnDuplicate(TypeIdentifierName.AutoControlAttribute.ToString());
+			templates.ThrowOnDuplicate(TypeIdentifierName.AutoControlTemplateAttribute.ToString());
 
 			Models = models;
 			Controls = controls;
@@ -32,7 +32,12 @@ namespace AutoForm.Generate.Models
 
 		public override String ToString()
 		{
-			return _stringRepresentation ?? String.Empty;
+			return ToJson();
+		}
+
+		public String ToJson()
+		{
+			return _stringRepresentation ?? "null";
 		}
 		public override Boolean Equals(Object obj)
 		{

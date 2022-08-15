@@ -114,14 +114,14 @@ namespace AutoForm.Generate.Blazor.Templates
 		}
 		private IEnumerable<String> GetRequiredDefaultControlTypes()
 		{
-			return DefaultControlsTemplate.AvailableDefaultControls.Keys.Except(_modelSpace.Controls.SelectMany(c => c.ModelIdentifiers).Select(i => i.ToEscapedString()));
+			return DefaultControlsTemplate.AvailableDefaultControls.Keys.Except(_modelSpace.Controls.SelectMany(c => c.ModelIdentifiers).Select(i => i.ToString()));
 		}
 		private IEnumerable<ModelControlPairTemplate> GetModelControlPairTemplates(Control control)
 		{
 			return control.ModelIdentifiers
 					.Select(t => new ModelControlPairTemplate()
-						.WithModelType(t.ToEscapedString())
-						.WithControlType(control.Identifier.ToEscapedString()));
+						.WithModelType(t.ToString())
+						.WithControlType(control.Identifier.ToString()));
 		}
 
 		private IEnumerable<ControlTemplate> GetControlTemplates()
@@ -158,7 +158,7 @@ namespace AutoForm.Generate.Blazor.Templates
 			var subControlPropertyTemplates = GetSubControlPropertyTemplates(model);
 
 			return new ControlTemplate()
-				.WithModelType(model.Name.ToEscapedString())
+				.WithModelType(model.Name.ToString())
 				.WithControlTypeIdentifierTemplate(controlTypeIdentifierTemplate)
 				.WithSubControlTemplates(subControlTemplates)
 				.WithSubControlPropertyTemplates(subControlPropertyTemplates);
@@ -173,13 +173,13 @@ namespace AutoForm.Generate.Blazor.Templates
 
 			return new SubControlPropertyTemplate()
 				.WithSubControlPropertyIdentifierTemplate(subControlPropertyIdentifierTemplate)
-				.WithPropertyIdentifier(property.Identifier.ToEscapedString())
-				.WithPropertyType(property.Type.ToEscapedString());
+				.WithPropertyIdentifier(property.Identifier.ToString())
+				.WithPropertyType(property.Type.ToString());
 		}
 		private ControlTypeIdentifierTemplate GetControlTypeIdentifierTemplate(Model model)
 		{
 			return new ControlTypeIdentifierTemplate()
-				.WithModelType(model.Name.ToEscapedString());
+				.WithModelType(model.Name.ToString());
 		}
 		private IEnumerable<SubControlTemplate> GetSubControlTemplates(Model model, IEnumerable<Control> controls)
 		{
@@ -199,7 +199,7 @@ namespace AutoForm.Generate.Blazor.Templates
 
 			if (exceptions.Any())
 			{
-				var message = $"Error while generating control for {model.Name.ToEscapedString()}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
+				var message = $"Error while generating control for {model.Name.ToString()}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
 				throw new AggregateException(message, exceptions);
 			}
 
@@ -207,9 +207,9 @@ namespace AutoForm.Generate.Blazor.Templates
 		}
 		private SubControlTemplate GetSubControlTemplate(Model model, Property property, IEnumerable<Control> controls)
 		{
-			var controlType = String.IsNullOrWhiteSpace(property.Control.ToEscapedString()) ? controls.SingleOrDefault(c => c.ModelIdentifiers.Contains(property.Type)).Identifier.ToEscapedString() : property.Control.ToEscapedString();
+			var controlType = String.IsNullOrWhiteSpace(property.Control.ToString()) ? controls.SingleOrDefault(c => c.ModelIdentifiers.Contains(property.Type)).Identifier.ToString() : property.Control.ToString();
 
-			if (controlType == null && !DefaultControlsTemplate.AvailableDefaultControls.TryGetValue(property.Type.ToEscapedString(), out controlType))
+			if (controlType == null && !DefaultControlsTemplate.AvailableDefaultControls.TryGetValue(property.Type.ToString(), out controlType))
 			{
 				throw new Exception($"Unable to locate control for {property.Identifier}. Make sure a control for {property.Type} is registered.");
 			}
@@ -218,9 +218,9 @@ namespace AutoForm.Generate.Blazor.Templates
 			var subControlPropertyIdentifierTemplate = GetSubControlPropertyIdentifierTemplate(property);
 
 			return new SubControlTemplate()
-				.WithModelType(model.Name.ToEscapedString())
-				.WithPropertyIdentifier(property.Identifier.ToEscapedString())
-				.WithPropertyType(property.Type.ToEscapedString())
+				.WithModelType(model.Name.ToString())
+				.WithPropertyIdentifier(property.Identifier.ToString())
+				.WithPropertyType(property.Type.ToString())
 				.WithSubControlType(controlType)
 				.WithSubControlPassAttributesTemplate(subControlPassAttributesTemplate)
 				.WithSubControlPropertyIdentifierTemplate(subControlPropertyIdentifierTemplate);
@@ -229,13 +229,13 @@ namespace AutoForm.Generate.Blazor.Templates
 		private SubControlPassAttributesTemplate GetSubControlPassAttributesTemplate(Model model)
 		{
 			return new SubControlPassAttributesTemplate()
-				.WithAttributesProviderIdentifier(model.AttributesProviderIdentifier.ToEscapedString());
+				.WithAttributesProviderIdentifier(model.AttributesProviderIdentifier.ToString());
 		}
 
 		private SubControlPropertyIdentifierTemplate GetSubControlPropertyIdentifierTemplate(Property property)
 		{
 			return new SubControlPropertyIdentifierTemplate()
-				.WithPropertyIdentifier(property.Identifier.ToEscapedString());
+				.WithPropertyIdentifier(property.Identifier.ToString());
 		}
 
 		private IEnumerable<Control> GetConcatenatedControlModels()

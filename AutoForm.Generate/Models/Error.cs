@@ -24,11 +24,14 @@ namespace AutoForm.Generate.Models
 		{
 			return new Error(Exceptions.Append(exception));
 		}
+		public String ToJson()
+		{
+			return _stringRepresentation ?? "null";
+		}
 		public override String ToString()
 		{
-			return _stringRepresentation;
+			return ToJson();
 		}
-
 		public override Boolean Equals(Object obj)
 		{
 			return obj is Error error && Equals(error);

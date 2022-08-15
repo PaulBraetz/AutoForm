@@ -12,7 +12,7 @@ namespace AutoForm.Generate.Models
 
 		private Control(TypeIdentifier identifier, IEnumerable<TypeIdentifier> modelIdentifiers)
 		{
-			modelIdentifiers.ThrowOnDuplicate(TypeIdentifierName.AutoControlAttribute.ToEscapedString());
+			modelIdentifiers.ThrowOnDuplicate(TypeIdentifierName.AutoControlAttribute.ToString());
 
 			Identifier = identifier;
 			ModelIdentifiers = modelIdentifiers;
@@ -49,9 +49,13 @@ namespace AutoForm.Generate.Models
 			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
 		}
 
+		public String ToJson()
+		{
+			return _stringRepresentation ?? "null";
+		}
 		public override String ToString()
 		{
-			return _stringRepresentation ?? String.Empty;
+			return ToJson();
 		}
 
 		public static Boolean operator ==(Control left, Control right)

@@ -12,12 +12,12 @@ namespace AutoForm.Generate.Models
 		{
 			Name = name;
 
-			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Name), Name));
+			_stringRepresentation = Name;
 		}
 
-		public String ToEscapedString()
+		public override String ToString()
 		{
-			return _stringRepresentation?.AsSpan(1, _stringRepresentation.Length - 2).ToString() ?? String.Empty;
+			return _stringRepresentation ?? String.Empty;
 		}
 
 		public static PropertyIdentifier Create(String name)
@@ -40,9 +40,9 @@ namespace AutoForm.Generate.Models
 			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
 		}
 
-		public override String ToString()
+		public String ToJson()
 		{
-			return _stringRepresentation ?? "null";
+			return Json.Value(_stringRepresentation);
 		}
 
 		public static Boolean operator ==(PropertyIdentifier left, PropertyIdentifier right)

@@ -21,7 +21,7 @@ namespace AutoForm.Generate.Models
 		{
 			Parts = parts;
 
-			_stringRepresentation = Json.Value(String.Concat(Parts));
+			_stringRepresentation = String.Concat(Parts);
 		}
 		public static TypeIdentifierName Create()
 		{
@@ -105,14 +105,14 @@ namespace AutoForm.Generate.Models
 			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
 		}
 
-		public String ToEscapedString()
-		{
-			return _stringRepresentation?.AsSpan(1, _stringRepresentation.Length - 2).ToString() ?? String.Empty;
-		}
-
 		public override String ToString()
 		{
 			return _stringRepresentation ?? String.Empty;
+		}
+
+		public String ToJson()
+		{
+			return Json.Value(_stringRepresentation);
 		}
 
 		public static Boolean operator ==(TypeIdentifierName left, TypeIdentifierName right)

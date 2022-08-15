@@ -12,7 +12,7 @@ namespace AutoForm.Generate.Models
 
 		private Template(TypeIdentifier identifier, IEnumerable<TypeIdentifier> modelIdentifiers)
 		{
-			modelIdentifiers.ThrowOnDuplicate(TypeIdentifierName.AutoControlTemplateAttribute.ToEscapedString());
+			modelIdentifiers.ThrowOnDuplicate(TypeIdentifierName.AutoControlTemplateAttribute.ToString());
 
 			Identifier = identifier;
 			ModelIdentifiers = modelIdentifiers;
@@ -48,8 +48,11 @@ namespace AutoForm.Generate.Models
 		{
 			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
 		}
-
 		public override String ToString()
+		{
+			return ToJson();
+		}
+		public String ToJson()
 		{
 			return _stringRepresentation;
 		}

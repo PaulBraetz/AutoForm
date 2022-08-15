@@ -24,7 +24,7 @@ namespace AutoForm.Generate.Models
 
 			String namespaceString = String.Concat(Namespace.Parts);
 			String nameString = String.Concat(Name.Parts);
-			_stringRepresentation = Json.Value(String.IsNullOrEmpty(namespaceString) ? String.IsNullOrEmpty(nameString) ? "null" : nameString.ToString() : $"{namespaceString}.{nameString}");
+			_stringRepresentation = String.IsNullOrEmpty(namespaceString) ? String.IsNullOrEmpty(nameString) ? "null" : nameString.ToString() : $"{namespaceString}.{nameString}";
 		}
 
 		public static TypeIdentifier Create(TypeIdentifierName name, Namespace @namespace)
@@ -32,14 +32,14 @@ namespace AutoForm.Generate.Models
 			return new TypeIdentifier(name, @namespace);
 		}
 
-		public String ToEscapedString()
-		{
-			return _stringRepresentation?.AsSpan(1, _stringRepresentation.Length - 2).ToString() ?? String.Empty;
-		}
-
 		public override String ToString()
 		{
-			return _stringRepresentation ?? "null";
+			return _stringRepresentation ?? String.Empty;
+		}
+
+		public String ToJson()
+		{
+			return Json.Value(_stringRepresentation);
 		}
 
 		public override Boolean Equals(Object obj)

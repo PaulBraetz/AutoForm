@@ -45,7 +45,11 @@ namespace AutoForm.Generate.Models
 
 		public override String ToString()
 		{
-			return _stringRepresentation ?? String.Empty;
+			return ToJson();
+		}
+		public String ToJson()
+		{
+			return _stringRepresentation ?? "null";
 		}
 
 		public static Boolean operator ==(Property left, Property right)

@@ -9,7 +9,7 @@ namespace AutoForm.Generate.Models
 		private Namespace(IEnumerable<IdentifierPart> parts)
 		{
 			Parts = parts;
-			_stringRepresentation = Json.Value(String.Concat(Parts));
+			_stringRepresentation = String.Concat(Parts);
 		}
 
 		public static readonly Namespace Attributes = Create().Append("AutoForm").Append("Attributes");
@@ -95,6 +95,10 @@ namespace AutoForm.Generate.Models
 		public override String ToString()
 		{
 			return _stringRepresentation ?? String.Empty;
+		}
+		public String ToJson()
+		{
+			return Json.Value(_stringRepresentation);
 		}
 
 		public override Boolean Equals(Object obj)
