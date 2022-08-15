@@ -7,10 +7,10 @@ namespace AutoForm
 		static Controls()
 		{
 			Type? type = Assembly.GetEntryAssembly()?
-				.GetType("AutoForm.Generate.Controls");
+				.GetType("AutoForm.Generate.AutoFormControls_Blazor");
 			if (type == null)
 			{
-				throw new Exception("Unable to locate AutoForm.Generate.Controls. Make sure that the AutoForm.Generate.Generator has run.");
+				throw new Exception("Unable to locate AutoForm.Generate.AutoFormControls_Blazor. Make sure that the AutoForm.Generate.Generator has run.");
 			}
 
 			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(type.TypeHandle);

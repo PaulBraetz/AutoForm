@@ -3,62 +3,68 @@ using System.Collections.Generic;
 
 namespace AutoForm.Generate.Models
 {
-    public readonly struct TypeIdentifier : IEquatable<TypeIdentifier>
-    {
-        public readonly TypeIdentifierName Name;
-        public readonly Namespace Namespace;
-        private readonly String _stringRepresentation;
+	public readonly struct TypeIdentifier : IEquatable<TypeIdentifier>
+	{
+		public static readonly TypeIdentifier AutoControlAttribute = Create(TypeIdentifierName.AutoControlAttribute, Namespace.Attributes);
+		public static readonly TypeIdentifier AutoControlAttributesProviderAttribute = Create(TypeIdentifierName.AutoControlAttributesProviderAttribute, Namespace.Attributes);
+		public static readonly TypeIdentifier AutoControlModelAttribute = Create(TypeIdentifierName.AutoControlModelAttribute, Namespace.Attributes);
+		public static readonly TypeIdentifier AutoControlPropertyControlAttribute = Create(TypeIdentifierName.AutoControlPropertyControlAttribute, Namespace.Attributes);
+		public static readonly TypeIdentifier AutoControlPropertyExcludeAttribute = Create(TypeIdentifierName.AutoControlPropertyExcludeAttribute, Namespace.Attributes);
+		public static readonly TypeIdentifier AutoControlPropertyOrderAttribute = Create(TypeIdentifierName.AutoControlPropertyOrderAttribute, Namespace.Attributes);
+		public static readonly TypeIdentifier AutoControlTemplateAttribute = Create(TypeIdentifierName.AutoControlTemplateAttribute, Namespace.Attributes);
 
-        private TypeIdentifier(TypeIdentifierName name, Namespace @namespace)
-        {
-            Name = name;
-            Namespace = @namespace;
+		public readonly TypeIdentifierName Name;
+		public readonly Namespace Namespace;
+		private readonly String _stringRepresentation;
 
-            String namespaceString = String.Concat(Namespace.Parts);
-            String nameString = String.Concat(Name.Parts);
-            _stringRepresentation = Json.Value(String.IsNullOrEmpty(namespaceString) ? String.IsNullOrEmpty(nameString) ? "null" : nameString.ToString() : $"{namespaceString}.{nameString}");
-        }
+		private TypeIdentifier(TypeIdentifierName name, Namespace @namespace)
+		{
+			Name = name;
+			Namespace = @namespace;
 
-        public static TypeIdentifier Create(TypeIdentifierName name, Namespace @namespace)
-        {
-            return new TypeIdentifier(name, @namespace);
-        }
+			String namespaceString = String.Concat(Namespace.Parts);
+			String nameString = String.Concat(Name.Parts);
+			_stringRepresentation = Json.Value(String.IsNullOrEmpty(namespaceString) ? String.IsNullOrEmpty(nameString) ? "null" : nameString.ToString() : $"{namespaceString}.{nameString}");
+		}
 
-        public String ToEscapedString()
-        {
-            String value = ToString();
+		public static TypeIdentifier Create(TypeIdentifierName name, Namespace @namespace)
+		{
+			return new TypeIdentifier(name, @namespace);
+		}
 
-            return value == "\"null\""?String.Empty: value.AsSpan(1, value.Length - 2).ToString();
-        }
+		public String ToEscapedString()
+		{
+			return _stringRepresentation?.AsSpan(1, _stringRepresentation.Length - 2).ToString() ?? String.Empty;
+		}
 
-        public override String ToString()
-        {
-            return _stringRepresentation ?? String.Empty;
-        }
+		public override String ToString()
+		{
+			return _stringRepresentation ?? "null";
+		}
 
-        public override Boolean Equals(Object obj)
-        {
-            return obj is TypeIdentifier identifier && Equals(identifier);
-        }
+		public override Boolean Equals(Object obj)
+		{
+			return obj is TypeIdentifier identifier && Equals(identifier);
+		}
 
-        public Boolean Equals(TypeIdentifier other)
-        {
-            return _stringRepresentation == other._stringRepresentation;
-        }
+		public Boolean Equals(TypeIdentifier other)
+		{
+			return _stringRepresentation == other._stringRepresentation;
+		}
 
-        public override Int32 GetHashCode()
-        {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
-        }
+		public override Int32 GetHashCode()
+		{
+			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
+		}
 
-        public static Boolean operator ==(TypeIdentifier left, TypeIdentifier right)
-        {
-            return left.Equals(right);
-        }
+		public static Boolean operator ==(TypeIdentifier left, TypeIdentifier right)
+		{
+			return left.Equals(right);
+		}
 
-        public static Boolean operator !=(TypeIdentifier left, TypeIdentifier right)
-        {
-            return !(left == right);
-        }
-    }
+		public static Boolean operator !=(TypeIdentifier left, TypeIdentifier right)
+		{
+			return !(left == right);
+		}
+	}
 }

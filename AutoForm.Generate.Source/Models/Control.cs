@@ -12,6 +12,8 @@ namespace AutoForm.Generate.Models
 
 		private Control(TypeIdentifier identifier, IEnumerable<TypeIdentifier> modelIdentifiers)
 		{
+			modelIdentifiers.ThrowOnDuplicate(TypeIdentifierName.AutoControlAttribute.ToEscapedString());
+
 			Identifier = identifier;
 			ModelIdentifiers = modelIdentifiers;
 
@@ -24,7 +26,7 @@ namespace AutoForm.Generate.Models
 			return new Control(identifier, Array.Empty<TypeIdentifier>());
 		}
 		public Control Append(TypeIdentifier modelIdentifier)
-        {
+		{
 			return new Control(Identifier, ModelIdentifiers.Append(modelIdentifier));
 		}
 		public Control AppendRange(IEnumerable<TypeIdentifier> modelIdentifiers)

@@ -12,6 +12,8 @@ namespace AutoForm.Generate.Models
 
 		private Template(TypeIdentifier identifier, IEnumerable<TypeIdentifier> modelIdentifiers)
 		{
+			modelIdentifiers.ThrowOnDuplicate(TypeIdentifierName.AutoControlTemplateAttribute.ToEscapedString());
+
 			Identifier = identifier;
 			ModelIdentifiers = modelIdentifiers;
 

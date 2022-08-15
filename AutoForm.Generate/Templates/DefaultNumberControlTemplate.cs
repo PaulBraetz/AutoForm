@@ -1,20 +1,19 @@
 ﻿using System;
-using static AutoForm.Generate.Blazor.BlazorSourceGenerator;
 
 namespace AutoForm.Generate.Blazor.Templates
 {
-    internal readonly partial struct SourceFactory
-    {
-        private readonly struct DefaultNumberControlTemplate
-        {
-            private DefaultNumberControlTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate, String modelType)
-            {
-                _controlTypeIdentifierTemplate = controlTypeIdentifierTemplate;
-                _modelType = modelType;
-            }
+	internal sealed partial class SourceFactory
+	{
+		private readonly struct DefaultNumberControlTemplate
+		{
+			private DefaultNumberControlTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate, String modelType)
+			{
+				_controlTypeIdentifierTemplate = controlTypeIdentifierTemplate;
+				_modelType = modelType;
+			}
 
-            private const String TEMPLATE =
-    @"		///<summary>
+			private const String TEMPLATE =
+	@"		///<summary>
 		///Default control for System." + MODEL_TYPE + @"
 		///</summary>
 		private sealed class " + CONTROL_TYPE_IDENTIFIER + @" : __ControlBase<global::" + MODEL_TYPE + @">
@@ -46,31 +45,31 @@ namespace AutoForm.Generate.Blazor.Templates
 			#pragma warning restore 1998
 		}";
 
-            private readonly ControlTypeIdentifierTemplate _controlTypeIdentifierTemplate;
-            private readonly String _modelType;
+			private readonly ControlTypeIdentifierTemplate _controlTypeIdentifierTemplate;
+			private readonly String _modelType;
 
-            public DefaultNumberControlTemplate WithControlTypeIdentifierTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
-            {
-                return new DefaultNumberControlTemplate(controlTypeIdentifierTemplate, _modelType);
-            }
-            public DefaultNumberControlTemplate WithModelType(String modelType)
-            {
-                return new DefaultNumberControlTemplate(_controlTypeIdentifierTemplate, modelType);
-            }
+			public DefaultNumberControlTemplate WithControlTypeIdentifierTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
+			{
+				return new DefaultNumberControlTemplate(controlTypeIdentifierTemplate, _modelType);
+			}
+			public DefaultNumberControlTemplate WithModelType(String modelType)
+			{
+				return new DefaultNumberControlTemplate(_controlTypeIdentifierTemplate, modelType);
+			}
 
-            public String Build()
-            {
-                String controlTypeIdentifier = _controlTypeIdentifierTemplate.Build();
+			public String Build()
+			{
+				String controlTypeIdentifier = _controlTypeIdentifierTemplate.Build();
 
-                return TEMPLATE
-                    .Replace(MODEL_TYPE, _modelType)
-                    .Replace(CONTROL_TYPE_IDENTIFIER, controlTypeIdentifier);
-            }
+				return TEMPLATE
+					.Replace(MODEL_TYPE, _modelType)
+					.Replace(CONTROL_TYPE_IDENTIFIER, controlTypeIdentifier);
+			}
 
-            public override String ToString()
-            {
-                return Build();
-            }
-        }
-    }
+			public override String ToString()
+			{
+				return Build();
+			}
+		}
+	}
 }

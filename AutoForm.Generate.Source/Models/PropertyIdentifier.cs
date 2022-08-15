@@ -15,6 +15,11 @@ namespace AutoForm.Generate.Models
 			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Name), Name));
 		}
 
+		public String ToEscapedString()
+		{
+			return _stringRepresentation?.AsSpan(1, _stringRepresentation.Length - 2).ToString() ?? String.Empty;
+		}
+
 		public static PropertyIdentifier Create(String name)
 		{
 			return new PropertyIdentifier(name);
@@ -37,7 +42,7 @@ namespace AutoForm.Generate.Models
 
 		public override String ToString()
 		{
-			return _stringRepresentation ?? String.Empty;
+			return _stringRepresentation ?? "null";
 		}
 
 		public static Boolean operator ==(PropertyIdentifier left, PropertyIdentifier right)

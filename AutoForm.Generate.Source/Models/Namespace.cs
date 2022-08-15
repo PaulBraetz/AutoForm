@@ -12,6 +12,9 @@ namespace AutoForm.Generate.Models
 			_stringRepresentation = Json.Value(String.Concat(Parts));
 		}
 
+		public static readonly Namespace Attributes = Create().Append("AutoForm").Append("Attributes");
+		public static readonly Namespace Generate = Create().Append("AutoForm").Append("Generate");
+
 		public readonly IEnumerable<IdentifierPart> Parts;
 		private readonly String _stringRepresentation;
 
@@ -29,7 +32,7 @@ namespace AutoForm.Generate.Models
 			IEnumerable<IdentifierPart> parts = GetNextParts()
 				.Append(IdentifierPart.Name(name));
 
-			return  new Namespace(parts);
+			return new Namespace(parts);
 		}
 		public Namespace Prepend(String name)
 		{
@@ -56,7 +59,7 @@ namespace AutoForm.Generate.Models
 		public Namespace AppendRange(IEnumerable<String> names)
 		{
 			Namespace @namespace = this;
-			foreach(String name in names)
+			foreach (String name in names)
 			{
 				@namespace = @namespace.Append(name);
 			}
@@ -73,7 +76,7 @@ namespace AutoForm.Generate.Models
 			Boolean prependSeparator = lastKind == IdentifierPart.PartKind.Name;
 
 			return prependSeparator ?
-				parts.Append(IdentifierPart.Period()) : 
+				parts.Append(IdentifierPart.Period()) :
 				parts;
 		}
 		private IEnumerable<IdentifierPart> GetPreviousParts()

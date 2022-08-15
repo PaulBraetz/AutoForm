@@ -1,24 +1,14 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AutoForm.Generate.Models
 {
 	internal readonly struct ModelExtractor
 	{
-		private const string CONTROL = "AutoControl";
-		private const string ATTRIBUTES_PROVIDER = "AutoControlAttributesProvider";
-		private const String MODEL = "AutoControlModel";
-		private const String PROPERTY_CONTROL = "AutoControlPropertyControl";
-		private const String PROPERTY_EXCLUDE = "AutoControlPropertyExclude";
-		private const String PROPERTY_ORDER = "AutoControlPropertyOrder";
-		private const String TEMPLATE = "AutoControlTemplate";
-
 		private readonly Compilation _compilation;
 
 		public ModelExtractor(Compilation compilation)
@@ -86,7 +76,7 @@ namespace AutoForm.Generate.Models
 			IEnumerable<BaseTypeDeclarationSyntax> typeDeclarations = GetTypeDeclarations();
 			foreach (BaseTypeDeclarationSyntax typeDeclaration in typeDeclarations)
 			{
-				if (TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, MODEL, out var _))
+				if (TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.AutoControlModelAttribute, out var _))
 				{
 					yield return typeDeclaration;
 				}
@@ -110,7 +100,7 @@ namespace AutoForm.Generate.Models
 
 			foreach (PropertyDeclarationSyntax propertyDeclaration in propertyDeclarations)
 			{
-				if (TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, ATTRIBUTES_PROVIDER, out var _))
+				if (TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlAttributesProviderAttribute, out var _))
 				{
 					return PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString());
 				}
@@ -120,7 +110,7 @@ namespace AutoForm.Generate.Models
 		}
 		private Property GetProperty(PropertyDeclarationSyntax propertyDeclaration)
 		{
-			TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, PROPERTY_CONTROL, out IEnumerable<AttributeSyntax> controlAttributes);
+			TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyControlAttribute, out IEnumerable<AttributeSyntax> controlAttributes);
 			TypeSyntax controlTypeSyntax = controlAttributes.SingleOrDefault()?.DescendantNodes().OfType<TypeOfExpressionSyntax>().Single().Type;
 			TypeIdentifier control = controlTypeSyntax != null ? GetTypeIdentifier(controlTypeSyntax) : default;
 
@@ -128,7 +118,7 @@ namespace AutoForm.Generate.Models
 
 			TypeIdentifier type = GetTypeIdentifier(propertyDeclaration);
 
-			TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, PROPERTY_ORDER, out IEnumerable<AttributeSyntax> orderAttributes);
+			TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyOrderAttribute, out IEnumerable<AttributeSyntax> orderAttributes);
 			String orderString = orderAttributes.SingleOrDefault()?.DescendantNodes().OfType<AttributeArgumentSyntax>().Single().ToString() ?? "0";
 			Int32 order = Int32.Parse(orderString);
 
@@ -149,8 +139,8 @@ namespace AutoForm.Generate.Models
 
 			foreach (var propertyDeclaration in propertyDeclarations)
 			{
-				if (!TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, PROPERTY_EXCLUDE, out var _) &&
-					!TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, ATTRIBUTES_PROVIDER, out var _))
+				if (!TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyExcludeAttribute, out var _) &&
+					!TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlAttributesProviderAttribute, out var _))
 				{
 					yield return propertyDeclaration;
 				}
@@ -160,8 +150,8 @@ namespace AutoForm.Generate.Models
 		{
 			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
 
-			TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, CONTROL, out IEnumerable<AttributeSyntax> attributes);
-			IEnumerable< TypeSyntax> modelTypeSyntaxes = attributes.SelectMany(a=>a.DescendantNodes()).OfType<TypeOfExpressionSyntax>().Select(e=>e.Type);
+			TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.AutoControlAttribute, out IEnumerable<AttributeSyntax> attributes);
+			IEnumerable<TypeSyntax> modelTypeSyntaxes = attributes.SelectMany(a => a.DescendantNodes()).OfType<TypeOfExpressionSyntax>().Select(e => e.Type);
 			IEnumerable<TypeIdentifier> modelTypes = modelTypeSyntaxes.Select(GetTypeIdentifier);
 
 			var template = Control.Create(identifier)
@@ -175,7 +165,7 @@ namespace AutoForm.Generate.Models
 
 			foreach (var declaration in declarations)
 			{
-				if (TryGetAttributes(declaration.AttributeLists, declaration, CONTROL, out var _))
+				if (TryGetAttributes(declaration.AttributeLists, declaration, TypeIdentifier.AutoControlAttribute, out var _))
 				{
 					yield return declaration;
 				}
@@ -185,7 +175,7 @@ namespace AutoForm.Generate.Models
 		{
 			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
 
-			TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TEMPLATE, out IEnumerable<AttributeSyntax> attributes);
+			TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.AutoControlTemplateAttribute, out IEnumerable<AttributeSyntax> attributes);
 			IEnumerable<TypeSyntax> modelTypeSyntaxes = attributes.SelectMany(a => a.DescendantNodes()).OfType<TypeOfExpressionSyntax>().Select(e => e.Type);
 			IEnumerable<TypeIdentifier> modelTypes = modelTypeSyntaxes.Select(GetTypeIdentifier);
 
@@ -199,7 +189,7 @@ namespace AutoForm.Generate.Models
 
 			foreach (var declaration in declarations)
 			{
-				if (TryGetAttributes(declaration.AttributeLists, declaration, TEMPLATE, out var _))
+				if (TryGetAttributes(declaration.AttributeLists, declaration, TypeIdentifier.AutoControlTemplateAttribute, out var _))
 				{
 					yield return declaration;
 				}
@@ -210,24 +200,19 @@ namespace AutoForm.Generate.Models
 			var declarations = _compilation.SyntaxTrees.SelectMany(t => t.GetRoot().DescendantNodes().OfType<TypeDeclarationSyntax>());
 			return declarations;
 		}
-		private Boolean TryGetAttributes(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, String attributeName, out IEnumerable<AttributeSyntax> attributes)
+		private Boolean TryGetAttributes(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, TypeIdentifier attributeIdentifier, out IEnumerable<AttributeSyntax> attributes)
 		{
 			IEnumerable<Namespace> availableUsings = GetAvailableUsings(node);
-			Namespace autoFormNamespace = Namespace.Create().Append("AutoForm").Append("Attributes");
-			Boolean usingAutoForm = availableUsings.Contains(autoFormNamespace);
-
-			TypeIdentifier attributeIdentifier = TypeIdentifier.Create(TypeIdentifierName.Create().AppendNamePart(attributeName), Namespace.Create());
-
-			TypeIdentifier qualifiedAttributeIdentifier = TypeIdentifier.Create(TypeIdentifierName.Create().AppendNamePart(attributeName), autoFormNamespace);
+			Boolean usingAutoForm = availableUsings.Contains(Namespace.Attributes);
 
 			attributes = attributeLists.SelectMany(al => al.Attributes).Where(a => equals(a));
 
 			return attributes.Any();
 
 			Boolean equals(AttributeSyntax attributeSyntax)
-            {
-				return attributeSyntax.Name.ToString() == qualifiedAttributeIdentifier.ToEscapedString() ||
-					(usingAutoForm && attributeSyntax.Name.ToString() == attributeIdentifier.ToEscapedString());
+			{
+				return attributeSyntax.Name.ToString() == attributeIdentifier.ToEscapedString() ||
+					usingAutoForm && attributeSyntax.Name.ToString() == attributeIdentifier.Name.ToEscapedString();
 
 			}
 		}
@@ -308,11 +293,11 @@ namespace AutoForm.Generate.Models
 		{
 			var result = TypeIdentifierName.Create();
 
-			if(symbol.ContainingType != null)
-            {
+			if (symbol.ContainingType != null)
+			{
 				TypeIdentifierName containingType = GetTypeIdentifierName(symbol.ContainingType);
 				result = result.AppendTypePart(containingType);
-            }
+			}
 
 			Boolean flag = false;
 			if (symbol is IArrayTypeSymbol arraySymbol)

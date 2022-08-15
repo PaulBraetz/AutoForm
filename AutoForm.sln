@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm", "AutoForm\AutoFo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate", "AutoForm.Generate.Source\AutoForm.Generate.csproj", "{431F69E6-13FF-4191-8A09-23A374DAE9FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugGenerator", "ConsoleGenerator\DebugGenerator.csproj", "{E140BC08-ABFD-40DF-90CC-EC7BD76A685E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate.Blazor.Generator", "AutoForm.Generate.Blazor.Generator\AutoForm.Generate.Blazor.Generator.csproj", "{FD8C0717-3BA9-463C-B0AB-F2872D55FAF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate.Debug.Generator", "AutoForm.Generate.Debug.Generator\AutoForm.Generate.Debug.Generator.csproj", "{4896F69F-E304-436C-B254-25EA48D842E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoForm.Generate.Debug", "AutoForm.Generate.Debug\AutoForm.Generate.Debug.csproj", "{1BC35948-2DF4-42F5-A365-90FD7C03D16D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoForm.Generate.Aggregate.Generator", "AutoForm.Generate.Aggregate.Generator\AutoForm.Generate.Aggregate.Generator.csproj", "{903D81B8-6C2A-4E4E-9B18-5F3289B4CF14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +41,22 @@ Global
 		{431F69E6-13FF-4191-8A09-23A374DAE9FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{431F69E6-13FF-4191-8A09-23A374DAE9FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{431F69E6-13FF-4191-8A09-23A374DAE9FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E140BC08-ABFD-40DF-90CC-EC7BD76A685E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E140BC08-ABFD-40DF-90CC-EC7BD76A685E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E140BC08-ABFD-40DF-90CC-EC7BD76A685E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E140BC08-ABFD-40DF-90CC-EC7BD76A685E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD8C0717-3BA9-463C-B0AB-F2872D55FAF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD8C0717-3BA9-463C-B0AB-F2872D55FAF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD8C0717-3BA9-463C-B0AB-F2872D55FAF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD8C0717-3BA9-463C-B0AB-F2872D55FAF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4896F69F-E304-436C-B254-25EA48D842E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4896F69F-E304-436C-B254-25EA48D842E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4896F69F-E304-436C-B254-25EA48D842E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4896F69F-E304-436C-B254-25EA48D842E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BC35948-2DF4-42F5-A365-90FD7C03D16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BC35948-2DF4-42F5-A365-90FD7C03D16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BC35948-2DF4-42F5-A365-90FD7C03D16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BC35948-2DF4-42F5-A365-90FD7C03D16D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{903D81B8-6C2A-4E4E-9B18-5F3289B4CF14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{903D81B8-6C2A-4E4E-9B18-5F3289B4CF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{903D81B8-6C2A-4E4E-9B18-5F3289B4CF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{903D81B8-6C2A-4E4E-9B18-5F3289B4CF14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

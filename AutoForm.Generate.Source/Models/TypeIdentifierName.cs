@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AutoForm.Generate.Models
 {
 	public readonly struct TypeIdentifierName : IEquatable<TypeIdentifierName>
 	{
+		public static readonly TypeIdentifierName AutoControlAttribute = Create().AppendNamePart("AutoControl");
+		public static readonly TypeIdentifierName AutoControlAttributesProviderAttribute = Create().AppendNamePart("AutoControlAttributesProvider");
+		public static readonly TypeIdentifierName AutoControlModelAttribute = Create().AppendNamePart("AutoControlModel");
+		public static readonly TypeIdentifierName AutoControlPropertyControlAttribute = Create().AppendNamePart("AutoControlPropertyControl");
+		public static readonly TypeIdentifierName AutoControlPropertyExcludeAttribute = Create().AppendNamePart("AutoControlPropertyExclude");
+		public static readonly TypeIdentifierName AutoControlPropertyOrderAttribute = Create().AppendNamePart("AutoControlPropertyOrder");
+		public static readonly TypeIdentifierName AutoControlTemplateAttribute = Create().AppendNamePart("AutoControlTemplate");
+
 		public readonly IEnumerable<IdentifierPart> Parts;
 		private readonly String _stringRepresentation;
 
@@ -96,6 +103,11 @@ namespace AutoForm.Generate.Models
 		public override Int32 GetHashCode()
 		{
 			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
+		}
+
+		public String ToEscapedString()
+		{
+			return _stringRepresentation?.AsSpan(1, _stringRepresentation.Length - 2).ToString() ?? String.Empty;
 		}
 
 		public override String ToString()

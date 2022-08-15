@@ -3,8 +3,8 @@ using TestApp.Models;
 
 namespace TestApp.Controls
 {
-    [AutoControlTemplate(typeof(Person.Address))]
-    public partial class AddressControlTemplate
-    {
-    }
+	[AutoControlTemplate(typeof(Person.Address))]
+	public partial class AddressControlTemplate
+	{
+	}
 }
