@@ -5,7 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AutoForm.Generate.Source\AutoForm.Generate.csproj" />
+		<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.csproj" />
 	</ItemGroup>
 
 </Project>

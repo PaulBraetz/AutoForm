@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.csproj" />
 		<ProjectReference Include="..\AutoForm.Generate.Debug\AutoForm.Generate.Debug.csproj" />
-		<ProjectReference Include="..\AutoForm.Generate.Source\AutoForm.Generate.csproj" />
 	</ItemGroup>
 
 </Project>

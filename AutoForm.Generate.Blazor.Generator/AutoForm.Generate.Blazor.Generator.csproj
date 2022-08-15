@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AutoForm.Generate.Source\AutoForm.Generate.csproj" />
-		<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.Blazor.csproj" />
+		<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.csproj" />
+		<ProjectReference Include="..\AutoForm.Generate.Blazor\AutoForm.Generate.Blazor.csproj" />
 	</ItemGroup>
 
 </Project>

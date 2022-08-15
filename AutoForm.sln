@@ -5,11 +5,11 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{42BB8E79-586A-47B9-A516-1EE7F116946E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate.Blazor", "AutoForm.Generate\AutoForm.Generate.Blazor.csproj", "{FC704548-AE94-4115-844A-0AFCBDAB3FA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate.Blazor", "AutoForm.Generate.Blazor\AutoForm.Generate.Blazor.csproj", "{FC704548-AE94-4115-844A-0AFCBDAB3FA0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm", "AutoForm\AutoForm.csproj", "{FD291B60-CBB5-4F4A-AD53-9661E51C7159}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate", "AutoForm.Generate.Source\AutoForm.Generate.csproj", "{431F69E6-13FF-4191-8A09-23A374DAE9FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate", "AutoForm.Generate\AutoForm.Generate.csproj", "{431F69E6-13FF-4191-8A09-23A374DAE9FE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Generate.Blazor.Generator", "AutoForm.Generate.Blazor.Generator\AutoForm.Generate.Blazor.Generator.csproj", "{FD8C0717-3BA9-463C-B0AB-F2872D55FAF9}"
 EndProject
