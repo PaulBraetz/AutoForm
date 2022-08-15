@@ -14,11 +14,18 @@ namespace AutoForm.Generate.Models
 		{
 			Parts = parts;
 
-			_stringRepresentation = String.Concat(parts);
+			_stringRepresentation = Json.Value(String.Concat(Parts));
 		}
 		public static TypeIdentifierName Create()
 		{
 			return new TypeIdentifierName(Array.Empty<IdentifierPart>());
+		}
+		public TypeIdentifierName AppendTypePart(TypeIdentifierName type)
+		{
+			IEnumerable<IdentifierPart> parts = GetNextParts(IdentifierPart.PartKind.Name)
+				.AppendRange(type.Parts);
+
+			return new TypeIdentifierName(parts);
 		}
 		public TypeIdentifierName AppendNamePart(String name)
 		{
@@ -36,15 +43,11 @@ namespace AutoForm.Generate.Models
 
 			for (Int32 i = 0; i < typesArray.Length; i++)
 			{
-				foreach (IdentifierPart part in typesArray[i].Namespace.Parts)
-				{
-					parts = parts.Append(part);
-				}
-				parts = parts.Append(IdentifierPart.Period());
-				foreach (IdentifierPart part in typesArray[i].Name.Parts)
-				{
-					parts = parts.Append(part);
-				}
+				var type = typesArray[i];
+				parts = parts.AppendRange(type.Namespace.Parts)
+					.Append(IdentifierPart.Period())
+					.AppendRange(type.Name.Parts);
+
 				if (i != typesArray.Length - 1)
 				{
 					parts = parts.Append(IdentifierPart.Comma());

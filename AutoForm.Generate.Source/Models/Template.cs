@@ -1,27 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AutoForm.Generate.Models
 {
 	public readonly struct Template : IEquatable<Template>
 	{
 		public readonly TypeIdentifier Identifier;
-		public readonly TypeIdentifier ModelType;
+		public readonly IEnumerable<TypeIdentifier> ModelIdentifiers;
 		private readonly String _stringRepresentation;
 
-		private Template(TypeIdentifier identifier, TypeIdentifier modelType)
+		private Template(TypeIdentifier identifier, IEnumerable<TypeIdentifier> modelIdentifiers)
 		{
 			Identifier = identifier;
-			ModelType = modelType;
+			ModelIdentifiers = modelIdentifiers;
 
-			_stringRepresentation = String.IsNullOrEmpty(Identifier.ToString()) || String.IsNullOrEmpty(ModelType.ToString()) ?
-									String.Empty :
-									$"[AutoForm.Attributes.AutoControlTemplate(typeof({ModelType}))]\n{Identifier}";
+			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(ModelIdentifiers), ModelIdentifiers),
+												Json.KeyValuePair(nameof(Identifier), Identifier));
 		}
 
-		public static Template Create(TypeIdentifier identifier, TypeIdentifier modelType)
+		public static Template Create(TypeIdentifier identifier)
 		{
-			return new Template(identifier, modelType);
+			return new Template(identifier, Array.Empty<TypeIdentifier>());
+		}
+		public Template Append(TypeIdentifier modelIdentifier)
+		{
+			return new Template(Identifier, ModelIdentifiers.Append(modelIdentifier));
+		}
+		public Template AppendRange(IEnumerable<TypeIdentifier> modelIdentifiers)
+		{
+			return new Template(Identifier, ModelIdentifiers.AppendRange(modelIdentifiers));
 		}
 
 		public override Boolean Equals(Object obj)

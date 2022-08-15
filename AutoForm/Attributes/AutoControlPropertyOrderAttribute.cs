@@ -6,9 +6,9 @@
 	[AttributeUsage(AttributeTargets.Property, Inherited = false)]
 	public sealed class AutoControlPropertyOrderAttribute : Attribute
 	{
-		public AutoControlPropertyOrderAttribute(Int32 position)
+		public AutoControlPropertyOrderAttribute(Int32 order)
 		{
-			Order = position;
+			Order = order;
 		}
 		public Int32 Order { get; }
 	}

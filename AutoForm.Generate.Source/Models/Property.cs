@@ -18,9 +18,10 @@ namespace AutoForm.Generate.Models
 			Control = control;
 			Order = order;
 
-			_stringRepresentation = String.IsNullOrEmpty(Identifier.ToString()) || String.IsNullOrEmpty(Type.ToString()) ?
-									String.Empty :
-									$"[AutoForm.Attributes.AutoControlPropertyOrder({Order})]\n{(String.IsNullOrEmpty(Control.ToString()) ? String.Empty : $"[AutoForm.Attributes.AutoControlPropertyControl(typeof({Control}))]\n")}{Type} {Identifier}";
+			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Order), Order),
+												Json.KeyValuePair(nameof(Control), Control),
+												Json.KeyValuePair(nameof(Identifier), Identifier),
+												Json.KeyValuePair(nameof(Type), Type));
 		}
 		public static Property Create(PropertyIdentifier identifier, TypeIdentifier type, TypeIdentifier control, Int32 order)
 		{

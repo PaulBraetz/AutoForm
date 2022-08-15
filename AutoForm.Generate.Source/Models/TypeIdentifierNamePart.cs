@@ -15,6 +15,9 @@ namespace AutoForm.Generate.Models
 			Name
 		}
 
+		public readonly PartKind Kind;
+		private readonly String _stringRepresentation;
+
 		private IdentifierPart(String name, PartKind kind)
 		{
 			Kind = kind;
@@ -42,9 +45,6 @@ namespace AutoForm.Generate.Models
 			}
 		}
 		private IdentifierPart(PartKind kind) : this(null, kind) { }
-
-		public readonly PartKind Kind;
-		private readonly String _stringRepresentation;
 
 		public static IdentifierPart Name(String name)
 		{

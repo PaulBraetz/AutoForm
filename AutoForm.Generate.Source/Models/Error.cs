@@ -10,7 +10,7 @@ namespace AutoForm.Generate.Models
 		{
 			Exceptions = exceptions;
 
-			_stringRepresentation = String.Join("\n", Exceptions);
+			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Exceptions), Exceptions));
 		}
 
 		public readonly IEnumerable<Exception> Exceptions;

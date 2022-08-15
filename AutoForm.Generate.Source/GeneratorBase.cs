@@ -10,40 +10,43 @@ using System.Text;
 
 namespace AutoForm.Generate
 {
-	public abstract class GeneratorBase : ISourceGenerator
-	{
-		protected abstract IControlsSourceGenerator GetControlGenerator();
+    public abstract class GeneratorBase : ISourceGenerator
+    {
+        protected abstract IControlsSourceGenerator GetControlGenerator();
 
-		protected ModelHelper Helper { get; private set; }
+        private ModelExtractor Helper { get; set; }
 
-		public void Execute(GeneratorExecutionContext context)
-		{
-			Helper = new ModelHelper(context.Compilation);
+        public void Execute(GeneratorExecutionContext context)
+        {
+            Helper = new ModelExtractor(context.Compilation);
 
-			String source = String.Empty;
-			var controlGenerator = GetControlGenerator();
-			try
-			{
-				var compilation = context.Compilation;
+            String source = String.Empty;
+            var controlGenerator = GetControlGenerator();
 
-				ModelSpace modelSpace = Helper.GetModelSpace();
+            try
+            {
+                var compilation = context.Compilation;
 
-				source = controlGenerator.Generate(modelSpace);
-			}
-			catch (Exception ex)
-			{
-				Error error = Helper.GetError(ex);
+                ModelSpace modelSpace = Helper.ExtractModelSpace();
 
-				source = controlGenerator.Generate(error);
-			}
-			finally
-			{
-				context.AddSource($"Controls.g", source);
-			}
-		}
-		public virtual void Initialize(GeneratorInitializationContext context)
-		{
+                source = controlGenerator.Generate(modelSpace);
+            }
+            catch (Exception ex)
+            {
+                Error error = Helper.GetErrorModel(ex);
 
-		}
-	}
+                source = controlGenerator.Generate(error);
+            }
+            finally
+            {
+                String filename = controlGenerator.Filename;
+
+                context.AddSource(filename, source);
+            }
+        }
+        public virtual void Initialize(GeneratorInitializationContext context)
+        {
+
+        }
+    }
 }

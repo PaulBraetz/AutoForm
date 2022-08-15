@@ -9,7 +9,7 @@ namespace AutoForm.Generate.Models
 		private Namespace(IEnumerable<IdentifierPart> parts)
 		{
 			Parts = parts;
-			_stringRepresentation = String.Concat(parts.Select(p => p.ToString()));
+			_stringRepresentation = Json.Value(String.Concat(Parts));
 		}
 
 		public readonly IEnumerable<IdentifierPart> Parts;

@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 namespace AutoForm.Generate
 {
 	[Generator]
-	internal class Generator : GeneratorBase
+	public sealed class Generator : GeneratorBase
 	{
 		protected override IControlsSourceGenerator GetControlGenerator()
 		{

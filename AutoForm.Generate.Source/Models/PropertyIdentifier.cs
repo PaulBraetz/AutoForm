@@ -12,7 +12,7 @@ namespace AutoForm.Generate.Models
 		{
 			Name = name;
 
-			_stringRepresentation = Name;
+			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(Name), Name));
 		}
 
 		public static PropertyIdentifier Create(String name)

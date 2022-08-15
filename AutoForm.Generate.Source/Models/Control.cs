@@ -1,27 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AutoForm.Generate.Models
 {
 	public readonly struct Control : IEquatable<Control>
 	{
-		public readonly TypeIdentifier ModelIdentifier;
 		public readonly TypeIdentifier Identifier;
+		public readonly IEnumerable<TypeIdentifier> ModelIdentifiers;
 		private readonly String _stringRepresentation;
 
-		private Control(TypeIdentifier modelIdentifier, TypeIdentifier identifier)
+		private Control(TypeIdentifier identifier, IEnumerable<TypeIdentifier> modelIdentifiers)
 		{
-			ModelIdentifier = modelIdentifier;
 			Identifier = identifier;
+			ModelIdentifiers = modelIdentifiers;
 
-			_stringRepresentation = String.IsNullOrEmpty(ModelIdentifier.ToString()) || String.IsNullOrEmpty(Identifier.ToString()) ?
-									String.Empty :
-									$"[AutoForm.Attributes.AutoControl(typeof({ModelIdentifier}))]\n{Identifier}";
+			_stringRepresentation = Json.Object(Json.KeyValuePair(nameof(ModelIdentifiers), ModelIdentifiers),
+												Json.KeyValuePair(nameof(Identifier), Identifier));
 		}
 
-		public static Control Create(TypeIdentifier identifier, TypeIdentifier modelIdentifier)
+		public static Control Create(TypeIdentifier identifier)
 		{
-			return new Control(modelIdentifier, identifier);
+			return new Control(identifier, Array.Empty<TypeIdentifier>());
+		}
+		public Control Append(TypeIdentifier modelIdentifier)
+        {
+			return new Control(Identifier, ModelIdentifiers.Append(modelIdentifier));
+		}
+		public Control AppendRange(IEnumerable<TypeIdentifier> modelIdentifiers)
+		{
+			return new Control(Identifier, ModelIdentifiers.AppendRange(modelIdentifiers));
 		}
 
 		public override Boolean Equals(Object obj)

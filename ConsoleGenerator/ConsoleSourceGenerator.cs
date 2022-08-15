@@ -4,16 +4,19 @@ using System;
 
 namespace ConsoleGenerator
 {
-	internal readonly struct ConsoleSourceGenerator : IControlsSourceGenerator
-	{
-		public String Generate(ModelSpace modelSpace)
-		{
-			return modelSpace.ToString();
-		}
+    internal readonly struct DirectSourceGenerator : IControlsSourceGenerator
+    {
+        public String Filename => "Debug.g";
 
-		public String Generate(Error error)
-		{
-			return error.ToString();
-		}
-	}
+
+        public String Generate(ModelSpace modelSpace)
+        {
+            return $"{{\"ModelSpace\":{modelSpace}}}";
+        }
+
+        public String Generate(Error error)
+        {
+            return $"{{\"Error\":{error}}}";
+        }
+    }
 }

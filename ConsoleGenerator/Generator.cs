@@ -8,7 +8,7 @@ namespace ConsoleGenerator
 	{
 		protected override IControlsSourceGenerator GetControlGenerator()
 		{
-			return new ConsoleSourceGenerator();
+			return new DirectSourceGenerator();
 		}
 	}
 }

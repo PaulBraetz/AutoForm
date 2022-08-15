@@ -3,57 +3,62 @@ using System.Collections.Generic;
 
 namespace AutoForm.Generate.Models
 {
-	public readonly struct TypeIdentifier : IEquatable<TypeIdentifier>
-	{
-		private TypeIdentifier(TypeIdentifierName identifier, Namespace @namespace)
-		{
-			Name = identifier;
-			Namespace = @namespace;
+    public readonly struct TypeIdentifier : IEquatable<TypeIdentifier>
+    {
+        public readonly TypeIdentifierName Name;
+        public readonly Namespace Namespace;
+        private readonly String _stringRepresentation;
 
-			_stringRepresentation = String.IsNullOrEmpty(Name.ToString()) ?
-									String.Empty :
-									String.IsNullOrEmpty(Namespace.ToString()) ?
-									Name.ToString() :
-									$"{Namespace}.{Name}";
-		}
+        private TypeIdentifier(TypeIdentifierName name, Namespace @namespace)
+        {
+            Name = name;
+            Namespace = @namespace;
 
-		public readonly TypeIdentifierName Name;
-		public readonly Namespace Namespace;
-		private readonly String _stringRepresentation;
+            String namespaceString = String.Concat(Namespace.Parts);
+            String nameString = String.Concat(Name.Parts);
+            _stringRepresentation = Json.Value(String.IsNullOrEmpty(namespaceString) ? String.IsNullOrEmpty(nameString) ? "null" : nameString.ToString() : $"{namespaceString}.{nameString}");
+        }
 
-		public static TypeIdentifier Create(TypeIdentifierName identifier, Namespace @namespace)
-		{
-			return new TypeIdentifier(identifier, @namespace);
-		}
+        public static TypeIdentifier Create(TypeIdentifierName name, Namespace @namespace)
+        {
+            return new TypeIdentifier(name, @namespace);
+        }
 
-		public override String ToString()
-		{
-			return _stringRepresentation ?? String.Empty;
-		}
+        public String ToEscapedString()
+        {
+            String value = ToString();
 
-		public override Boolean Equals(Object obj)
-		{
-			return obj is TypeIdentifier identifier && Equals(identifier);
-		}
+            return value == "\"null\""?String.Empty: value.AsSpan(1, value.Length - 2).ToString();
+        }
 
-		public Boolean Equals(TypeIdentifier other)
-		{
-			return _stringRepresentation == other._stringRepresentation;
-		}
+        public override String ToString()
+        {
+            return _stringRepresentation ?? String.Empty;
+        }
 
-		public override Int32 GetHashCode()
-		{
-			return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
-		}
+        public override Boolean Equals(Object obj)
+        {
+            return obj is TypeIdentifier identifier && Equals(identifier);
+        }
 
-		public static Boolean operator ==(TypeIdentifier left, TypeIdentifier right)
-		{
-			return left.Equals(right);
-		}
+        public Boolean Equals(TypeIdentifier other)
+        {
+            return _stringRepresentation == other._stringRepresentation;
+        }
 
-		public static Boolean operator !=(TypeIdentifier left, TypeIdentifier right)
-		{
-			return !(left == right);
-		}
-	}
+        public override Int32 GetHashCode()
+        {
+            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_stringRepresentation);
+        }
+
+        public static Boolean operator ==(TypeIdentifier left, TypeIdentifier right)
+        {
+            return left.Equals(right);
+        }
+
+        public static Boolean operator !=(TypeIdentifier left, TypeIdentifier right)
+        {
+            return !(left == right);
+        }
+    }
 }
