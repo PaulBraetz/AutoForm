@@ -6,9 +6,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.2.0" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\AutoForm.Generate\AutoForm.Generate.csproj" />
 		<ProjectReference Include="..\AutoForm.Generate.Debug\AutoForm.Generate.Debug.csproj" />
