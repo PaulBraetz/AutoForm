@@ -1,0 +1,14 @@
+﻿<div class="input-group mb-3">
+	<span class="input-group-text">
+		@(Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ?? typeof(Person.Address).Name)
+	</span>
+	@ChildContent
+</div>
+@code {
+	[Parameter]
+	public Person.Address Value { get; set; }
+	[Parameter]
+	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+}

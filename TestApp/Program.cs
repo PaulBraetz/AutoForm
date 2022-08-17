@@ -1,4 +1,4 @@
-using AutoForm;
+using AutoForm.Blazor;
 using System.Reflection;
 using TestApp.Data;
 
