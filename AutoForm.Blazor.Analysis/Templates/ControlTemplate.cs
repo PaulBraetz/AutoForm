@@ -35,18 +35,7 @@ namespace AutoForm.Generate.Blazor.Templates
 			{	
 				if(Value != null)
 				{
-                    if(Attributes?.Any() ?? false)
-				    {
-                        __builder.OpenElement(0, ""div"");
-				        __builder.AddMultipleAttributes(1, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));
-                    }
-
 " + SUB_CONTROLS + @"
-
-                    if(Attributes != null)
-				    {
-                        __builder.CloseElement();
-                    }
 				}
 			}
             #pragma warning restore 1998
