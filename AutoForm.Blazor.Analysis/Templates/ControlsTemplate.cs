@@ -8,7 +8,7 @@ namespace AutoForm.Generate.Blazor.Templates
     {
         private readonly struct ControlsTemplate
         {
-            private ControlsTemplate(IEnumerable<ModelControlPairTemplate> modelControlPairTemplates, IEnumerable<ControlTemplate> controlTemplates, DefaultControlsTemplate defaultControlsTemplate)
+            private ControlsTemplate(IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates, IEnumerable<ControlTemplate> controlTemplates, DefaultControlsTemplate defaultControlsTemplate)
             {
                 _defaultControlsTemplate = defaultControlsTemplate;
                 _modelControlPairTemplates = modelControlPairTemplates;
@@ -16,7 +16,7 @@ namespace AutoForm.Generate.Blazor.Templates
             }
 
             private readonly DefaultControlsTemplate _defaultControlsTemplate;
-            private readonly IEnumerable<ModelControlPairTemplate> _modelControlPairTemplates;
+            private readonly IEnumerable<KeyValueTypesPairTemplate> _modelControlPairTemplates;
             private readonly IEnumerable<ControlTemplate> _controlTemplates;
 
             private const String TEMPLATE =
@@ -33,6 +33,13 @@ namespace AutoForm.Blazor
 		public static readonly IDictionary<Type, Type> ModelControlMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
 		{
 " + MODEL_CONTROL_PAIRS + @"
+		});
+#endregion
+
+#region TemplateControlMap
+		public static readonly IDictionary<Type, Type> TemplateControlMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
+		{
+" + MODEL_TEMPLATE_PAIRS + @"
 		});
 #endregion
 
@@ -61,7 +68,7 @@ namespace AutoForm.Blazor
 }
 #pragma warning restore 1591";
 
-            public ControlsTemplate WithModelControlPairTemplates(IEnumerable<ModelControlPairTemplate> modelControlPairTemplates)
+            public ControlsTemplate WithModelControlPairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates)
             {
                 return new ControlsTemplate(modelControlPairTemplates, _controlTemplates, _defaultControlsTemplate);
             }

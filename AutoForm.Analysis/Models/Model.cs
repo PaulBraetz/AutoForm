@@ -7,38 +7,40 @@ namespace AutoForm.Analysis.Models
     public readonly struct Model : IEquatable<Model>
     {
         public readonly TypeIdentifier Name;
+        public readonly TypeIdentifier Control;
+        public readonly TypeIdentifier Template;
         public readonly PropertyIdentifier AttributesProvider;
         public readonly IEnumerable<Property> Properties;
         private readonly String _json;
         private readonly String _string;
 
-        private Model(TypeIdentifier name, IEnumerable<Property> properties, PropertyIdentifier attributesProvider)
+        private Model(TypeIdentifier name, TypeIdentifier control, TypeIdentifier template, IEnumerable<Property> properties, PropertyIdentifier attributesProvider)
         {
             Name = name;
+            Control = control;
+            Template = template;
             Properties = properties;
             AttributesProvider = attributesProvider;
 
             _json = Json.Object(Json.KeyValuePair(nameof(Name), Name),
-                                                Json.KeyValuePair(nameof(AttributesProvider), AttributesProvider),
-                                                Json.KeyValuePair(nameof(Properties), Properties.Select(p => p)));
+                                Json.KeyValuePair(nameof(AttributesProvider), AttributesProvider),
+                                Json.KeyValuePair(nameof(Control), Control),
+                                Json.KeyValuePair(nameof(Template), Template),
+                                Json.KeyValuePair(nameof(Properties), Properties.Select(p => p)));
             _string = _json;
         }
 
-        public static Model Create(TypeIdentifier identifier, PropertyIdentifier attributesProvider)
+        public static Model Create(TypeIdentifier name, TypeIdentifier control, TypeIdentifier template, PropertyIdentifier attributesProvider)
         {
-            return new Model(identifier, Array.Empty<Property>(), attributesProvider);
-        }
-        public static Model Create(TypeIdentifier identifier)
-        {
-            return Create(identifier, default);
+            return new Model(name, control, template, Array.Empty<Property>(), attributesProvider);
         }
         public Model Append(Property property)
         {
-            return new Model(Name, Properties.Append(property), AttributesProvider);
+            return new Model(Name, Control, Template, Properties.Append(property), AttributesProvider);
         }
         public Model AppendRange(IEnumerable<Property> properties)
         {
-            return new Model(Name, Properties.AppendRange(properties), AttributesProvider);
+            return new Model(Name, Control, Template, Properties.AppendRange(properties), AttributesProvider);
         }
 
         public override Boolean Equals(Object obj)

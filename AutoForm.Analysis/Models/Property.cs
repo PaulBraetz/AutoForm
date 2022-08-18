@@ -21,11 +21,11 @@ namespace AutoForm.Analysis.Models
             Template = template;
             Order = order;
 
-            _json = Json.Object(Json.KeyValuePair(nameof(Order), Order),
-                                                Json.KeyValuePair(nameof(Name), Name),
-                                                Json.KeyValuePair(nameof(Type), Type),
-                                                Json.KeyValuePair(nameof(Control), Control),
-                                                Json.KeyValuePair(nameof(Template), Template));
+            _json = Json.Object(Json.KeyValuePair(nameof(Name), Name),
+                                Json.KeyValuePair(nameof(Type), Type),
+                                Json.KeyValuePair(nameof(Order), Order),
+                                Json.KeyValuePair(nameof(Control), Control),
+                                Json.KeyValuePair(nameof(Template), Template));
             _string = _json;
         }
         public static Property Create(PropertyIdentifier identifier, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, Int32 order)

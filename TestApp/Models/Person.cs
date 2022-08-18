@@ -1,26 +1,29 @@
 ﻿using AutoForm.Attributes;
+using AutoForm.Blazor;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace TestApp.Models
 {
 
-    [AutoControlModel]
+    [Model]
+    [Template(typeof(Templates.PersonControlTemplate))]
     public sealed class Person
     {
-        [AutoControlModel]
+        [Model]
         public sealed class Address
         {
             private String? street;
 
             [MaxLength(10)]
+            [Control(typeof(TextArea))]
             public String? Street { get => street; set => Console.WriteLine(street = value); }
 
             [MaxLength(10)]
-            [AutoControlPropertyOrder(-1)]
+            [Order(-1)]
             public String? City { get; set; }
 
-            [AutoControlAttributesProvider]
+            [AttributesProvider]
             public AddressAttributesProvider AttributesProvider { get; } = new();
         }
         public Person()
@@ -28,13 +31,14 @@ namespace TestApp.Models
             Location1 = new();
             Location2 = new();
         }
-        [AutoControlPropertyOrder(Int32.MaxValue)]
+        [Order(Int32.MaxValue)]
+        [Template(typeof(Templates.AddressControlTemplate))]
         public Address Location1 { get; set; }
 
-        [AutoControlPropertyOrder(0)]
+        [Order(0)]
         public Address Location2 { get; set; }
 
-        [AutoControlAttributesProvider]
+        [AttributesProvider]
         public PersonAttributesProvider AttributesProvider { get; } = new();
     }
     public sealed class AddressAttributesProvider

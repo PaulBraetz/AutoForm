@@ -4,34 +4,34 @@ namespace AutoForm.Generate.Blazor.Templates
 {
     internal sealed partial class SourceFactory
     {
-        private readonly struct ModelControlPairTemplate
+        private readonly struct KeyValueTypesPairTemplate
         {
-            private ModelControlPairTemplate(String modelType, String controlType)
+            private KeyValueTypesPairTemplate(String keyType, String valueType)
             {
-                ModelType = modelType;
-                ControlType = controlType;
+                ModelType = keyType;
+                MappedType = valueType;
             }
 
             public readonly String ModelType;
-            public readonly String ControlType;
+            public readonly String MappedType;
 
             private const String TEMPLATE = "			{typeof(" + MODEL_TYPE + "), typeof(" + CONTROL_TYPE + ")}";
 
-            public ModelControlPairTemplate WithModelType(String modelType)
+            public KeyValueTypesPairTemplate WithKeyType(String modelType)
             {
-                return new ModelControlPairTemplate(modelType, ControlType);
+                return new KeyValueTypesPairTemplate(modelType, MappedType);
             }
 
-            public ModelControlPairTemplate WithControlType(String controlType)
+            public KeyValueTypesPairTemplate WithValueType(String controlType)
             {
-                return new ModelControlPairTemplate(ModelType, controlType);
+                return new KeyValueTypesPairTemplate(ModelType, controlType);
             }
 
             public String Build()
             {
                 return TEMPLATE
                     .Replace(MODEL_TYPE, ModelType)
-                    .Replace(CONTROL_TYPE, ControlType);
+                    .Replace(CONTROL_TYPE, MappedType);
             }
 
             public override String ToString()

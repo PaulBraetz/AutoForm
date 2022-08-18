@@ -4,7 +4,7 @@ using TestApp.Models;
 
 namespace TestApp.Templates
 {
-    [AutoControlTemplate(typeof(Person.Address))]
+    //[FallbackTemplate(typeof(Person.Address))]
     public partial class AddressControlTemplate
     {
     }

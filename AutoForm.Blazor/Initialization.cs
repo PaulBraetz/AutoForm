@@ -19,7 +19,7 @@ namespace AutoForm.Blazor
 
                 var autoControls = autoControlModelAssembly
                                     .GetTypes()
-                                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType == typeof(AutoControlModelAttribute)))
+                                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType == typeof(ModelAttribute)))
                                     .Select(m => typeof(AutoControl<>).MakeGenericType(m));
 
                 foreach (var autoControl in autoControls)

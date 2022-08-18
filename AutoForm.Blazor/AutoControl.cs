@@ -10,7 +10,7 @@ namespace AutoForm.Blazor
     {
         private static readonly Type _controlType = Controls.ModelControlMap.TryGetValue(typeof(TModel), out Type? controlType) ?
             controlType :
-            throw new Exception($"Unable to locate control for {nameof(TModel)} of {typeof(TModel).FullName}. Make sure that {typeof(TModel).FullName}is annotated with {nameof(AutoControlModelAttribute)}.");
+            throw new Exception($"Unable to locate control for {nameof(TModel)} of {typeof(TModel).FullName}. Make sure that {typeof(TModel).FullName}is annotated with {nameof(ModelAttribute)}.");
 
         [Parameter]
         public TModel? Value { get; set; }

@@ -32,8 +32,8 @@ namespace AutoForm.Analysis.Models
         public ModelSpace ExtractModelSpace()
         {
             IEnumerable<Model> models = GetModels();
-            IEnumerable<Control> controls = GetControls();
-            IEnumerable<Template> templates = GetTemplates();
+            IEnumerable<FallbackControl> controls = GetControls();
+            IEnumerable<FallbackTemplate> templates = GetTemplates();
 
             var modelSpace = ModelSpace.Create(models, controls, templates);
 
@@ -56,17 +56,17 @@ namespace AutoForm.Analysis.Models
 
             return models;
         }
-        private IEnumerable<Control> GetControls()
+        private IEnumerable<FallbackControl> GetControls()
         {
             IEnumerable<BaseTypeDeclarationSyntax> controlDeclarations = GetControlDeclarations();
-            IEnumerable<Control> controls = controlDeclarations.Select(GetControl);
+            IEnumerable<FallbackControl> controls = controlDeclarations.Select(GetControl);
 
             return controls;
         }
-        private IEnumerable<Template> GetTemplates()
+        private IEnumerable<FallbackTemplate> GetTemplates()
         {
             IEnumerable<BaseTypeDeclarationSyntax> templateDeclarations = GetTemplateDeclarations();
-            IEnumerable<Template> templates = templateDeclarations.Select(GetTemplate);
+            IEnumerable<FallbackTemplate> templates = templateDeclarations.Select(GetTemplate);
 
             return templates;
         }
@@ -76,7 +76,7 @@ namespace AutoForm.Analysis.Models
             IEnumerable<BaseTypeDeclarationSyntax> typeDeclarations = GetTypeDeclarations();
             foreach (BaseTypeDeclarationSyntax typeDeclaration in typeDeclarations)
             {
-                if (TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.AutoControlModelAttribute, out var _))
+                if (TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.ModelAttribute, out var _))
                 {
                     yield return typeDeclaration;
                 }
@@ -87,11 +87,25 @@ namespace AutoForm.Analysis.Models
             IEnumerable<Property> properties = GetProperties(typeDeclaration);
             TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
             PropertyIdentifier attributesProvider = GetAttributesProvider(typeDeclaration);
+            TypeIdentifier control = GetControlIdentifier(typeDeclaration);
+            TypeIdentifier template = GetTemplateIdentifier(typeDeclaration);
 
-            Model model = Model.Create(identifier, attributesProvider)
+            Model model = Model.Create(identifier, control, template, attributesProvider)
                 .AppendRange(properties);
 
             return model;
+        }
+        private TypeIdentifier GetControlIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
+        {
+            TypeIdentifier templateIdentifier = GetTypeArgumentOrDefault(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.ControlAttribute);
+
+            return templateIdentifier;
+        }
+        private TypeIdentifier GetTemplateIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
+        {
+            TypeIdentifier templateIdentifier = GetTypeArgumentOrDefault(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.TemplateAttribute);
+
+            return templateIdentifier;
         }
         private PropertyIdentifier GetAttributesProvider(BaseTypeDeclarationSyntax typeDeclaration)
         {
@@ -100,7 +114,7 @@ namespace AutoForm.Analysis.Models
 
             foreach (PropertyDeclarationSyntax propertyDeclaration in propertyDeclarations)
             {
-                if (TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlAttributesProviderAttribute, out var _))
+                if (TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AttributesProviderAttribute, out var _))
                 {
                     return PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString());
                 }
@@ -110,9 +124,9 @@ namespace AutoForm.Analysis.Models
         }
         private Property GetProperty(PropertyDeclarationSyntax propertyDeclaration)
         {
-            TypeIdentifier control = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyControlAttribute);
-            
-            TypeIdentifier template = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyTemplateAttribute);
+            TypeIdentifier control = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.ControlAttribute);
+
+            TypeIdentifier template = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.TemplateAttribute);
 
             var identifier = PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString());
 
@@ -137,20 +151,20 @@ namespace AutoForm.Analysis.Models
 
             foreach (var propertyDeclaration in propertyDeclarations)
             {
-                if (!TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyExcludeAttribute, out var _) &&
-                    !TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlAttributesProviderAttribute, out var _))
+                if (!TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.ExcludeAttribute, out var _) &&
+                    !TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AttributesProviderAttribute, out var _))
                 {
                     yield return propertyDeclaration;
                 }
             }
         }
-        private Control GetControl(BaseTypeDeclarationSyntax typeDeclaration)
+        private FallbackControl GetControl(BaseTypeDeclarationSyntax typeDeclaration)
         {
             TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
 
-            IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.AutoControlAttribute);
+            IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackControlAttribute);
 
-            var template = Control.Create(identifier)
+            var template = FallbackControl.Create(identifier)
                 .AppendRange(modelTypes);
 
             return template;
@@ -161,19 +175,19 @@ namespace AutoForm.Analysis.Models
 
             foreach (var declaration in declarations)
             {
-                if (TryGetAttributes(declaration.AttributeLists, declaration, TypeIdentifier.AutoControlAttribute, out var _))
+                if (TryGetAttributes(declaration.AttributeLists, declaration, TypeIdentifier.FallbackControlAttribute, out var _))
                 {
                     yield return declaration;
                 }
             }
         }
-        private Template GetTemplate(BaseTypeDeclarationSyntax typeDeclaration)
+        private FallbackTemplate GetTemplate(BaseTypeDeclarationSyntax typeDeclaration)
         {
             TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
-           
-            IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.AutoControlTemplateAttribute);
 
-            var template = Template.Create(identifier).AppendRange(modelTypes);
+            IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackTemplateAttribute);
+
+            var template = FallbackTemplate.Create(identifier).AppendRange(modelTypes);
 
             return template;
         }
@@ -183,7 +197,7 @@ namespace AutoForm.Analysis.Models
 
             foreach (var declaration in declarations)
             {
-                if (TryGetAttributes(declaration.AttributeLists, declaration, TypeIdentifier.AutoControlTemplateAttribute, out var _))
+                if (TryGetAttributes(declaration.AttributeLists, declaration, TypeIdentifier.FallbackTemplateAttribute, out var _))
                 {
                     yield return declaration;
                 }
@@ -197,7 +211,7 @@ namespace AutoForm.Analysis.Models
 
         private Int32 GetOrderArgumentOrDefault(PropertyDeclarationSyntax propertyDeclaration)
         {
-            TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AutoControlPropertyOrderAttribute, out IEnumerable<AttributeSyntax> orderAttributes);
+            TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.OrderAttribute, out IEnumerable<AttributeSyntax> orderAttributes);
             String orderString = orderAttributes.SingleOrDefault()?.DescendantNodes().OfType<AttributeArgumentSyntax>().Single().ToString() ?? "0";
             Int32 order = 0;
 
@@ -226,7 +240,7 @@ namespace AutoForm.Analysis.Models
 
         private IEnumerable<TypeIdentifier> GetTypeArguments(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, TypeIdentifier attributeIdentifier)
         {
-            if(TryGetAttributes(attributeLists, node, attributeIdentifier, out IEnumerable<AttributeSyntax> attributes))
+            if (TryGetAttributes(attributeLists, node, attributeIdentifier, out IEnumerable<AttributeSyntax> attributes))
             {
                 IEnumerable<TypeSyntax> modelTypeSyntaxes = attributes.SelectMany(a => a.DescendantNodes()).OfType<TypeOfExpressionSyntax>().Select(e => e.Type);
                 IEnumerable<TypeIdentifier> arguments = modelTypeSyntaxes.Select(GetTypeIdentifier);

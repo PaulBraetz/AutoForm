@@ -5,14 +5,14 @@ namespace AutoForm.Analysis.Models
 {
     public readonly struct TypeIdentifier : IEquatable<TypeIdentifier>
     {
-        public static readonly TypeIdentifier AutoControlAttribute = Create(TypeIdentifierName.AutoControlAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlAttributesProviderAttribute = Create(TypeIdentifierName.AutoControlAttributesProviderAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlModelAttribute = Create(TypeIdentifierName.AutoControlModelAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlPropertyControlAttribute = Create(TypeIdentifierName.AutoControlPropertyControlAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlPropertyTemplateAttribute = Create(TypeIdentifierName.AutoControlPropertyTemplateAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlPropertyExcludeAttribute = Create(TypeIdentifierName.AutoControlPropertyExcludeAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlPropertyOrderAttribute = Create(TypeIdentifierName.AutoControlPropertyOrderAttribute, Namespace.Attributes);
-        public static readonly TypeIdentifier AutoControlTemplateAttribute = Create(TypeIdentifierName.AutoControlTemplateAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier FallbackControlAttribute = Create(TypeIdentifierName.FallbackControlAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier AttributesProviderAttribute = Create(TypeIdentifierName.AttributesProviderAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier ModelAttribute = Create(TypeIdentifierName.ModelAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier TemplateAttribute = Create(TypeIdentifierName.TemplateAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier ControlAttribute = Create(TypeIdentifierName.ControlAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier ExcludeAttribute = Create(TypeIdentifierName.ExcludeAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier OrderAttribute = Create(TypeIdentifierName.OrderAttribute, Namespace.Attributes);
+        public static readonly TypeIdentifier FallbackTemplateAttribute = Create(TypeIdentifierName.FallbackTemplateAttribute, Namespace.Attributes);
 
         public readonly TypeIdentifierName Name;
         public readonly Namespace Namespace;

@@ -1,12 +1,14 @@
-﻿namespace AutoForm.Attributes
+﻿using System;
+
+namespace AutoForm.Attributes
 {
     /// <summary>
     /// Denotes in what order the control is to be rendered.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = false)]
-    public sealed class AutoControlPropertyOrderAttribute : Attribute
+    public sealed class OrderAttribute : Attribute
     {
-        public AutoControlPropertyOrderAttribute(Int32 order)
+        public OrderAttribute(Int32 order)
         {
             Order = order;
         }

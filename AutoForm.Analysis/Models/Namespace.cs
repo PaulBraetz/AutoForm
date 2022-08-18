@@ -14,7 +14,6 @@ namespace AutoForm.Analysis.Models
         }
 
         public static readonly Namespace Attributes = Create().Append("AutoForm").Append("Attributes");
-        public static readonly Namespace Generate = Create().Append("AutoForm").Append("Generate");
 
         public readonly IEnumerable<IdentifierPart> Parts;
         private readonly String _json;

@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AutoForm.Analysis.Models
 {
     public readonly struct TypeIdentifierName : IEquatable<TypeIdentifierName>
     {
-        public static readonly TypeIdentifierName AutoControlAttribute = Create().AppendNamePart("AutoControl");
-        public static readonly TypeIdentifierName AutoControlAttributesProviderAttribute = Create().AppendNamePart("AutoControlAttributesProvider");
-        public static readonly TypeIdentifierName AutoControlModelAttribute = Create().AppendNamePart("AutoControlModel");
-        public static readonly TypeIdentifierName AutoControlPropertyControlAttribute = Create().AppendNamePart("AutoControlPropertyControl");
-        public static readonly TypeIdentifierName AutoControlPropertyTemplateAttribute = Create().AppendNamePart("AutoControlPropertyTemplate");
-        public static readonly TypeIdentifierName AutoControlPropertyExcludeAttribute = Create().AppendNamePart("AutoControlPropertyExclude");
-        public static readonly TypeIdentifierName AutoControlPropertyOrderAttribute = Create().AppendNamePart("AutoControlPropertyOrder");
-        public static readonly TypeIdentifierName AutoControlTemplateAttribute = Create().AppendNamePart("AutoControlTemplate");
+        private static readonly Regex AttributeRegex = new Regex(@"Attribute$");
 
+        public static readonly TypeIdentifierName ModelAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.ModelAttribute)));
+
+        public static readonly TypeIdentifierName ControlAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.ControlAttribute)));
+        public static readonly TypeIdentifierName TemplateAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.TemplateAttribute)));
+
+        public static readonly TypeIdentifierName FallbackControlAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.FallbackControlAttribute)));
+        public static readonly TypeIdentifierName FallbackTemplateAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.FallbackTemplateAttribute)));
+
+        public static readonly TypeIdentifierName ExcludeAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.ExcludeAttribute)));
+        public static readonly TypeIdentifierName AttributesProviderAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.AttributesProviderAttribute)));
+        public static readonly TypeIdentifierName OrderAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.OrderAttribute)));
+        
         public readonly IEnumerable<IdentifierPart> Parts;
         private readonly String _json;
         private readonly String _string;
@@ -91,6 +97,11 @@ namespace AutoForm.Analysis.Models
             }
 
             return parts;
+        }
+
+        private static String GetAttributeName(Type attributeType)
+        {
+            return AttributeRegex.Replace(attributeType.Name, String.Empty);
         }
 
         public override Boolean Equals(Object obj)

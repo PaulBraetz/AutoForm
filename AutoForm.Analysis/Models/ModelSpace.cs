@@ -5,29 +5,29 @@ namespace AutoForm.Analysis.Models
 {
     public readonly struct ModelSpace : IEquatable<ModelSpace>
     {
-        public readonly IEnumerable<Template> Templates;
         public readonly IEnumerable<Model> Models;
-        public readonly IEnumerable<Control> Controls;
+        public readonly IEnumerable<FallbackControl> FallbackControls;
+        public readonly IEnumerable<FallbackTemplate> FallbackTemplates;
         private readonly String _json;
         private readonly String _string;
 
-        private ModelSpace(IEnumerable<Model> models, IEnumerable<Control> controls, IEnumerable<Template> templates)
+        private ModelSpace(IEnumerable<Model> models, IEnumerable<FallbackControl> controls, IEnumerable<FallbackTemplate> templates)
         {
-            models.ThrowOnDuplicate(TypeIdentifierName.AutoControlModelAttribute.ToString());
-            controls.ThrowOnDuplicate(TypeIdentifierName.AutoControlAttribute.ToString());
-            templates.ThrowOnDuplicate(TypeIdentifierName.AutoControlTemplateAttribute.ToString());
+            models.ThrowOnDuplicate(TypeIdentifierName.ModelAttribute.ToString());
+            controls.ThrowOnDuplicate(TypeIdentifierName.FallbackControlAttribute.ToString());
+            templates.ThrowOnDuplicate(TypeIdentifierName.FallbackTemplateAttribute.ToString());
 
             Models = models;
-            Controls = controls;
-            Templates = templates;
+            FallbackControls = controls;
+            FallbackTemplates = templates;
 
             _json = Json.Object(Json.KeyValuePair(nameof(Models), Models),
-                                Json.KeyValuePair(nameof(Controls), Controls),
-                                Json.KeyValuePair(nameof(Templates), Templates));
+                                Json.KeyValuePair(nameof(FallbackControls), FallbackControls),
+                                Json.KeyValuePair(nameof(FallbackTemplates), FallbackTemplates));
             _string = _json;
         }
 
-        public static ModelSpace Create(IEnumerable<Model> models, IEnumerable<Control> controls, IEnumerable<Template> templates)
+        public static ModelSpace Create(IEnumerable<Model> models, IEnumerable<FallbackControl> controls, IEnumerable<FallbackTemplate> templates)
         {
             return new ModelSpace(models, controls, templates);
         }
