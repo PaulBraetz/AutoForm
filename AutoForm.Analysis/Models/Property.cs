@@ -28,9 +28,9 @@ namespace AutoForm.Analysis.Models
                                 Json.KeyValuePair(nameof(Template), Template));
             _string = _json;
         }
-        public static Property Create(PropertyIdentifier identifier, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, Int32 order)
+        public static Property Create(PropertyIdentifier name, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, Int32 order)
         {
-            return new Property(identifier, type, control, template, order);
+            return new Property(name, type, control, template, order);
         }
 
         public override Boolean Equals(Object obj)

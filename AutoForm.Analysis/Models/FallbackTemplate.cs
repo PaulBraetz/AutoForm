@@ -33,7 +33,7 @@ namespace AutoForm.Analysis.Models
         }
         public FallbackTemplate AppendRange(IEnumerable<TypeIdentifier> modelIdentifiers)
         {
-            return new FallbackTemplate(Name, Models.AppendRange(modelIdentifiers));
+            return new FallbackTemplate(Name, Models.Concat(modelIdentifiers));
         }
 
         public override Boolean Equals(Object obj)

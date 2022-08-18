@@ -39,7 +39,7 @@ namespace AutoForm.Analysis.Models
         public TypeIdentifierName AppendTypePart(TypeIdentifierName type)
         {
             IEnumerable<IdentifierPart> parts = GetNextParts(IdentifierPart.PartKind.Name)
-                .AppendRange(type.Parts);
+                .Concat(type.Parts);
 
             return new TypeIdentifierName(parts);
         }
@@ -60,9 +60,9 @@ namespace AutoForm.Analysis.Models
             for (Int32 i = 0; i < typesArray.Length; i++)
             {
                 var type = typesArray[i];
-                parts = parts.AppendRange(type.Namespace.Parts)
+                parts = parts.Concat(type.Namespace.Parts)
                     .Append(IdentifierPart.Period())
-                    .AppendRange(type.Name.Parts);
+                    .Concat(type.Name.Parts);
 
                 if (i != typesArray.Length - 1)
                 {

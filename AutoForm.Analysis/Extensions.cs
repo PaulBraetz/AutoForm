@@ -15,16 +15,5 @@ namespace AutoForm.Analysis
                 throw new ArgumentException($"Cannot register {name} {duplicate} multiple times.");
             }
         }
-        public static IEnumerable<T> AppendRange<T>(this IEnumerable<T> enumeration, IEnumerable<T> range)
-        {
-            foreach (var original in enumeration)
-            {
-                yield return original;
-            }
-            foreach (var extra in range)
-            {
-                yield return extra;
-            }
-        }
     }
 }

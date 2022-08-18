@@ -1,72 +1,84 @@
-﻿using System;
+﻿using AutoForm.Analysis.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace AutoForm.Generate.Blazor.Templates
 {
-    internal sealed partial class SourceFactory
-    {
-        private readonly struct DefaultControlsTemplate
-        {
-            private DefaultControlsTemplate(IEnumerable<String> requiredDefaultControls)
-            {
-                _requiredDefaultControls = requiredDefaultControls;
-            }
+	internal sealed partial class SourceFactory
+	{
+		private readonly struct DefaultControlsTemplate
+		{
+			private DefaultControlsTemplate(IEnumerable<TypeIdentifier> requiredDefaultControls)
+			{
+				_requiredDefaultControls = requiredDefaultControls;
+			}
 
-            public readonly static IDictionary<String, String> AvailableDefaultControls = new ReadOnlyDictionary<String, String>(new Dictionary<String, String>()
-            {
-                {typeof(String).FullName, GetNumberControlIdentifier(typeof(String)) },
-                {typeof(Boolean).FullName, GetNumberControlIdentifier(typeof(Boolean)) },
-                {typeof(Byte).FullName, GetNumberControlIdentifier(typeof(Byte)) },
-                {typeof(SByte).FullName, GetNumberControlIdentifier(typeof(SByte)) },
-                {typeof(Int16).FullName, GetNumberControlIdentifier(typeof(Int16)) },
-                {typeof(UInt16).FullName, GetNumberControlIdentifier(typeof(UInt16)) },
-                {typeof(Int32).FullName, GetNumberControlIdentifier(typeof(Int32)) },
-                {typeof(UInt32).FullName, GetNumberControlIdentifier(typeof(UInt32)) },
-                {typeof(Int64).FullName, GetNumberControlIdentifier(typeof(Int64)) },
-                {typeof(UInt64).FullName, GetNumberControlIdentifier(typeof(UInt64)) },
-                {typeof(Single).FullName, GetNumberControlIdentifier(typeof(Single)) },
-                {typeof(Double).FullName, GetNumberControlIdentifier(typeof(Double)) },
-                {typeof(Decimal).FullName, GetNumberControlIdentifier(typeof(Decimal)) }
-            });
-            private readonly static IDictionary<String, String> AvailableDefaultControlTemplates = new ReadOnlyDictionary<String, String>(new Dictionary<String, String>()
-            {
-                {typeof(String).FullName, STRING_CONTROL },
-                {typeof(Boolean).FullName, BOOLEAN_CONTROL},
-                {typeof(Byte).FullName, GetNumberControl(typeof(Byte)) },
-                {typeof(SByte).FullName, GetNumberControl(typeof(SByte)) },
-                {typeof(Int16).FullName, GetNumberControl(typeof(Int16)) },
-                {typeof(UInt16).FullName, GetNumberControl(typeof(UInt16)) },
-                {typeof(Int32).FullName, GetNumberControl(typeof(Int32)) },
-                {typeof(UInt32).FullName, GetNumberControl(typeof(UInt32)) },
-                {typeof(Int64).FullName, GetNumberControl(typeof(Int64)) },
-                {typeof(UInt64).FullName, GetNumberControl(typeof(UInt64)) },
-                {typeof(Single).FullName, GetNumberControl(typeof(Single)) },
-                {typeof(Double).FullName, GetNumberControl(typeof(Double)) },
-                {typeof(Decimal).FullName, GetNumberControl(typeof(Decimal)) }
-            });
+			public readonly static IDictionary<TypeIdentifier, TypeIdentifier> DefaultModelControlPairs = new ReadOnlyDictionary<TypeIdentifier, TypeIdentifier>(new Dictionary<TypeIdentifier, TypeIdentifier>()
+			{
+				{TypeIdentifier.Create<String>(), GetDefaultControlIdentifier<String>() },
+				{TypeIdentifier.Create<Boolean>(), GetDefaultControlIdentifier<Boolean>() },
+				{TypeIdentifier.Create<Byte>(), GetDefaultControlIdentifier<Byte>() },
+				{TypeIdentifier.Create<SByte>(), GetDefaultControlIdentifier<SByte>() },
+				{TypeIdentifier.Create<Int16>(), GetDefaultControlIdentifier<Int16>() },
+				{TypeIdentifier.Create<UInt16>(), GetDefaultControlIdentifier<UInt16>() },
+				{TypeIdentifier.Create<Int32>(), GetDefaultControlIdentifier<Int32>() },
+				{TypeIdentifier.Create<UInt32>(), GetDefaultControlIdentifier<UInt32>() },
+				{TypeIdentifier.Create<Int64>(), GetDefaultControlIdentifier<Int64>() },
+				{TypeIdentifier.Create<UInt64>(), GetDefaultControlIdentifier<UInt64>() },
+				{TypeIdentifier.Create<Single>(), GetDefaultControlIdentifier<Single>() },
+				{TypeIdentifier.Create<Double>(), GetDefaultControlIdentifier<Double>() },
+				{TypeIdentifier.Create<Decimal>(), GetDefaultControlIdentifier<Decimal>() }
+			});
+			private readonly static IDictionary<TypeIdentifier, String> DefaultModelTemplatePairs = new ReadOnlyDictionary<TypeIdentifier, String>(new Dictionary<TypeIdentifier, String>()
+			{
+				{TypeIdentifier.Create<String>(), STRING_CONTROL },
+				{TypeIdentifier.Create<Boolean>(), BOOLEAN_CONTROL},
+				{TypeIdentifier.Create<Byte>(), GetNumberControl<Byte>() },
+				{TypeIdentifier.Create<SByte>(), GetNumberControl<SByte>() },
+				{TypeIdentifier.Create<Int16>(), GetNumberControl<Int16>() },
+				{TypeIdentifier.Create<UInt16>(), GetNumberControl<UInt16>() },
+				{TypeIdentifier.Create<Int32>(), GetNumberControl<Int32>() },
+				{TypeIdentifier.Create<UInt32>(), GetNumberControl<UInt32>() },
+				{TypeIdentifier.Create<Int64>(), GetNumberControl<Int64>() },
+				{TypeIdentifier.Create<UInt64>(), GetNumberControl<UInt64>() },
+				{TypeIdentifier.Create<Single>(), GetNumberControl<Single>() },
+				{TypeIdentifier.Create<Double>(), GetNumberControl<Double>() },
+				{TypeIdentifier.Create<Decimal>(), GetNumberControl<Decimal>() }
+			});
 
-            private static String GetNumberControlIdentifier(Type modelType)
-            {
-                return new ControlTypeIdentifierTemplate()
-                    .WithModelType(modelType.FullName)
-                    .Build();
-            }
-            private static String GetNumberControl(Type modelType)
-            {
-                var controlIdentifierTemplate = new ControlTypeIdentifierTemplate()
-                                                        .WithModelType(modelType.FullName);
+			private static TypeIdentifier GetDefaultControlIdentifier<T>()
+			{
+				var modelTypeIDentifier = TypeIdentifier.Create<T>();
 
-                return new DefaultNumberControlTemplate()
-                    .WithModelType(modelType.FullName)
-                    .WithControlTypeIdentifierTemplate(controlIdentifierTemplate)
-                    .Build();
-            }
+				String nameString = new ControlTypeIdentifierTemplate()
+					.WithModelType(modelTypeIDentifier)
+					.Build();
 
-            private const String STRING_CONTROL_IDENTIFIER = "{" + nameof(STRING_CONTROL_IDENTIFIER) + "}";
-            private const String STRING_CONTROL =
-    @"		///<summary>
+				TypeIdentifierName name = TypeIdentifierName.Create().AppendNamePart(nameString);
+				var @namespace = Namespace.Create();
+
+				var identifier = TypeIdentifier.Create(name, @namespace);
+
+				return identifier;
+			}
+			private static String GetNumberControl<T>()
+			{
+				var modelTypeIdentifier = TypeIdentifier.Create<T>();
+
+				ControlTypeIdentifierTemplate controlIdentifierTemplate = new ControlTypeIdentifierTemplate()
+														.WithModelType(modelTypeIdentifier);
+
+				return new DefaultNumericControlTemplate()
+					.WithModelType(modelTypeIdentifier)
+					.WithControlTypeIdentifierTemplate((ControlTypeIdentifierTemplate)controlIdentifierTemplate)
+					.Build();
+			}
+
+			private const String STRING_CONTROL_IDENTIFIER = "{" + nameof(STRING_CONTROL_IDENTIFIER) + "}";
+			private const String STRING_CONTROL =
+	@"		///<summary>
 		///Default control for System.String
 		///</summary>
 		private sealed class " + STRING_CONTROL_IDENTIFIER + @" : __ControlBase<global::System.String>
@@ -97,9 +109,9 @@ namespace AutoForm.Generate.Blazor.Templates
 			#pragma warning restore 1998
 		}";
 
-            private const String BOOLEAN_CONTROL_IDENTIFIER = "{" + nameof(BOOLEAN_CONTROL_IDENTIFIER) + "}";
-            private const String BOOLEAN_CONTROL =
-    @"		///<summary>
+			private const String BOOLEAN_CONTROL_IDENTIFIER = "{" + nameof(BOOLEAN_CONTROL_IDENTIFIER) + "}";
+			private const String BOOLEAN_CONTROL =
+	@"		///<summary>
 		///Default control for System.Boolean
 		///</summary>
 		private sealed class " + BOOLEAN_CONTROL_IDENTIFIER + @" : __ControlBase<global::System.Boolean>
@@ -132,27 +144,27 @@ namespace AutoForm.Generate.Blazor.Templates
 		}
 ";
 
-            private readonly IEnumerable<String> _requiredDefaultControls;
+			private readonly IEnumerable<TypeIdentifier> _requiredDefaultControls;
 
-            public DefaultControlsTemplate WithRequiredDefaultControls(IEnumerable<String> requiredDefaultControls)
-            {
-                return new DefaultControlsTemplate(requiredDefaultControls);
-            }
+			public DefaultControlsTemplate WithRequiredDefaultControls(IEnumerable<TypeIdentifier> requiredDefaultControls)
+			{
+				return new DefaultControlsTemplate(requiredDefaultControls);
+			}
 
-            public String Build()
-            {
-                IEnumerable<String> controls = _requiredDefaultControls
-                    .Select(c => AvailableDefaultControlTemplates[c]);
+			public String Build()
+			{
+				IEnumerable<String> controlTemplates = _requiredDefaultControls
+					.Select(c => DefaultModelTemplatePairs[c]);
 
-                return String.Join("\n\n", controls)
-                    .Replace(STRING_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(String).FullName])
-                    .Replace(BOOLEAN_CONTROL_IDENTIFIER, AvailableDefaultControls[typeof(Boolean).FullName]);
-            }
+				return String.Join("\n\n", controlTemplates)
+					.Replace(STRING_CONTROL_IDENTIFIER, DefaultModelControlPairs[TypeIdentifier.Create<String>()].ToEscapedString())
+					.Replace(BOOLEAN_CONTROL_IDENTIFIER, DefaultModelControlPairs[TypeIdentifier.Create<Boolean>()].ToEscapedString());
+			}
 
-            public override String ToString()
-            {
-                return Build();
-            }
-        }
-    }
+			public override String ToString()
+			{
+				return Build();
+			}
+		}
+	}
 }
