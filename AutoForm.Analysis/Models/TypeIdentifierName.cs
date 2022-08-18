@@ -11,8 +11,8 @@ namespace AutoForm.Analysis.Models
 
         public static readonly TypeIdentifierName ModelAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.ModelAttribute)));
 
-        public static readonly TypeIdentifierName ControlAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.ControlAttribute)));
-        public static readonly TypeIdentifierName TemplateAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.TemplateAttribute)));
+        public static readonly TypeIdentifierName ControlAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.UseControlAttribute)));
+        public static readonly TypeIdentifierName TemplateAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.UseTemplateAttribute)));
 
         public static readonly TypeIdentifierName FallbackControlAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.FallbackControlAttribute)));
         public static readonly TypeIdentifierName FallbackTemplateAttribute = Create().AppendNamePart(GetAttributeName(typeof(Attributes.FallbackTemplateAttribute)));

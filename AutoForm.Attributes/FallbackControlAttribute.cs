@@ -3,7 +3,7 @@
 namespace AutoForm.Attributes
 {
     /// <summary>
-    /// Denotes the target as a fallback control for <c>ModelType</c>.
+    /// Denotes the target as a fallback control for subcontrols whose model type is <c>ModelType</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public sealed class FallbackControlAttribute : Attribute

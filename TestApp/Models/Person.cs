@@ -7,7 +7,7 @@ namespace TestApp.Models
 {
 
     [Model]
-    [Template(typeof(Templates.PersonControlTemplate))]
+    [UseTemplate(typeof(Templates.PersonControlTemplate))]
     public sealed class Person
     {
         [Model]
@@ -16,7 +16,7 @@ namespace TestApp.Models
             private String? street;
 
             [MaxLength(10)]
-            [Control(typeof(TextArea))]
+            [UseControl(typeof(TextArea))]
             public String? Street { get => street; set => Console.WriteLine(street = value); }
 
             [MaxLength(10)]
@@ -32,7 +32,7 @@ namespace TestApp.Models
             Location2 = new();
         }
         [Order(Int32.MaxValue)]
-        [Template(typeof(Templates.AddressControlTemplate))]
+        [UseTemplate(typeof(Templates.AddressControlTemplate))]
         public Address Location1 { get; set; }
 
         [Order(0)]
