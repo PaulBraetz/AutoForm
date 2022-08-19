@@ -24,7 +24,7 @@ namespace AutoForm.Blazor
         [Parameter]
         public EventCallback<String?> ValueChanged { get; set; }
         [Parameter]
-        public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+        public IDictionary<String, Object>? Attributes { get; set; }
 
         private global::System.String? __Value
         {

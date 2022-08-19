@@ -10,19 +10,19 @@ namespace AutoForm.Generate.Blazor.Templates
 	{
 		private readonly struct ControlTemplate
 		{
-			private ControlTemplate(Model model,
-									IEnumerable<SubControlTemplate> subControlTemplates,
-									ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
+			private ControlTemplate(TypeIdentifier modelType,
+									SubControlTemplate[] subControlTemplates,
+									TypeIdentifier controlType)
 			{
-				_model = model;
-				_subControlTemplates = subControlTemplates;
-				_controlTypeIdentifierTemplate = controlTypeIdentifierTemplate;
+				_modelType = modelType;
+				_subControlTemplates = subControlTemplates ?? Array.Empty<SubControlTemplate>();
+				_controlType = controlType;
 			}
 
-			private readonly Model _model;
+			private readonly TypeIdentifier _modelType;
+			private readonly TypeIdentifier _controlType;
 
-			private readonly IEnumerable<SubControlTemplate> _subControlTemplates;
-			private readonly ControlTypeIdentifierTemplate _controlTypeIdentifierTemplate;
+			private readonly SubControlTemplate[] _subControlTemplates;
 
 			private const String TEMPLATE =
 @"		///<summary>
@@ -41,17 +41,17 @@ namespace AutoForm.Generate.Blazor.Templates
             #pragma warning restore 1998
 		}";
 
-			public ControlTemplate WithModel(Model model)
+			public ControlTemplate WithModelType(TypeIdentifier modelType)
 			{
-				return new ControlTemplate(model, _subControlTemplates, _controlTypeIdentifierTemplate);
+				return new ControlTemplate(modelType, _subControlTemplates, _controlType);
 			}
-			public ControlTemplate WithControlTypeIdentifierTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
+			public ControlTemplate WithControlType(TypeIdentifier controlType)
 			{
-				return new ControlTemplate(_model, _subControlTemplates, controlTypeIdentifierTemplate);
+				return new ControlTemplate(_modelType, _subControlTemplates, controlType);
 			}
 			public ControlTemplate WithSubControlTemplates(IEnumerable<SubControlTemplate> subControlTemplates)
 			{
-				return new ControlTemplate(_model, subControlTemplates, _controlTypeIdentifierTemplate);
+				return new ControlTemplate(_modelType, subControlTemplates.ToArray(), _controlType);
 			}
 			public String Build()
 			{
@@ -60,9 +60,9 @@ namespace AutoForm.Generate.Blazor.Templates
 				var subControls = String.Join("\n\n", _subControlTemplates.Select(t => t.Build()));
 
 				var template = TEMPLATE
-					.Replace(MODEL_TYPE, _model.Name.ToEscapedString())
+					.Replace(MODEL_TYPE, _modelType.ToEscapedString())
 					.Replace(SUB_CONTROLS, subControls)
-					.Replace(CONTROL_TYPE_IDENTIFIER, _controlTypeIdentifierTemplate.Build());
+					.Replace(CONTROL_TYPE_IDENTIFIER, _controlType.ToEscapedString());
 
 				var regex = new Regex(Regex.Escape(LINE_INDEX));
 				while (regex.IsMatch(template))

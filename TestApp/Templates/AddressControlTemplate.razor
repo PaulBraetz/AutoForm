@@ -1,14 +1,16 @@
-﻿<div class="input-group mb-3">
-	<span class="input-group-text">
-		@(Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ?? typeof(Person.Address).Name)
+﻿<div class="d-flex flex-column p-1">
+	<span class="mb-1">
+		@(Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ?? typeof(Address).Name)
 	</span>
-	@ChildContent
+	<div class="d-flex flex-row">
+		@ChildContent
+	</div>
 </div>
 @code {
 	[Parameter]
-	public Person.Address Value { get; set; }
+	public Address Value { get; set; }
 	[Parameter]
-	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+	public IDictionary<String, Object> Attributes { get; set; }
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
 }

@@ -7,9 +7,9 @@ namespace AutoForm.Generate.Blazor.Templates
 	{
 		private readonly struct DefaultNumericControlTemplate
 		{
-			private DefaultNumericControlTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate, TypeIdentifier modelType)
+			private DefaultNumericControlTemplate(TypeIdentifier controlType, TypeIdentifier modelType)
 			{
-				_controlTypeIdentifierTemplate = controlTypeIdentifierTemplate;
+				_controlType = controlType;
 				_modelType = modelType;
 			}
 
@@ -28,7 +28,7 @@ namespace AutoForm.Generate.Blazor.Templates
 				__builder.AddAttribute(3, ""oninput"", global::Microsoft.AspNetCore.Components.EventCallback.Factory.CreateBinder(this, __value => __Value = __value, __Value));
 				if(Attributes != null)
 				{
-					__builder.AddMultipleAttributes(4, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));
+					__builder.AddMultipleAttributes(4, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object>>(Attributes));
 				}
 				__builder.SetUpdatesAttributeName(""value"");
 				__builder.CloseElement();
@@ -46,25 +46,23 @@ namespace AutoForm.Generate.Blazor.Templates
 			#pragma warning restore 1998
 		}";
 
-			private readonly ControlTypeIdentifierTemplate _controlTypeIdentifierTemplate;
+			private readonly TypeIdentifier _controlType;
 			private readonly TypeIdentifier _modelType;
 
-			public DefaultNumericControlTemplate WithControlTypeIdentifierTemplate(ControlTypeIdentifierTemplate controlTypeIdentifierTemplate)
+			public DefaultNumericControlTemplate WithControlType(TypeIdentifier controlType)
 			{
-				return new DefaultNumericControlTemplate(controlTypeIdentifierTemplate, _modelType);
+				return new DefaultNumericControlTemplate(controlType, _modelType);
 			}
 			public DefaultNumericControlTemplate WithModelType(TypeIdentifier modelType)
 			{
-				return new DefaultNumericControlTemplate(_controlTypeIdentifierTemplate, modelType);
+				return new DefaultNumericControlTemplate(_controlType, modelType);
 			}
 
 			public String Build()
 			{
-				String controlTypeIdentifier = _controlTypeIdentifierTemplate.Build();
-
 				return TEMPLATE
 					.Replace(MODEL_TYPE, _modelType.ToEscapedString())
-					.Replace(CONTROL_TYPE_IDENTIFIER, controlTypeIdentifier);
+					.Replace(CONTROL_TYPE_IDENTIFIER, _controlType.ToEscapedString());
 			}
 
 			public override String ToString()

@@ -42,12 +42,12 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			if (!isError)
 			{
-				IEnumerable<FallbackControl> defaultFallbackControls = DefaultControlsTemplate.DefaultModelControlPairs
+				IEnumerable<Control> defaultFallbackControls = DefaultControlsTemplate.DefaultModelControlPairs
 					.Where(kvp => !modelSpace.FallbackControls.SelectMany(c => c.Models).Contains(kvp.Key))
 					.GroupBy(kvp => kvp.Value)
-					.Select(group => FallbackControl.Create(group.Key).AppendRange(group.Select(kvp => kvp.Key)));
+					.Select(group => Control.Create(group.Key).WithRange(group.Select(kvp => kvp.Key)));
 
-				modelSpace = modelSpace.AppendRange(defaultFallbackControls).ApplyFallbacks();
+				modelSpace = modelSpace.WithFallbackControls(defaultFallbackControls).WithRequiredGeneratedControls();
 			}
 
 			_modelSpace = modelSpace;
@@ -91,15 +91,21 @@ namespace AutoForm.Generate.Blazor.Templates
 		private ControlsTemplate GetControlsTemplate()
 		{
 			IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates = GetModelControlPairTemplates();
+			IEnumerable<KeyValueTypesPairTemplate> modelTemplatePairTemplates = GetModelTemplatePairTemplates();
 			IEnumerable<ControlTemplate> controlTemplates = GetControlTemplates();
 			DefaultControlsTemplate defaultControlsTemplate = GetDefaultControlsTemplate();
 
 			return new ControlsTemplate()
 				.WithControlTemplates(controlTemplates)
 				.WithDefaultControlsTemplate(defaultControlsTemplate)
-				.WithModelControlPairTemplates(modelControlPairTemplates);
+				.WithModelControlPairTemplates(modelControlPairTemplates)
+				.WithModelTemplatePairTemplates(modelTemplatePairTemplates);
 		}
 
+		private IEnumerable<KeyValueTypesPairTemplate> GetModelTemplatePairTemplates()
+		{
+			return _modelSpace.FallbackTemplates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
+		}
 		private DefaultControlsTemplate GetDefaultControlsTemplate()
 		{
 			IEnumerable<TypeIdentifier> requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
@@ -111,19 +117,31 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			IEnumerable<TypeIdentifier> requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
 
-			return requiredDefaulControlTypes.Select(GetModelControlPairTemplate);
+			return GetControlsToBeGenerated().SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name)))//)
+				.Concat(_modelSpace.FallbackControls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
 		}
 		private KeyValueTypesPairTemplate GetModelControlPairTemplate(TypeIdentifier requiredDefaultControlType)
 		{
+			return GetModelControlPairTemplate(DefaultControlsTemplate.DefaultModelControlPairs[requiredDefaultControlType], requiredDefaultControlType);
+		}
+		private KeyValueTypesPairTemplate GetModelControlPairTemplate(TypeIdentifier key, TypeIdentifier value)
+		{
 			return new KeyValueTypesPairTemplate()
-				.WithValueType(DefaultControlsTemplate.DefaultModelControlPairs[requiredDefaultControlType])
-				.WithKeyType(requiredDefaultControlType);
+				.WithValueType(value)
+				.WithKeyType(key);
 		}
 		private IEnumerable<TypeIdentifier> GetRequiredDefaultControlTypes()
 		{
-			return DefaultControlsTemplate.DefaultModelControlPairs.Keys.Except(_modelSpace.FallbackControls.SelectMany(c => c.Models));
+			return DefaultControlsTemplate.DefaultModelControlPairs.Keys
+				.Except(GetControlsToBeGenerated().SelectMany(c => c.Models));
 		}
-		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates(FallbackControl control)
+
+		private IEnumerable<Control> GetControlsToBeGenerated()
+		{
+			return _modelSpace.RequiredGeneratedControls.Where(c => !DefaultControlsTemplate.DefaultModelControlPairs.Values.Contains(c.Name));
+		}
+
+		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates(Control control)
 		{
 			return control.Models
 					.Select(t => new KeyValueTypesPairTemplate()
@@ -133,15 +151,14 @@ namespace AutoForm.Generate.Blazor.Templates
 
 		private IEnumerable<ControlTemplate> GetControlTemplates()
 		{
-			IEnumerable<Model> modelsWithMissingControl = GetModelsWithMissingControlModel();
-
 			var result = new List<ControlTemplate>();
 			var exceptions = new List<Exception>();
-			foreach (var model in modelsWithMissingControl)
+			var defaults = DefaultControlsTemplate.DefaultModelControlPairs.Select(kvp => kvp.Value);
+			foreach (var requiredControl in _modelSpace.RequiredGeneratedControls.Where(c => !defaults.Contains(c.Name)))
 			{
 				try
 				{
-					result.Add(GetControlTemplate(model));
+					result.Add(GetControlTemplate(requiredControl));
 				}
 				catch (Exception ex)
 				{
@@ -157,26 +174,24 @@ namespace AutoForm.Generate.Blazor.Templates
 
 			return result;
 		}
-		private ControlTemplate GetControlTemplate(Model model)
+		private ControlTemplate GetControlTemplate(Control requiredControl)
 		{
-			ControlTypeIdentifierTemplate controlTypeIdentifierTemplate = GetControlTypeIdentifierTemplate(model);
+			var model = _modelSpace.Models.Single(m => requiredControl.Models.Contains(m.Name));
+
 			IEnumerable<SubControlTemplate> subControlTemplates = GetSubControlTemplates(model);
 
 			return new ControlTemplate()
-				.WithModel(model)
-				.WithControlTypeIdentifierTemplate(controlTypeIdentifierTemplate)
+				.WithModelType(model.Name)
+				.WithControlType(requiredControl.Name)
 				.WithSubControlTemplates(subControlTemplates);
 		}
-		private ControlTypeIdentifierTemplate GetControlTypeIdentifierTemplate(Model model)
-		{
-			return new ControlTypeIdentifierTemplate()
-				.WithModelType(model.Name);
-		}
+
 		private IEnumerable<SubControlTemplate> GetSubControlTemplates(Model model)
 		{
 			var exceptions = new List<Exception>();
 			var subControlTemplates = new List<SubControlTemplate>();
-			foreach (var property in model.Properties)
+			var properties = model.Properties.OrderBy(p => p.Order);
+			foreach (var property in properties)
 			{
 				try
 				{
@@ -215,19 +230,6 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			return new SubControlPassAttributesTemplate()
 				.WithAttributesProviderIdentifier(model.AttributesProvider);
-		}
-
-		private IEnumerable<Model> GetModelsWithMissingControlModel()
-		{
-			return _modelSpace.Models.Where(m => m.Control == default);
-		}
-		private FallbackControl GetControlModel(Model model)
-		{
-			ControlTypeIdentifierTemplate controlIdentifierTemplate = GetControlTypeIdentifierTemplate(model);
-			TypeIdentifierName controlIdentifierName = TypeIdentifierName.Create().AppendNamePart(controlIdentifierTemplate.Build());
-			TypeIdentifier controlIdentifier = TypeIdentifier.Create(controlIdentifierName, Namespace.Create());
-
-			return FallbackControl.Create(controlIdentifier).Append(model.Name);
 		}
 
 		#endregion

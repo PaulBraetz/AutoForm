@@ -24,7 +24,7 @@ namespace AutoForm.Generate.Blazor.Templates
 			private readonly SubControlPassAttributesTemplate _subControlPassAttributesTemplate;
 
 			private const String TEMPLATE =
-@"                    //Subcontrol for " + PROPERTY_IDENTIFIER + @"
+@"					//Subcontrol for " + PROPERTY_IDENTIFIER + @"
                     __builder.OpenComponent<" + CONTROL_TYPE + @">(" + LINE_INDEX + @");
                     __builder.AddAttribute(" + LINE_INDEX + @", ""Value"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<" + PROPERTY_TYPE + @">(Value." + PROPERTY_IDENTIFIER + @"));
                     __builder.AddAttribute(" + LINE_INDEX + @", ""ValueChanged"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::Microsoft.AspNetCore.Components.EventCallback<" + PROPERTY_TYPE + @">>(global::Microsoft.AspNetCore.Components.EventCallback.Factory.Create<" + PROPERTY_TYPE + @">(this, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value." + PROPERTY_IDENTIFIER + @" = __value; ValueChanged.InvokeAsync(Value);}, Value." + PROPERTY_IDENTIFIER + @"))));" + SUB_CONTROL_PASS_ATTRIBUTES + @"
@@ -33,11 +33,11 @@ namespace AutoForm.Generate.Blazor.Templates
 			private const String TEMPLATED_TEMPLATE =
 @"					//Template for " + PROPERTY_IDENTIFIER + @"
                     __builder.OpenComponent<" + TEMPLATE_TYPE + @">(" + LINE_INDEX + @");
-                    __builder.AddAttribute(" + LINE_INDEX + @", ""Value"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<" + PROPERTY_TYPE + @">(Value));" + SUB_CONTROL_PASS_ATTRIBUTES + @"
+                    __builder.AddAttribute(" + LINE_INDEX + @", ""Value"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<" + PROPERTY_TYPE + @">(Value." + PROPERTY_IDENTIFIER + @"));" + SUB_CONTROL_PASS_ATTRIBUTES + @"
                     __builder.AddAttribute(" + LINE_INDEX + @", ""ChildContent"", (Microsoft.AspNetCore.Components.RenderFragment)(build" + PROPERTY_IDENTIFIER + @"SubControl));
                     __builder.CloseComponent();
 					
-                    void build" + PROPERTY_IDENTIFIER + @"SubControl(RenderTreeBuilder __builder)
+                    void build" + PROPERTY_IDENTIFIER + @"SubControl(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
 					{
 " + TEMPLATE + @"
 					}";

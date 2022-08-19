@@ -23,7 +23,7 @@ namespace AutoForm.Analysis.Models
 
 			foreach (Exception exception in exceptions)
 			{
-				error = error.Append(exception);
+				error = error.With(exception);
 			}
 
 			return error;
@@ -32,13 +32,13 @@ namespace AutoForm.Analysis.Models
 		public ModelSpace ExtractModelSpace()
 		{
 			IEnumerable<Model> models = GetModels();
-			IEnumerable<FallbackControl> controls = GetControls();
-			IEnumerable<FallbackTemplate> templates = GetTemplates();
+			IEnumerable<Control> controls = GetControls();
+			IEnumerable<Template> templates = GetTemplates();
 
 			var modelSpace = ModelSpace.Create()
-				.AppendRange(models)
-				.AppendRange(controls)
-				.AppendRange(templates);
+				.WithModels(models)
+				.WithFallbackControls(controls)
+				.WithTemplates(templates);
 
 			return modelSpace;
 		}
@@ -59,17 +59,17 @@ namespace AutoForm.Analysis.Models
 
 			return models;
 		}
-		private IEnumerable<FallbackControl> GetControls()
+		private IEnumerable<Control> GetControls()
 		{
 			IEnumerable<BaseTypeDeclarationSyntax> controlDeclarations = GetControlDeclarations();
-			IEnumerable<FallbackControl> controls = controlDeclarations.Select(GetControl);
+			IEnumerable<Control> controls = controlDeclarations.Select(GetControl);
 
 			return controls;
 		}
-		private IEnumerable<FallbackTemplate> GetTemplates()
+		private IEnumerable<Template> GetTemplates()
 		{
 			IEnumerable<BaseTypeDeclarationSyntax> templateDeclarations = GetTemplateDeclarations();
-			IEnumerable<FallbackTemplate> templates = templateDeclarations.Select(GetTemplate);
+			IEnumerable<Template> templates = templateDeclarations.Select(GetTemplate);
 
 			return templates;
 		}
@@ -94,7 +94,7 @@ namespace AutoForm.Analysis.Models
 			TypeIdentifier template = GetTemplateIdentifier(typeDeclaration);
 
 			Model model = Model.Create(identifier, control, template, attributesProvider)
-				.AppendRange(properties);
+				.WithRange(properties);
 
 			return model;
 		}
@@ -161,14 +161,14 @@ namespace AutoForm.Analysis.Models
 				}
 			}
 		}
-		private FallbackControl GetControl(BaseTypeDeclarationSyntax typeDeclaration)
+		private Control GetControl(BaseTypeDeclarationSyntax typeDeclaration)
 		{
 			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
 
 			IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackControlAttribute);
 
-			var template = FallbackControl.Create(identifier)
-				.AppendRange(modelTypes);
+			var template = Control.Create(identifier)
+				.WithRange(modelTypes);
 
 			return template;
 		}
@@ -184,13 +184,13 @@ namespace AutoForm.Analysis.Models
 				}
 			}
 		}
-		private FallbackTemplate GetTemplate(BaseTypeDeclarationSyntax typeDeclaration)
+		private Template GetTemplate(BaseTypeDeclarationSyntax typeDeclaration)
 		{
 			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
 
 			IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackTemplateAttribute);
 
-			var template = FallbackTemplate.Create(identifier).AppendRange(modelTypes);
+			var template = Template.Create(identifier).WithRange(modelTypes);
 
 			return template;
 		}
@@ -280,7 +280,7 @@ namespace AutoForm.Analysis.Models
 				foreach (UsingDirectiveSyntax @namespace in namespaces)
 				{
 					Namespace item = Namespace.Create()
-						.AppendRange(@namespace.Name.ToString().Split('.'));
+						.WithRange(@namespace.Name.ToString().Split('.'));
 
 					result.Add(item);
 				}
@@ -349,7 +349,7 @@ namespace AutoForm.Analysis.Models
 			if (symbol.ContainingType != null)
 			{
 				TypeIdentifierName containingType = GetTypeIdentifierName(symbol.ContainingType);
-				result = result.AppendTypePart(containingType);
+				result = result.WithTypePart(containingType);
 			}
 
 			Boolean flag = false;
@@ -359,17 +359,34 @@ namespace AutoForm.Analysis.Models
 				symbol = arraySymbol.ElementType;
 			}
 
-			result = result.AppendNamePart(symbol.Name);
+			result = result.WithNamePart(symbol.Name);
 
 			if (symbol is INamedTypeSymbol namedSymbol && namedSymbol.TypeArguments.Any())
 			{
-				IEnumerable<TypeIdentifier> arguments = namedSymbol.TypeArguments.Select(GetTypeIdentifier);
-				result = result.AppendGenericPart(arguments);
+				var arguments = new TypeIdentifier[namedSymbol.TypeArguments.Length];
+				
+				for(int i = 0; i < arguments.Length; i++)
+				{
+					var typeArgument = namedSymbol.TypeArguments[i];
+					TypeIdentifier argument = default;
+					if (typeArgument.ContainingType == namedSymbol)
+					{
+						argument = TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart(typeArgument.ToString()), Namespace.Create());
+					}
+					else
+					{
+						argument = GetTypeIdentifier(typeArgument);
+					}
+
+					arguments[i] = argument;
+				}
+
+				result = result.WithGenericPart(arguments);
 			}
 
 			if (flag)
 			{
-				result = result.AppendArrayPart();
+				result = result.WithArrayPart();
 			}
 
 			return result;

@@ -10,9 +10,9 @@ namespace AutoForm.Generate.Blazor.Templates
 	{
 		private readonly struct DefaultControlsTemplate
 		{
-			private DefaultControlsTemplate(IEnumerable<TypeIdentifier> requiredDefaultControls)
+			private DefaultControlsTemplate(TypeIdentifier[] requiredDefaultControls)
 			{
-				_requiredDefaultControls = requiredDefaultControls;
+				_requiredDefaultControls = requiredDefaultControls ?? Array.Empty<TypeIdentifier>();
 			}
 
 			public readonly static IDictionary<TypeIdentifier, TypeIdentifier> DefaultModelControlPairs = new ReadOnlyDictionary<TypeIdentifier, TypeIdentifier>(new Dictionary<TypeIdentifier, TypeIdentifier>()
@@ -50,29 +50,17 @@ namespace AutoForm.Generate.Blazor.Templates
 
 			private static TypeIdentifier GetDefaultControlIdentifier<T>()
 			{
-				var modelTypeIDentifier = TypeIdentifier.Create<T>();
-
-				String nameString = new ControlTypeIdentifierTemplate()
-					.WithModelType(modelTypeIDentifier)
-					.Build();
-
-				TypeIdentifierName name = TypeIdentifierName.Create().AppendNamePart(nameString);
-				var @namespace = Namespace.Create();
-
-				var identifier = TypeIdentifier.Create(name, @namespace);
-
-				return identifier;
+				return TypeIdentifier.CreateGeneratedControl(TypeIdentifier.Create<T>());
 			}
 			private static String GetNumberControl<T>()
 			{
-				var modelTypeIdentifier = TypeIdentifier.Create<T>();
+				var modelType = TypeIdentifier.Create<T>();
 
-				ControlTypeIdentifierTemplate controlIdentifierTemplate = new ControlTypeIdentifierTemplate()
-														.WithModelType(modelTypeIdentifier);
+				var controlType = GetDefaultControlIdentifier<T>();
 
 				return new DefaultNumericControlTemplate()
-					.WithModelType(modelTypeIdentifier)
-					.WithControlTypeIdentifierTemplate((ControlTypeIdentifierTemplate)controlIdentifierTemplate)
+					.WithModelType(modelType)
+					.WithControlType(controlType)
 					.Build();
 			}
 
@@ -91,7 +79,7 @@ namespace AutoForm.Generate.Blazor.Templates
 				__builder.AddAttribute(2, ""oninput"", global::Microsoft.AspNetCore.Components.EventCallback.Factory.CreateBinder(this, __value => __Value = __value, __Value));
 				if(Attributes != null)
 				{
-					__builder.AddMultipleAttributes(3, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));
+					__builder.AddMultipleAttributes(3, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object>>(Attributes));
 				}
 				__builder.SetUpdatesAttributeName(""value"");
 				__builder.CloseElement();
@@ -125,7 +113,7 @@ namespace AutoForm.Generate.Blazor.Templates
 				__builder.AddAttribute(3, ""oninput"", global::Microsoft.AspNetCore.Components.EventCallback.Factory.CreateBinder(this, __value => __Value = __value, __Value));
 				if(Attributes != null)
 				{
-					__builder.AddMultipleAttributes(4, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Attributes));
+					__builder.AddMultipleAttributes(4, global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object>>(Attributes));
 				}
 				__builder.SetUpdatesAttributeName(""checked"");
 				__builder.CloseElement();
@@ -144,11 +132,11 @@ namespace AutoForm.Generate.Blazor.Templates
 		}
 ";
 
-			private readonly IEnumerable<TypeIdentifier> _requiredDefaultControls;
+			private readonly TypeIdentifier[] _requiredDefaultControls;
 
 			public DefaultControlsTemplate WithRequiredDefaultControls(IEnumerable<TypeIdentifier> requiredDefaultControls)
 			{
-				return new DefaultControlsTemplate(requiredDefaultControls);
+				return new DefaultControlsTemplate(requiredDefaultControls.ToArray());
 			}
 
 			public String Build()

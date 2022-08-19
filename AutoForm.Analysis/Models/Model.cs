@@ -10,18 +10,18 @@ namespace AutoForm.Analysis.Models
 		public readonly TypeIdentifier Control;
 		public readonly TypeIdentifier Template;
 		public readonly PropertyIdentifier AttributesProvider;
-		public readonly IEnumerable<Property> Properties;
+		public readonly Property[] Properties;
 		private readonly String _json;
 		private readonly String _string;
 
-		private Model(TypeIdentifier name, TypeIdentifier control, TypeIdentifier template, IEnumerable<Property> properties, PropertyIdentifier attributesProvider)
+		private Model(TypeIdentifier name, TypeIdentifier control, TypeIdentifier template, Property[] properties, PropertyIdentifier attributesProvider)
 		{
 			properties.ThrowOnDuplicate(nameof(properties));
 
 			Name = name;
 			Control = control;
 			Template = template;
-			Properties = properties;
+			Properties = properties ?? Array.Empty<Property>();
 			AttributesProvider = attributesProvider;
 
 			_json = Json.Object(Json.KeyValuePair(nameof(Name), Name),
@@ -36,13 +36,13 @@ namespace AutoForm.Analysis.Models
 		{
 			return new Model(name, control, template, Array.Empty<Property>(), attributesProvider);
 		}
-		public Model Append(Property property)
+		public Model With(Property property)
 		{
-			return new Model(Name, Control, Template, Properties.Append(property), AttributesProvider);
+			return new Model(Name, Control, Template, Properties.Append(property).ToArray(), AttributesProvider);
 		}
-		public Model AppendRange(IEnumerable<Property> properties)
+		public Model WithRange(IEnumerable<Property> properties)
 		{
-			return new Model(Name, Control, Template, Properties.Concat(properties), AttributesProvider);
+			return new Model(Name, Control, Template, Properties.Concat(properties).ToArray(), AttributesProvider);
 		}
 
 		public override Boolean Equals(Object obj)

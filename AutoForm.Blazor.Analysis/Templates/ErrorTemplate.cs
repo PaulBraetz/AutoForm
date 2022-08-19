@@ -1,5 +1,6 @@
 ﻿using AutoForm.Analysis.Models;
 using System;
+using System.Collections.Generic;
 
 namespace AutoForm.Generate.Blazor.Templates
 {
@@ -32,7 +33,7 @@ namespace AutoForm.Generate.Blazor.Templates
 			public String Build()
 			{
 				String generatedDate = DateTimeOffset.Now.ToString();
-				String errorMessage = String.Join("\n\n", _error.Exceptions);
+				String errorMessage = String.Join("\n\n", (IEnumerable<Exception>)_error.Exceptions);
 
 				return TEMPLATE
 					.Replace(GENERATED_DATE, generatedDate)

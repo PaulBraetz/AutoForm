@@ -9,7 +9,7 @@ namespace TestApp.Controls
         [Parameter]
         public EventCallback<ICollection<TModel>> ValueChanged { get; set; }
         [Parameter]
-        public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+        public IDictionary<String, Object> Attributes { get; set; }
 
         protected abstract Func<TModel>? ModelFactory { get; }
 

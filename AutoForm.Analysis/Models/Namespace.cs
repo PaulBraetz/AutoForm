@@ -6,16 +6,16 @@ namespace AutoForm.Analysis.Models
 {
     public readonly struct Namespace : IEquatable<Namespace>
     {
-        private Namespace(IEnumerable<IdentifierPart> parts)
+        private Namespace(IdentifierPart[] parts)
         {
-            Parts = parts;
+            Parts = parts ?? Array.Empty<IdentifierPart>();
             _string = String.Concat(Parts);
             _json = Json.Value(_string);
         }
 
-        public static readonly Namespace Attributes = Create().Append("AutoForm").Append("Attributes");
+        public static readonly Namespace Attributes = Create().With("AutoForm").With("Attributes");
 
-        public readonly IEnumerable<IdentifierPart> Parts;
+        public readonly IdentifierPart[] Parts;
         private readonly String _json;
         private readonly String _string;
 
@@ -23,15 +23,16 @@ namespace AutoForm.Analysis.Models
         {
             return new Namespace(Array.Empty<IdentifierPart>());
         }
-        public Namespace Append(String name)
+        public Namespace With(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 return this;
             }
 
-            IEnumerable<IdentifierPart> parts = GetNextParts()
-                .Append(IdentifierPart.Name(name));
+            var parts = GetNextParts()
+                .Append(IdentifierPart.Name(name))
+				.ToArray();
 
             return new Namespace(parts);
         }
@@ -42,8 +43,9 @@ namespace AutoForm.Analysis.Models
                 return this;
             }
 
-            IEnumerable<IdentifierPart> parts = GetPreviousParts()
-                .Prepend(IdentifierPart.Name(name));
+            var parts = GetPreviousParts()
+                .Prepend(IdentifierPart.Name(name))
+				.ToArray();
 
             return new Namespace(parts);
         }
@@ -57,12 +59,12 @@ namespace AutoForm.Analysis.Models
 
             return @namespace;
         }
-        public Namespace AppendRange(IEnumerable<String> names)
+        public Namespace WithRange(IEnumerable<String> names)
         {
             Namespace @namespace = this;
             foreach (String name in names)
             {
-                @namespace = @namespace.Append(name);
+                @namespace = @namespace.With(name);
             }
 
             return @namespace;

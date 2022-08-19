@@ -11,7 +11,7 @@ namespace AutoForm.Json.Analysis
 
         public String Generate(ModelSpace modelSpace)
         {
-            return $"//{{\"ModelSpace\":{modelSpace}}}";
+            return $"//{{\"ModelSpace\":{modelSpace.WithRequiredGeneratedControls(false)}}}";
         }
 
         public String Generate(Error error)

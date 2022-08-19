@@ -1,12 +1,12 @@
 ﻿@typeparam TModel
 @if (Value != null)
 {
-	<div class="d-flex flex-column" @attributes="Attributes">
+	<div class="d-inline-flex flex-column" @attributes="Attributes">
 		@foreach (TModel model in Value)
 		{
-			<div class="d-flex flex-column">
+			<div class="card mb-2">
 				<AutoControl TModel="TModel" Value="model" ValueChanged="(TModel m)=>this.SubControlChanged()" />
-				<div>
+				<div class="card-body">
 					<button class="btn btn-sm btn-outline-danger" @onclick="()=>Remove(model)">
 						Remove
 					</button>
@@ -15,10 +15,12 @@
 		}
 		@if (ModelFactory != null)
 		{
-			<div>
-				<button class="btn btn-sm btn-outline-primary" @onclick="Add">
-					Add
-				</button>
+			<div class="card">
+				<div class="card-footer d-flex justify-content-center">
+					<button class="btn btn-sm btn-outline-primary flex-shrink-1" @onclick="Add">
+						Add
+					</button>
+				</div>
 			</div>
 		}
 	</div>

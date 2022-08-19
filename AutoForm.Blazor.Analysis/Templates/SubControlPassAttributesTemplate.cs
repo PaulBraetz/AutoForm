@@ -16,7 +16,7 @@ namespace AutoForm.Generate.Blazor.Templates
 
             private const String TEMPLATE =
     @"
-                    __builder.AddAttribute(" + LINE_INDEX + @", ""Attributes"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object>>>(Value." + ATTRIBUTES_PROVIDER_IDENTIFIER + @".Get" + PROPERTY_IDENTIFIER + "Attributes()));";
+                    __builder.AddAttribute(" + LINE_INDEX + @", ""Attributes"", global::Microsoft.AspNetCore.Components.CompilerServices.RuntimeHelpers.TypeCheck<global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object>>(Value." + ATTRIBUTES_PROVIDER_IDENTIFIER + @".Get" + PROPERTY_IDENTIFIER + "Attributes()));";
 
             public SubControlPassAttributesTemplate WithAttributesProviderIdentifier(PropertyIdentifier attributesProviderIdentifier)
             {

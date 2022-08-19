@@ -1,66 +1,83 @@
 ﻿using AutoForm.Attributes;
 using AutoForm.Blazor;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace TestApp.Models
 {
+	[Model]
+	public sealed class Person
+	{
+		public Person()
+		{
+			Residency = new();
+		}
+		public Address Residency { get; set; }
 
-    [Model]
-    [UseTemplate(typeof(Templates.PersonControlTemplate))]
-    public sealed class Person
-    {
-        [Model]
-        public sealed class Address
-        {
-            private String? street;
+		[AttributesProvider]
+		public PersonAttributesProvider AttributesProvider { get; } = new();
+	}
 
-            [MaxLength(10)]
-            [UseControl(typeof(TextArea))]
-            public String? Street { get => street; set => Console.WriteLine(street = value); }
+	[Model]
+	public sealed class Address
+	{
+		private String? street;
+		[Order(-2)]
+		public String? Street { get => street; set => Console.WriteLine($"{street = value}, {HouseNumber}, {City}"); }
+		public String? City { get; set; }
+		[Order(-1)]
+		public Int16 HouseNumber { get; set; }
 
-            [MaxLength(10)]
-            [Order(-1)]
-            public String? City { get; set; }
+		[AttributesProvider]
+		public AddressAttributesProvider AttributesProvider { get; } = new();
+	}
 
-            [AttributesProvider]
-            public AddressAttributesProvider AttributesProvider { get; } = new();
-        }
-        public Person()
-        {
-            Location1 = new();
-            Location2 = new();
-        }
-        [Order(Int32.MaxValue)]
-        [UseTemplate(typeof(Templates.AddressControlTemplate))]
-        public Address Location1 { get; set; }
+	public sealed class AddressAttributesProvider
+	{
+		private readonly IDictionary<String, Object> _houseNumber =
+			AttributesFactory.Create(("class", "form-control"), ("placeholder", nameof(Address.HouseNumber)));
+		private readonly IDictionary<String, Object> _street =
+			AttributesFactory.Create(("class", "form-control"), ("placeholder", nameof(Address.Street)));
+		private readonly IDictionary<String, Object> _city =
+			AttributesFactory.Create(("class", "form-control"), ("placeholder", nameof(Address.City)));
 
-        [Order(0)]
-        public Address Location2 { get; set; }
+		public IDictionary<String, Object> GetHouseNumberAttributes() => _houseNumber;
+		public IDictionary<String, Object> GetStreetAttributes() => _street;
+		public IDictionary<String, Object> GetCityAttributes() => _city;
+	}
 
-        [AttributesProvider]
-        public PersonAttributesProvider AttributesProvider { get; } = new();
-    }
-    public sealed class AddressAttributesProvider
-    {
-        private readonly IEnumerable<KeyValuePair<String, Object>> _default = new Dictionary<String, Object>(){
-                    {"class", "form-control" }
-                };
+	public sealed class PersonAttributesProvider
+	{
+		private readonly IDictionary<String, Object> _residency = AttributesFactory.Create(("label", nameof(Person.Residency)));
 
-        public IEnumerable<KeyValuePair<String, Object>> GetStreetAttributes() => _default;
-        public IEnumerable<KeyValuePair<String, Object>> GetCityAttributes() => _default;
-    }
-    public sealed class PersonAttributesProvider
-    {
-        private readonly IEnumerable<KeyValuePair<String, Object>> _location1 = new Dictionary<String, Object>(){
-                    {"label", nameof(Person.Location1)}
-                };
+		public IDictionary<String, Object> GetResidencyAttributes() => _residency;
+	}
 
-        private readonly IEnumerable<KeyValuePair<String, Object>> _location2 = new Dictionary<String, Object>(){
-                    {"label", nameof(Person.Location2)}
-                };
+	internal static class AttributesFactory
+	{
+		public static IDictionary<String, Object> Create(params (String, Object)[] attributes)
+		{
+			return Create(true, attributes);
+		}
+		public static IDictionary<String, Object> Create(Boolean appendId, params (String, Object)[] attributes)
+		{
+			var result = new Dictionary<String, Object>();
 
-        public IEnumerable<KeyValuePair<String, Object>> GetLocation1Attributes() => _location1;
-        public IEnumerable<KeyValuePair<String, Object>> GetLocation2Attributes() => _location2;
-    }
+			foreach (var attribute in attributes)
+			{
+				if (!result.ContainsKey(attribute.Item1))
+				{
+					result.Add(attribute.Item1, attribute.Item2);
+				}
+			}
+
+			if (appendId && !result.ContainsKey("id"))
+			{
+				result.Add("id", $"component_{Guid.NewGuid()}");
+			}
+
+			return result;
+		}
+	}
 }

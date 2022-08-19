@@ -1,14 +1,15 @@
-﻿<div class="d-flex flex-column">
-	<span>
-		@(Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ?? typeof(Person).Name)
-	</span>
-	@ChildContent
+﻿<div class="card-body">
+	<h6 class="card-title">@(Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ?? typeof(Person).Name)</h6>
+	<hr />
+	<div class="d-flex flex-column">
+		@ChildContent
+	</div>
 </div>
 @code {
 	[Parameter]
 	public Person Value { get; set; }
 	[Parameter]
-	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+	public IDictionary<String, Object> Attributes { get; set; }
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
 }

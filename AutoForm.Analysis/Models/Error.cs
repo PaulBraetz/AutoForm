@@ -6,15 +6,15 @@ namespace AutoForm.Analysis.Models
 {
     public readonly struct Error : IEquatable<Error>
     {
-        private Error(IEnumerable<Exception> exceptions)
+        private Error(Exception[] exceptions)
         {
-            Exceptions = exceptions;
+            Exceptions = exceptions ?? Array.Empty<Exception>();
 
             _json = Json.Object(Json.KeyValuePair(nameof(Exceptions), Exceptions.Select(m => m.Message)));
             _string = _json;
         }
 
-        public readonly IEnumerable<Exception> Exceptions;
+        public readonly Exception[] Exceptions;
         private readonly String _json;
         private readonly String _string;
 
@@ -22,9 +22,9 @@ namespace AutoForm.Analysis.Models
         {
             return new Error(Array.Empty<Exception>());
         }
-        public Error Append(Exception exception)
+        public Error With(Exception exception)
         {
-            return new Error(Exceptions.Append(exception));
+            return new Error(Exceptions.Append(exception).ToArray());
         }
 
         public override String ToString()

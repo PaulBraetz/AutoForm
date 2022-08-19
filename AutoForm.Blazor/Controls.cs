@@ -15,17 +15,28 @@ namespace AutoForm.Blazor
 
             System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(type.TypeHandle);
 
-            FieldInfo? field = type?
+            FieldInfo? modelControlMapField = type?
                 .GetField("ModelControlMap");
 
-            if (field == null)
+            if (modelControlMapField == null)
             {
                 throw new Exception("Unable to locate ModelControlMap in AutoForm.Blazor.GeneratedControls. Make sure that the AutoForm.Blazor.Analysis.BlazorGenerator has run.");
             }
 
-            ModelControlMap = (IDictionary<Type, Type>)field.GetValue(null)!;
-        }
+            ModelControlMap = (IDictionary<Type, Type>)modelControlMapField.GetValue(null)!;
+
+			FieldInfo? modelTemplateMapField = type?
+				.GetField("ModelTemplateMap");
+
+			if (modelTemplateMapField == null)
+			{
+				throw new Exception("Unable to locate ModelTemplateMap in AutoForm.Blazor.GeneratedControls. Make sure that the AutoForm.Blazor.Analysis.BlazorGenerator has run.");
+			}
+
+			ModelTemplateMap = (IDictionary<Type, Type>)modelTemplateMapField.GetValue(null)!;
+		}
 
         public static IDictionary<Type, Type> ModelControlMap { get; private set; }
-    }
+		public static IDictionary<Type, Type> ModelTemplateMap { get; private set; }
+	}
 }

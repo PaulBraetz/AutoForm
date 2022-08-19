@@ -17,13 +17,15 @@ namespace AutoForm.Analysis.Models
 
 		public readonly TypeIdentifierName Name;
 		public readonly Namespace Namespace;
+		public readonly Boolean IsNotGenerated;
 		private readonly String _json;
 		private readonly String _string;
 
-		private TypeIdentifier(TypeIdentifierName name, Namespace @namespace)
+		private TypeIdentifier(TypeIdentifierName name, Namespace @namespace, Boolean isNotGenerated)
 		{
 			Name = name;
 			Namespace = @namespace;
+			IsNotGenerated = isNotGenerated;
 
 			String namespaceString = Namespace.ToEscapedString();
 			String nameString = Name.ToEscapedString();
@@ -32,6 +34,14 @@ namespace AutoForm.Analysis.Models
 			_json = Json.Value(_string);
 		}
 
+		public static TypeIdentifier CreateGeneratedControl(TypeIdentifier typeIdentifier)
+		{
+			var generatedName = $"__Control_{typeIdentifier.ToEscapedString().Replace(".", "_")}";
+			var name = TypeIdentifierName.Create().WithNamePart(generatedName);
+			var @namespace = Namespace.Create();
+
+			return Create(name, @namespace, false);
+		}
 		public static TypeIdentifier Create<T>()
 		{
 			return Create(typeof(T));
@@ -45,36 +55,40 @@ namespace AutoForm.Analysis.Models
 			{
 				Type parentType = type.Assembly.GetTypes().Single(t => t.GetNestedType(type.FullName) != null);
 				TypeIdentifier parentTypeIdentifier = Create(parentType);
-				name = name.AppendTypePart(parentTypeIdentifier.Name);
+				name = name.WithTypePart(parentTypeIdentifier.Name);
 				@namespace = parentTypeIdentifier.Namespace;
 			}
 
-			name = name.AppendNamePart(type.Name);
+			name = name.WithNamePart(type.Name);
 
 			if (type.IsConstructedGenericType)
 			{
-				IEnumerable<TypeIdentifier> genericArguments = type.GenericTypeArguments.Select(Create);
-				name = name.AppendGenericPart(genericArguments);
+				var genericArguments = type.GenericTypeArguments.Select(Create).ToArray();
+				name = name.WithGenericPart(genericArguments);
 			}
 
 			if (type.IsArray)
 			{
-				name = name.AppendArrayPart();
+				name = name.WithArrayPart();
 			}
 
 			if (@namespace == default)
 			{
 				String[] namespaceParts = type.Namespace.Split('.');
-				@namespace = Namespace.Create().AppendRange(namespaceParts);
+				@namespace = Namespace.Create().WithRange(namespaceParts);
 			}
 
 			return Create(name, @namespace);
 
 		}
 
+		private static TypeIdentifier Create(TypeIdentifierName name, Namespace @namespace, Boolean isNotGenerated)
+		{
+			return new TypeIdentifier(name, @namespace, isNotGenerated);
+		}
 		public static TypeIdentifier Create(TypeIdentifierName name, Namespace @namespace)
 		{
-			return new TypeIdentifier(name, @namespace);
+			return Create(name, @namespace, true);
 		}
 
 		public override String ToString()

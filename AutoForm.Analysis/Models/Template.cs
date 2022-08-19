@@ -4,44 +4,44 @@ using System.Linq;
 
 namespace AutoForm.Analysis.Models
 {
-    public readonly struct FallbackTemplate : IEquatable<FallbackTemplate>
+    public readonly struct Template : IEquatable<Template>
     {
         public readonly TypeIdentifier Name;
-        public readonly IEnumerable<TypeIdentifier> Models;
+        public readonly TypeIdentifier[] Models;
         private readonly String _json;
         private readonly String _string;
 
-        private FallbackTemplate(TypeIdentifier name, IEnumerable<TypeIdentifier> models)
+        private Template(TypeIdentifier name, TypeIdentifier[] models)
         {
             models.ThrowOnDuplicate(TypeIdentifierName.FallbackTemplateAttribute.ToString());
 
             Name = name;
-            Models = models;
+            Models = models ?? Array.Empty<TypeIdentifier>();
 
             _json = Json.Object(Json.KeyValuePair(nameof(Name), Name),
                                 Json.KeyValuePair(nameof(Models), Models));
             _string = _json;
         }
 
-        public static FallbackTemplate Create(TypeIdentifier identifier)
+        public static Template Create(TypeIdentifier identifier)
         {
-            return new FallbackTemplate(identifier, Array.Empty<TypeIdentifier>());
+            return new Template(identifier, Array.Empty<TypeIdentifier>());
         }
-        public FallbackTemplate Append(TypeIdentifier modelIdentifier)
+        public Template With(TypeIdentifier modelIdentifier)
         {
-            return new FallbackTemplate(Name, Models.Append(modelIdentifier));
+            return new Template(Name, Models.Append(modelIdentifier).ToArray());
         }
-        public FallbackTemplate AppendRange(IEnumerable<TypeIdentifier> modelIdentifiers)
+        public Template WithRange(IEnumerable<TypeIdentifier> modelIdentifiers)
         {
-            return new FallbackTemplate(Name, Models.Concat(modelIdentifiers));
+            return new Template(Name, Models.Concat(modelIdentifiers).ToArray());
         }
 
         public override Boolean Equals(Object obj)
         {
-            return obj is FallbackTemplate template && Equals(template);
+            return obj is Template template && Equals(template);
         }
 
-        public Boolean Equals(FallbackTemplate other)
+        public Boolean Equals(Template other)
         {
             return _json == other._json;
         }
@@ -60,12 +60,12 @@ namespace AutoForm.Analysis.Models
             return _string ?? String.Empty;
         }
 
-        public static Boolean operator ==(FallbackTemplate left, FallbackTemplate right)
+        public static Boolean operator ==(Template left, Template right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(FallbackTemplate left, FallbackTemplate right)
+        public static Boolean operator !=(Template left, Template right)
         {
             return !(left == right);
         }

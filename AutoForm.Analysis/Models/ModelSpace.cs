@@ -7,124 +7,142 @@ namespace AutoForm.Analysis.Models
 {
 	public readonly struct ModelSpace : IEquatable<ModelSpace>
 	{
-		public readonly IEnumerable<Model> Models;
-		public readonly IEnumerable<FallbackControl> FallbackControls;
-		public readonly IEnumerable<FallbackTemplate> FallbackTemplates;
+		public readonly Model[] Models;
+		public readonly Control[] FallbackControls;
+		public readonly Template[] FallbackTemplates;
+		public readonly Control[] RequiredGeneratedControls;
 		private readonly String _json;
 		private readonly String _string;
 
-		private ModelSpace(IEnumerable<Model> models, IEnumerable<FallbackControl> controls, IEnumerable<FallbackTemplate> templates)
+		private ModelSpace(Model[] models, Control[] controls, Template[] templates, Control[] requiredGeneratedControls)
 		{
 			models.ThrowOnDuplicate(TypeIdentifierName.ModelAttribute.ToString());
 			controls.ThrowOnDuplicate(TypeIdentifierName.FallbackControlAttribute.ToString());
 			templates.ThrowOnDuplicate(TypeIdentifierName.FallbackTemplateAttribute.ToString());
+			requiredGeneratedControls.ThrowOnDuplicate("required generated control");
 
-			Models = models.ToArray();
-			FallbackControls = controls.ToArray();
-			FallbackTemplates = templates.ToArray();
+			Models = models ?? Array.Empty<Model>();
+			FallbackControls = controls ?? Array.Empty<Control>();
+			FallbackTemplates = templates ?? Array.Empty<Template>();
+			RequiredGeneratedControls = requiredGeneratedControls ?? Array.Empty<Control>();
 
 			_json = Json.Object(Json.KeyValuePair(nameof(Models), Models),
 								Json.KeyValuePair(nameof(FallbackControls), FallbackControls),
-								Json.KeyValuePair(nameof(FallbackTemplates), FallbackTemplates));
+								Json.KeyValuePair(nameof(FallbackTemplates), FallbackTemplates),
+								Json.KeyValuePair(nameof(RequiredGeneratedControls), RequiredGeneratedControls));
 			_string = _json;
 		}
 
 		public static ModelSpace Create()
 		{
-			return new ModelSpace(Array.Empty<Model>(), Array.Empty<FallbackControl>(), Array.Empty<FallbackTemplate>());
+			return new ModelSpace(Array.Empty<Model>(), Array.Empty<Control>(), Array.Empty<Template>(), Array.Empty<Control>());
 		}
 
-		public ModelSpace AppendRange(IEnumerable<Model> models)
+		public ModelSpace WithModels(IEnumerable<Model> models)
 		{
-			return new ModelSpace(Models.Concat(models), FallbackControls, FallbackTemplates);
+			return new ModelSpace(Models.Concat(models).ToArray(), FallbackControls, FallbackTemplates, RequiredGeneratedControls);
 		}
 
-		public ModelSpace AppendRange(IEnumerable<FallbackControl> controls)
+		public ModelSpace WithFallbackControls(IEnumerable<Control> controls)
 		{
-			return new ModelSpace(Models, FallbackControls.Concat(controls), FallbackTemplates);
+			return new ModelSpace(Models, FallbackControls.Concat(controls).ToArray(), FallbackTemplates, RequiredGeneratedControls);
 		}
 
-		public ModelSpace AppendRange(IEnumerable<FallbackTemplate> templates)
+		public ModelSpace WithTemplates(IEnumerable<Template> templates)
 		{
-			return new ModelSpace(Models, FallbackControls, FallbackTemplates.Concat(templates));
+			return new ModelSpace(Models, FallbackControls, FallbackTemplates.Concat(templates).ToArray(), RequiredGeneratedControls);
 		}
 
-		private IEnumerable<Property> ApplyFallbacksToProperties(IEnumerable<Property> properties, IEnumerable<Model> models, IEnumerable<FallbackControl> fallbackControls)
+		private ModelSpace WithRequiredGeneratedControls(IEnumerable<Control> requiredGeneratedControls)
 		{
-			foreach (Property property in properties)
+			return new ModelSpace(Models, FallbackControls, FallbackTemplates, RequiredGeneratedControls.Concat(requiredGeneratedControls).ToArray());
+		}
+
+		private IEnumerable<Model> ApplyFallbacksToModels()
+		{
+			var generatedFallbackControls = Models.Select(m=>Control.CreateGenerated(m.Name));
+			var availableControls = FallbackControls.Where(c1 => !generatedFallbackControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedFallbackControls);
+
+			var fallbackAppliedModels = new List<Model>();
+
+			foreach (var model in Models)
 			{
-				TypeIdentifier control = property.Control;
+				var control = model.Control;
 				if (control == default)
 				{
-					control = models.SingleOrDefault(m => m.Name == property.Type).Control;
-					if (control == default)
-					{
-						control = fallbackControls.SingleOrDefault(c => c.Models.Any(m => m == property.Type)).Name;
-					}
+					control = availableControls.SingleOrDefault(c => c.Models.Contains(model.Name)).Name;
 				}
 
-				TypeIdentifier template = property.Template;
+				var template = model.Template;
 				if (template == default)
 				{
-					template = models.SingleOrDefault(m => m.Name == property.Type).Template;
-					if (template == default)
+					template = FallbackTemplates.SingleOrDefault(t => t.Models.Contains(model.Name)).Name;
+				}
+
+				var fallbackAppliedProperties = new List<Property>();
+
+				foreach (var property in model.Properties)
+				{
+					var subControl = property.Control;
+					if (subControl == default)
 					{
-						template = FallbackTemplates.SingleOrDefault(t => t.Models.Any(m => m == property.Type)).Name;
+						subControl = availableControls.SingleOrDefault(c => c.Models.Contains(property.Type)).Name;
+					}
+
+					var subTemplate = property.Template;
+					if (subTemplate == default)
+					{
+						subTemplate = FallbackTemplates.SingleOrDefault(t => t.Models.Contains(property.Type)).Name;
+					}
+
+					var fallbackAppliedProperty = Property.Create(property.Name, property.Type, subControl, subTemplate, property.Order);
+
+					fallbackAppliedProperties.Add(fallbackAppliedProperty);
+				}
+
+				var fallbackAppliedModel = Model.Create(model.Name, control, template, model.AttributesProvider).WithRange(fallbackAppliedProperties);
+
+				fallbackAppliedModels.Add(fallbackAppliedModel);
+			}
+
+			return fallbackAppliedModels;
+		}
+
+		public ModelSpace WithRequiredGeneratedControls(Boolean checkModelViability = false)
+		{
+			var fallbackAppliedModels = ApplyFallbacksToModels();
+
+			var requiredGeneratedControls = fallbackAppliedModels
+				.Where(m => !m.Control.IsNotGenerated)
+				.Select(m => m.Name)
+				.Concat(fallbackAppliedModels
+					.SelectMany(m => m.Properties)
+					.Where(p => !p.Control.IsNotGenerated)
+					.Select(p => p.Type))
+				.Distinct()
+				.Select(Control.CreateGenerated);
+
+			if (checkModelViability)
+			{
+				var exceptions = new List<Exception>();
+				foreach (var requiredControlModel in requiredGeneratedControls.SelectMany(c => c.Models))
+				{
+					if (!fallbackAppliedModels.Any(m => m.Name == requiredControlModel))
+					{
+						exceptions.Add(new ArgumentException($"Unable to provide control for {requiredControlModel.ToEscapedString()}"));
 					}
 				}
-
-				yield return Property.Create(property.Name, property.Type, control, template, property.Order);
-			}
-		}
-
-		private IEnumerable<Model> ApplyFallbacksToModels(IEnumerable<Model> models, IEnumerable<FallbackControl> fallbackControls)
-		{
-			var fallbackAppliedOnceModels = new List<Model>();
-
-			foreach (Model model in models)
-			{
-				TypeIdentifier control = model.Control;
-				if (control == default)
+				if (exceptions.Any())
 				{
-					control = fallbackControls.SingleOrDefault(c => c.Models.Any(m => m == model.Name)).Name;
+					throw new AggregateException(exceptions);
 				}
-
-				TypeIdentifier template = model.Template;
-				if (template == default)
-				{
-					template = FallbackTemplates.SingleOrDefault(t => t.Models.Any(m => m == model.Name)).Name;
-				}
-
-				Model fallbackAppliedModel = Model.Create(model.Name, control, template, model.AttributesProvider).AppendRange(model.Properties);
-
-				fallbackAppliedOnceModels.Add(fallbackAppliedModel);
 			}
-
-			var fallbackAppliedOnceModelControls = fallbackAppliedOnceModels.Select(FallbackControl.Create);
-			fallbackControls = fallbackControls.Where(c1 => !fallbackAppliedOnceModelControls.Any(c2=>c2.Name == c1.Name)).Concat(fallbackAppliedOnceModelControls);
-
-			foreach (var model in fallbackAppliedOnceModels)
-			{
-				IEnumerable<Property> properties = ApplyFallbacksToProperties(model.Properties, fallbackAppliedOnceModels, fallbackControls);
-
-				Model fallbackAppliedTwiceModel = Model.Create(model.Name,
-												   model.Control,
-												   model.Template,
-												   model.AttributesProvider).AppendRange(properties);
-
-				yield return fallbackAppliedTwiceModel;
-			}
-		}
-
-		public ModelSpace ApplyFallbacks()
-		{
-			IEnumerable<FallbackControl> fallbackControls = FallbackControls.Concat(Models.Select(FallbackControl.Create).Where(c1=>!FallbackControls.Any(c2=>c2.Name == c1.Name)));
-			IEnumerable<Model> fallbackAppliedModels = ApplyFallbacksToModels(Models, fallbackControls);
 
 			ModelSpace modelSpace = Create()
-				.AppendRange(fallbackAppliedModels)
-				.AppendRange(fallbackControls)
-				.AppendRange(FallbackTemplates);
+				.WithModels(fallbackAppliedModels)
+				.WithFallbackControls(FallbackControls)
+				.WithTemplates(FallbackTemplates)
+				.WithRequiredGeneratedControls(requiredGeneratedControls);
 
 			return modelSpace;
 		}
