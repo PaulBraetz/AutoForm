@@ -1,0 +1,17 @@
+﻿<div class="form-check m-1">
+	@ChildContent
+	@if ((Attributes?.TryGetValue("placeholder", out var label) ?? false) || (Attributes?.TryGetValue("label", out label) ?? false))
+	{
+		<label class="form-check-label" for="@((Attributes?.TryGetValue("id", out var id)??false)?id:String.Empty)">
+			@label
+		</label>
+	}
+</div>
+@code {
+	[Parameter]
+	public Boolean Value { get; set; }
+	[Parameter]
+	public IDictionary<String, Object> Attributes { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+}

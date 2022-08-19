@@ -1,7 +1,7 @@
 ﻿@typeparam T
-<div class="form-floating m-@Margin">
+<div class="form-floating m-1">
 	@ChildContent
-	<label for="@((Attributes?.TryGetValue("id", out var id) ?? false) ? id : String.Empty)">@((Attributes?.TryGetValue("placeholder", out var label) ?? false) ? label : nameof(Value))</label>
+	<label for="@((Attributes?.TryGetValue("id", out var id) ?? false) ? id : String.Empty)">@(((Attributes?.TryGetValue("placeholder", out var label) ?? false) || (Attributes?.TryGetValue("label", out label) ?? false)) ? label : nameof(Value))</label>
 </div>
 @code {
 	[Parameter]
@@ -10,6 +10,4 @@
 	public IDictionary<String, Object> Attributes { get; set; }
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
-
-	protected virtual Byte Margin { get; } = 0;
 }

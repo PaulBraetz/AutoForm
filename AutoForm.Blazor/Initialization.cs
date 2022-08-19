@@ -14,7 +14,7 @@ namespace AutoForm.Blazor
 
             try
             {
-                RuntimeHelpers.RunClassConstructor(typeof(Controls).TypeHandle);
+                RuntimeHelpers.RunClassConstructor(typeof(GeneratedControls).TypeHandle);
                 var exceptions = new List<Exception>();
 
                 var autoControls = autoControlModelAssembly

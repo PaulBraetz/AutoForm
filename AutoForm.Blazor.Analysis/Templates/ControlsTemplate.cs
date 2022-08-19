@@ -29,17 +29,15 @@ namespace AutoForm.Generate.Blazor.Templates
 using Microsoft.AspNetCore.Components;
 namespace AutoForm.Blazor
 {	
-	public static class GeneratedControls
+	public static partial class GeneratedControls
 	{
-#region ModelControlMap
-		public static readonly IDictionary<Type, Type> ModelControlMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
+#region Type Maps
+		public static readonly IReadOnlyDictionary<Type, Type> ModelControlMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
 		{
 " + MODEL_CONTROL_PAIRS + @"
 		});
-#endregion
 
-#region ModelTemplateMap
-		public static readonly IDictionary<Type, Type> ModelTemplateMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
+		public static readonly IReadOnlyDictionary<Type, Type> ModelTemplateMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
 		{
 " + MODEL_TEMPLATE_PAIRS + @"
 		});

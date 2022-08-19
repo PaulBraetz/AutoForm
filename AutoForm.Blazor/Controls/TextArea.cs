@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.CompilerServices;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace AutoForm.Blazor
+namespace AutoForm.Blazor.Controls
 {
     public sealed class TextArea : ComponentBase
     {
@@ -20,13 +20,13 @@ namespace AutoForm.Blazor
         }
 
         [Parameter]
-        public String? Value { get; set; }
+        public string? Value { get; set; }
         [Parameter]
-        public EventCallback<String?> ValueChanged { get; set; }
+        public EventCallback<string?> ValueChanged { get; set; }
         [Parameter]
-        public IDictionary<String, Object>? Attributes { get; set; }
+        public IDictionary<string, object>? Attributes { get; set; }
 
-        private global::System.String? __Value
+        private string? __Value
         {
             get => Value;
             set

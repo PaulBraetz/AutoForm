@@ -3,6 +3,9 @@ using AutoForm.Blazor;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static System.Net.Mime.MediaTypeNames;
+using System.Xml.Linq;
+using static TestApp.Models.AttributesFactory;
 
 namespace TestApp.Models
 {
@@ -13,6 +16,10 @@ namespace TestApp.Models
 		{
 			Residency = new();
 		}
+
+		private String name;
+
+		public String Name { get => name; set => Console.WriteLine(name = value); }
 		public Address Residency { get; set; }
 
 		[AttributesProvider]
@@ -23,11 +30,12 @@ namespace TestApp.Models
 	public sealed class Address
 	{
 		private String? street;
-		[Order(-2)]
-		public String? Street { get => street; set => Console.WriteLine($"{street = value}, {HouseNumber}, {City}"); }
-		public String? City { get; set; }
-		[Order(-1)]
-		public Int16 HouseNumber { get; set; }
+		private String? city;
+		private Int16 houseNumber;
+
+		public String? Street { get => street; set => Console.WriteLine(street = value); }
+		public Int16 HouseNumber { get => houseNumber; set => Console.WriteLine(houseNumber = value); }
+		public String? City { get => city; set => Console.WriteLine(city = value); }
 
 		[AttributesProvider]
 		public AddressAttributesProvider AttributesProvider { get; } = new();
@@ -35,12 +43,9 @@ namespace TestApp.Models
 
 	public sealed class AddressAttributesProvider
 	{
-		private readonly IDictionary<String, Object> _houseNumber =
-			AttributesFactory.Create(("class", "form-control"), ("placeholder", nameof(Address.HouseNumber)));
-		private readonly IDictionary<String, Object> _street =
-			AttributesFactory.Create(("class", "form-control"), ("placeholder", nameof(Address.Street)));
-		private readonly IDictionary<String, Object> _city =
-			AttributesFactory.Create(("class", "form-control"), ("placeholder", nameof(Address.City)));
+		private readonly IDictionary<String, Object> _houseNumber = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.HouseNumber)));
+		private readonly IDictionary<String, Object> _street = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.Street)));
+		private readonly IDictionary<String, Object> _city = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.City)));
 
 		public IDictionary<String, Object> GetHouseNumberAttributes() => _houseNumber;
 		public IDictionary<String, Object> GetStreetAttributes() => _street;
@@ -49,18 +54,27 @@ namespace TestApp.Models
 
 	public sealed class PersonAttributesProvider
 	{
-		private readonly IDictionary<String, Object> _residency = AttributesFactory.Create(("label", nameof(Person.Residency)));
+		private readonly IDictionary<String, Object> _residency = AttributesFactory.Create(Options.Id, ("label", nameof(Person.Residency)));
+		private readonly IDictionary<String, Object> _name = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Person.Name)));
 
 		public IDictionary<String, Object> GetResidencyAttributes() => _residency;
+		public IDictionary<String, Object> GetNameAttributes() => _name;
 	}
 
 	internal static class AttributesFactory
 	{
+		[Flags]
+		public enum Options
+		{
+			None = 0,
+			Id = 1,
+			FormControl = 2
+		}
 		public static IDictionary<String, Object> Create(params (String, Object)[] attributes)
 		{
-			return Create(true, attributes);
+			return Create(Options.Id, attributes);
 		}
-		public static IDictionary<String, Object> Create(Boolean appendId, params (String, Object)[] attributes)
+		public static IDictionary<String, Object> Create(Options options, params (String, Object)[] attributes)
 		{
 			var result = new Dictionary<String, Object>();
 
@@ -72,9 +86,14 @@ namespace TestApp.Models
 				}
 			}
 
-			if (appendId && !result.ContainsKey("id"))
+			if (options.HasFlag(Options.Id) && !result.ContainsKey("id"))
 			{
 				result.Add("id", $"component_{Guid.NewGuid()}");
+			}
+
+			if (options.HasFlag(Options.FormControl) && !result.ContainsKey("class"))
+			{
+				result.Add("class", "form-control");
 			}
 
 			return result;
