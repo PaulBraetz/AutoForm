@@ -4,18 +4,18 @@ using System;
 
 namespace AutoForm.Json.Analysis
 {
-	internal sealed class JsonSourceGenerator : IControlsSourceGenerator
-	{
-		public String Filename => "ModelSpaceJson.g";
+    internal sealed class JsonSourceGenerator : IControlsSourceGenerator
+    {
+        public String Filename => "ModelSpaceJson.g";
 
-		public String Generate(ModelSpace modelSpace)
-		{
-			return $"//{{\"ModelSpace\":{modelSpace.WithRequiredGeneratedControls(false)}}}";
-		}
+        public String Generate(ModelSpace modelSpace)
+        {
+            return $"//{{\"ModelSpace\":{modelSpace.WithRequiredGeneratedControls(false)}}}";
+        }
 
-		public String Generate(Error error)
-		{
-			return $"//{{\"Error\":{error}}}";
-		}
-	}
+        public String Generate(Error error)
+        {
+            return $"//{{\"Error\":{error}}}";
+        }
+    }
 }

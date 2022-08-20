@@ -2,8 +2,8 @@
 
 namespace TestApp.Templates
 {
-	[FallbackTemplate(typeof(Boolean))]
-	public partial class BooleanTemplate
-	{
-	}
+    [FallbackTemplate(typeof(Boolean))]
+    public partial class BooleanTemplate
+    {
+    }
 }

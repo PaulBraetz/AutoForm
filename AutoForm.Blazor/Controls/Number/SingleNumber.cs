@@ -2,8 +2,8 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class SingleNumber : NumberControlBase<Single>
-	{
+    public class SingleNumber : NumberControlBase<Single>
+    {
 
-	}
+    }
 }

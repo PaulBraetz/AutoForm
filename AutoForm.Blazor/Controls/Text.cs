@@ -2,11 +2,11 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class Text : InputControlBase<string>
-	{
-		public Text() : base("text")
-		{
+    public class Text : InputControlBase<string>
+    {
+        public Text() : base("text")
+        {
 
-		}
-	}
+        }
+    }
 }

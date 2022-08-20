@@ -1,12 +1,10 @@
-﻿using System.Collections.ObjectModel;
-
-namespace AutoForm.Blazor.Controls.Abstractions
+﻿namespace AutoForm.Blazor.Controls.Abstractions
 {
-	public abstract class RangeControlBase<T> : InputControlBase<T>
-	{
-		protected RangeControlBase() : base("range")
-		{
+    public abstract class RangeControlBase<T> : InputControlBase<T>
+    {
+        protected RangeControlBase() : base("range")
+        {
 
-		}
-	}
+        }
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class UInt32Number : NumberControlBase<UInt32>
-	{
+    public class UInt32Number : NumberControlBase<UInt32>
+    {
 
-	}
+    }
 }

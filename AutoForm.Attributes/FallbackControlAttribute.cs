@@ -2,16 +2,16 @@
 
 namespace AutoForm.Attributes
 {
-	/// <summary>
-	/// Denotes the target as a fallback control for subcontrols whose model type is <c>ModelType</c>.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-	public sealed class FallbackControlAttribute : Attribute
-	{
-		public FallbackControlAttribute(Type modelType)
-		{
-			ModelType = modelType;
-		}
-		public Type ModelType { get; }
-	}
+    /// <summary>
+    /// Denotes the target as a fallback control for subcontrols whose model type is <c>ModelType</c>.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    public sealed class FallbackControlAttribute : Attribute
+    {
+        public FallbackControlAttribute(Type modelType)
+        {
+            ModelType = modelType;
+        }
+        public Type ModelType { get; }
+    }
 }

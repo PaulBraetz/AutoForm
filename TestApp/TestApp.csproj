@@ -10,13 +10,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.8" />
-		<PackageReference Include="RhoMicro.AutoForm.Attributes" Version="0.0.1" />
-		<PackageReference Include="RhoMicro.AutoForm.Blazor" Version="0.0.3" />
-		<PackageReference Include="RhoMicro.AutoForm.Blazor.Analysis" Version="0.0.6">
+		<PackageReference Include="RhoMicro.AutoForm.Attributes" Version="1.0.1" />
+		<PackageReference Include="RhoMicro.AutoForm.Blazor" Version="1.0.1" />
+		<PackageReference Include="RhoMicro.AutoForm.Blazor.Analysis" Version="1.0.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RhoMicro.AutoForm.Json.Analysis" Version="0.0.8">
+		<PackageReference Include="RhoMicro.AutoForm.Json.Analysis" Version="1.0.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

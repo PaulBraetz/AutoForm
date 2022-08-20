@@ -2,8 +2,8 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class ByteNumber : NumberControlBase<Byte>
-	{
+    public class ByteNumber : NumberControlBase<Byte>
+    {
 
-	}
+    }
 }

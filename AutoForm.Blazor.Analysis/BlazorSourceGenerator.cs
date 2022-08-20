@@ -5,18 +5,18 @@ using System;
 
 namespace AutoForm.Blazor.Analysis
 {
-	public sealed class BlazorSourceGenerator : IControlsSourceGenerator
-	{
-		public String Filename => "GeneratedControls.g";
+    public sealed class BlazorSourceGenerator : IControlsSourceGenerator
+    {
+        public String Filename => "GeneratedControls.g";
 
-		public String Generate(ModelSpace modelSpace)
-		{
-			return SourceFactory.Create(modelSpace).Build();
-		}
+        public String Generate(ModelSpace modelSpace)
+        {
+            return SourceFactory.Create(modelSpace).Build();
+        }
 
-		public String Generate(Error error)
-		{
-			return SourceFactory.Create(error).Build();
-		}
-	}
+        public String Generate(Error error)
+        {
+            return SourceFactory.Create(error).Build();
+        }
+    }
 }

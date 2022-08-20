@@ -2,8 +2,8 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class UInt64Number : NumberControlBase<UInt64>
-	{
+    public class UInt64Number : NumberControlBase<UInt64>
+    {
 
-	}
+    }
 }

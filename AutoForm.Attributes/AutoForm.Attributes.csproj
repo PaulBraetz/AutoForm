@@ -4,10 +4,10 @@
 	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <Authors>Paul Brätz</Authors>
-	  <Description>Attributes for Rhomicro.AutoForm. This is a test deployment, use at your own risk!</Description>
+	  <Description>Attributes for Rhomicro.AutoForm.</Description>
 	  <Copyright>2022</Copyright>
 	  <PackageTags>Rhomicro</PackageTags>
-	  <Version>0.0.1</Version>
+	  <Version>1.0.1</Version>
 	  <PackageId>RhoMicro.AutoForm.Attributes</PackageId>
 	  <AssemblyName>AutoForm.Attributes</AssemblyName>
 	  <RootNamespace>AutoForm.Attributes</RootNamespace>

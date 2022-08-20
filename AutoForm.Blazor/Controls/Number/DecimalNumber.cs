@@ -2,8 +2,8 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class DecimalNumber : NumberControlBase<Decimal>
-	{
+    public class DecimalNumber : NumberControlBase<Decimal>
+    {
 
-	}
+    }
 }

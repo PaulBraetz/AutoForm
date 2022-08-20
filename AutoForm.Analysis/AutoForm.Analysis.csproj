@@ -8,7 +8,7 @@
 		<NoPackageAnalysis>true</NoPackageAnalysis>
 
 		<Authors>Paul Brätz</Authors>
-		<Description>Models and base generator for Rhomicro.AutoForm. This is a test deployment, use at your own risk!</Description>
+		<Description>Models and base generator for Rhomicro.AutoForm.</Description>
 		<Copyright>2022</Copyright>
 		<PackageTags>Rhomicro</PackageTags>
 		<Version>0.0.2</Version>

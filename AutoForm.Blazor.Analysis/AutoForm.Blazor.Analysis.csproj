@@ -12,10 +12,10 @@
 
 	<PropertyGroup>
 		<Authors>Paul Brätz</Authors>
-		<Description>Blazor component generator for Rhomicro.AutoForm. This is a test deployment, use at your own risk!</Description>
+		<Description>Blazor component generator for Rhomicro.AutoForm.</Description>
 		<Copyright>2022</Copyright>
 		<PackageTags>Rhomicro</PackageTags>
-		<Version>0.0.6</Version>
+		<Version>1.0.1</Version>
 		<PackageId>RhoMicro.AutoForm.Blazor.Analysis</PackageId>
 		<AssemblyName>AutoForm.Blazor.Analysis</AssemblyName>
 		<RootNamespace>AutoForm.Blazor.Analysis</RootNamespace>

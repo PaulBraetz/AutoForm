@@ -2,8 +2,8 @@
 
 namespace AutoForm.Blazor.Controls
 {
-	public class Int32Number : NumberControlBase<Int32Range>
-	{
+    public class Int32Number : NumberControlBase<Int32>
+    {
 
-	}
+    }
 }
