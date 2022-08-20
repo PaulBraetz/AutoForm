@@ -1,13 +1,16 @@
 ﻿@typeparam T
 <div class="form-floating m-1">
 	@ChildContent
-	<label for="@((Attributes?.TryGetValue("id", out var id) ?? false) ? id : String.Empty)">@(((Attributes?.TryGetValue("placeholder", out var label) ?? false) || (Attributes?.TryGetValue("label", out label) ?? false)) ? label : nameof(Value))</label>
+	<label for="@(Attributes?.FirstOrDefault(kvp=>kvp.Key=="id").Value ?? String.Empty)">@(Label ?? nameof(Value))</label>
 </div>
 @code {
 	[Parameter]
 	public T Value { get; set; }
 	[Parameter]
-	public IDictionary<String, Object> Attributes { get; set; }
+	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
+
+	private Object? _label;
+	private Object? Label => _label ??= (Attributes?.FirstOrDefault(kvp => kvp.Key == "placeholder").Value ?? Attributes?.FirstOrDefault(kvp => kvp.Key == "label").Value);
 }

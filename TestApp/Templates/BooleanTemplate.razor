@@ -1,9 +1,9 @@
 ﻿<div class="form-check m-1">
 	@ChildContent
-	@if ((Attributes?.TryGetValue("placeholder", out var label) ?? false) || (Attributes?.TryGetValue("label", out label) ?? false))
+	@if (Label != null)
 	{
-		<label class="form-check-label" for="@((Attributes?.TryGetValue("id", out var id)??false)?id:String.Empty)">
-			@label
+		<label class="form-check-label" for="@(Attributes?.FirstOrDefault(kvp => kvp.Key == "id").Value ?? String.Empty)">
+			@Label
 		</label>
 	}
 </div>
@@ -11,7 +11,10 @@
 	[Parameter]
 	public Boolean Value { get; set; }
 	[Parameter]
-	public IDictionary<String, Object> Attributes { get; set; }
+	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
+
+	private Object? _label;
+	private Object? Label => _label ??= (Attributes?.FirstOrDefault(kvp => kvp.Key == "placeholder").Value ?? Attributes?.FirstOrDefault(kvp => kvp.Key == "label").Value);
 }

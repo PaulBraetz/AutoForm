@@ -1,9 +1,10 @@
 ﻿using AutoForm.Analysis.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace AutoForm.Generate.Blazor.Templates
+namespace AutoForm.Blazor.Analysis.Templates
 {
 	internal sealed partial class SourceFactory
 	{
@@ -11,7 +12,6 @@ namespace AutoForm.Generate.Blazor.Templates
 		private const String GENERATED_DATE = "{" + nameof(GENERATED_DATE) + "}";
 		private const String MODEL_CONTROL_PAIRS = "{" + nameof(MODEL_CONTROL_PAIRS) + "}";
 		private const String MODEL_TEMPLATE_PAIRS = "{" + nameof(MODEL_TEMPLATE_PAIRS) + "}";
-		private const String DEFAULT_CONTROLS = "{" + nameof(DEFAULT_CONTROLS) + "}";
 		private const String CONTROLS = "{" + nameof(CONTROLS) + "}";
 
 		private const String CONTROL_TYPE = "{" + nameof(CONTROL_TYPE) + "}";
@@ -34,6 +34,26 @@ namespace AutoForm.Generate.Blazor.Templates
 		private const String ERROR_MESSAGE = "{" + nameof(ERROR_MESSAGE) + "}";
 		#endregion
 
+		#region Available Default Controls
+		private static readonly Namespace ControlsNamespace = Namespace.Create().WithRange(new[] { "AutoForm", "Blazor", "Controls" });
+		private static readonly IReadOnlyDictionary<TypeIdentifier, TypeIdentifier> AvailableDefaultControls = new ReadOnlyDictionary<TypeIdentifier, TypeIdentifier>(new Dictionary<TypeIdentifier, TypeIdentifier>()
+		{
+			{TypeIdentifier.Create<String>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Text"), ControlsNamespace) },
+			{TypeIdentifier.Create<Boolean>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Checkbox"), ControlsNamespace) },
+			{TypeIdentifier.Create<Byte>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("ByteNumber"), ControlsNamespace) },
+			{TypeIdentifier.Create<SByte>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("SByteNumber"), ControlsNamespace) },
+			{TypeIdentifier.Create<Int16>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Int16Number"), ControlsNamespace) },
+			{TypeIdentifier.Create<UInt16>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("UInt16Number"), ControlsNamespace) },
+			{TypeIdentifier.Create<Int32>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Int32Number"), ControlsNamespace) },
+			{TypeIdentifier.Create<UInt32>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("UInt32Number"), ControlsNamespace) },
+			{TypeIdentifier.Create<Int64>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Int64Number"), ControlsNamespace) },
+			{TypeIdentifier.Create<UInt64>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("UInt64Number"), ControlsNamespace) },
+			{TypeIdentifier.Create<Single>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("SingleNumber"), ControlsNamespace) },
+			{TypeIdentifier.Create<Double>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("DoubleNumber"), ControlsNamespace) },
+			{TypeIdentifier.Create<Decimal>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("DecimalNumber"), ControlsNamespace) }
+		});
+		#endregion
+
 		private readonly ModelSpace _modelSpace;
 		private readonly Error _error;
 		private readonly Boolean _isError;
@@ -42,7 +62,7 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			if (!isError)
 			{
-				IEnumerable<Control> defaultFallbackControls = DefaultControlsTemplate.DefaultModelControlPairs
+				var defaultFallbackControls = AvailableDefaultControls
 					.Where(kvp => !modelSpace.FallbackControls.SelectMany(c => c.Models).Contains(kvp.Key))
 					.GroupBy(kvp => kvp.Value)
 					.Select(group => Control.Create(group.Key).WithRange(group.Select(kvp => kvp.Key)));
@@ -90,14 +110,12 @@ namespace AutoForm.Generate.Blazor.Templates
 
 		private ControlsTemplate GetControlsTemplate()
 		{
-			IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates = GetModelControlPairTemplates();
-			IEnumerable<KeyValueTypesPairTemplate> modelTemplatePairTemplates = GetModelTemplatePairTemplates();
-			IEnumerable<ControlTemplate> controlTemplates = GetControlTemplates();
-			DefaultControlsTemplate defaultControlsTemplate = GetDefaultControlsTemplate();
+			var modelControlPairTemplates = GetModelControlPairTemplates();
+			var modelTemplatePairTemplates = GetModelTemplatePairTemplates();
+			var controlTemplates = GetControlTemplates();
 
 			return new ControlsTemplate()
 				.WithControlTemplates(controlTemplates)
-				.WithDefaultControlsTemplate(defaultControlsTemplate)
 				.WithModelControlPairTemplates(modelControlPairTemplates)
 				.WithModelTemplatePairTemplates(modelTemplatePairTemplates);
 		}
@@ -106,23 +124,12 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			return _modelSpace.FallbackTemplates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
 		}
-		private DefaultControlsTemplate GetDefaultControlsTemplate()
-		{
-			IEnumerable<TypeIdentifier> requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
-
-			return new DefaultControlsTemplate()
-				.WithRequiredDefaultControls(requiredDefaulControlTypes);
-		}
 		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates()
 		{
-			IEnumerable<TypeIdentifier> requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
+			var requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
 
 			return GetControlsToBeGenerated().SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name)))//)
 				.Concat(_modelSpace.FallbackControls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
-		}
-		private KeyValueTypesPairTemplate GetModelControlPairTemplate(TypeIdentifier requiredDefaultControlType)
-		{
-			return GetModelControlPairTemplate(DefaultControlsTemplate.DefaultModelControlPairs[requiredDefaultControlType], requiredDefaultControlType);
 		}
 		private KeyValueTypesPairTemplate GetModelControlPairTemplate(TypeIdentifier key, TypeIdentifier value)
 		{
@@ -132,13 +139,13 @@ namespace AutoForm.Generate.Blazor.Templates
 		}
 		private IEnumerable<TypeIdentifier> GetRequiredDefaultControlTypes()
 		{
-			return DefaultControlsTemplate.DefaultModelControlPairs.Keys
+			return AvailableDefaultControls.Keys
 				.Except(GetControlsToBeGenerated().SelectMany(c => c.Models));
 		}
 
 		private IEnumerable<Control> GetControlsToBeGenerated()
 		{
-			return _modelSpace.RequiredGeneratedControls.Where(c => !DefaultControlsTemplate.DefaultModelControlPairs.Values.Contains(c.Name));
+			return _modelSpace.RequiredGeneratedControls.Where(c => !AvailableDefaultControls.Values.Contains(c.Name));
 		}
 
 		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates(Control control)
@@ -153,7 +160,7 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			var result = new List<ControlTemplate>();
 			var exceptions = new List<Exception>();
-			var defaults = DefaultControlsTemplate.DefaultModelControlPairs.Select(kvp => kvp.Value);
+			var defaults = AvailableDefaultControls.Select(kvp => kvp.Value);
 			foreach (var requiredControl in _modelSpace.RequiredGeneratedControls.Where(c => !defaults.Contains(c.Name)))
 			{
 				try
@@ -178,7 +185,7 @@ namespace AutoForm.Generate.Blazor.Templates
 		{
 			var model = _modelSpace.Models.Single(m => requiredControl.Models.Contains(m.Name));
 
-			IEnumerable<SubControlTemplate> subControlTemplates = GetSubControlTemplates(model);
+			var subControlTemplates = GetSubControlTemplates(model);
 
 			return new ControlTemplate()
 				.WithModelType(model.Name)

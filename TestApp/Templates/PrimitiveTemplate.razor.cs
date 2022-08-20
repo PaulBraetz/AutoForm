@@ -14,4 +14,8 @@ namespace TestApp.Templates
 	public class Int16TemplateMargin1 : PrimitiveTemplate<Int16>
 	{
 	}
+	[FallbackTemplate(typeof(SByte))]
+	public class SByteTemplateMargin1 : PrimitiveTemplate<SByte>
+	{
+	}
 }

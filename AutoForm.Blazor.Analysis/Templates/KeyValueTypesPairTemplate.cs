@@ -1,7 +1,7 @@
 ﻿using AutoForm.Analysis.Models;
 using System;
 
-namespace AutoForm.Generate.Blazor.Templates
+namespace AutoForm.Blazor.Analysis.Templates
 {
 	internal sealed partial class SourceFactory
 	{

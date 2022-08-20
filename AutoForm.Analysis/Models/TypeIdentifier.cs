@@ -27,8 +27,8 @@ namespace AutoForm.Analysis.Models
 			Namespace = @namespace;
 			IsNotGenerated = isNotGenerated;
 
-			String namespaceString = Namespace.ToEscapedString();
-			String nameString = Name.ToEscapedString();
+			var namespaceString = Namespace.ToEscapedString();
+			var nameString = Name.ToEscapedString();
 
 			_string = String.IsNullOrEmpty(namespaceString) ? String.IsNullOrEmpty(nameString) ? null : nameString.ToString() : $"{namespaceString}.{nameString}";
 			_json = Json.Value(_string);
@@ -48,13 +48,13 @@ namespace AutoForm.Analysis.Models
 		}
 		public static TypeIdentifier Create(Type type)
 		{
-			TypeIdentifierName name = TypeIdentifierName.Create();
+			var name = TypeIdentifierName.Create();
 			Namespace @namespace = default;
 
 			if (type.IsNested)
 			{
-				Type parentType = type.Assembly.GetTypes().Single(t => t.GetNestedType(type.FullName) != null);
-				TypeIdentifier parentTypeIdentifier = Create(parentType);
+				var parentType = type.Assembly.GetTypes().Single(t => t.GetNestedType(type.FullName) != null);
+				var parentTypeIdentifier = Create(parentType);
 				name = name.WithTypePart(parentTypeIdentifier.Name);
 				@namespace = parentTypeIdentifier.Namespace;
 			}
@@ -74,7 +74,7 @@ namespace AutoForm.Analysis.Models
 
 			if (@namespace == default)
 			{
-				String[] namespaceParts = type.Namespace.Split('.');
+				var namespaceParts = type.Namespace.Split('.');
 				@namespace = Namespace.Create().WithRange(namespaceParts);
 			}
 

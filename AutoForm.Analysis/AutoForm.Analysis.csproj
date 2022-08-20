@@ -2,15 +2,47 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<developmentDependency>true</developmentDependency>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<NoPackageAnalysis>true</NoPackageAnalysis>
+
+		<Authors>Paul Brätz</Authors>
+		<Description>Models and base generator for Rhomicro.AutoForm. This is a test deployment, use at your own risk!</Description>
+		<Copyright>2022</Copyright>
+		<PackageTags>Rhomicro</PackageTags>
+		<Version>0.0.2</Version>
+		<PackageId>RhoMicro.AutoForm.Analysis</PackageId>
+		<AssemblyName>AutoForm.Analysis</AssemblyName>
+		<RootNamespace>AutoForm.Analysis</RootNamespace>
+		<Company>RhoMicro</Company>
+		<PackageProjectUrl>https://github.com/PaulBraetz/AutoForm.Analysis/</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
+	  <Compile Remove="Templates\**" />
+	  <EmbeddedResource Remove="Templates\**" />
+	  <None Remove="Templates\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\AutoForm.Attributes\AutoForm.Attributes.csproj" />
+	  <Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\ExcludeAttribute.cs" Link="AutoForm.Attributes\ExcludeAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\ModelAttribute.cs" Link="AutoForm.Attributes\ModelAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\OrderAttribute.cs" Link="AutoForm.Attributes\OrderAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Attributes\UseControlAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Attributes\UseTemplateAttribute.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="AutoForm.Attributes\" />
+	</ItemGroup>
 
 </Project>

@@ -1,0 +1,9 @@
+﻿@ChildContent
+@code {
+	[Parameter]
+	public T Value { get; set; }
+	[Parameter]
+	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+}

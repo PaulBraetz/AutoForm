@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AutoForm.Generate.Blazor.Templates
+namespace AutoForm.Blazor.Analysis.Templates
 {
 	internal sealed partial class SourceFactory
 	{
@@ -28,7 +28,7 @@ namespace AutoForm.Generate.Blazor.Templates
 @"		///<summary>
 		///Generated control for models of type <cref see=""" + MODEL_TYPE + @"""/>.
 		///</summary>
-		private sealed class " + CONTROL_TYPE_IDENTIFIER + @" : __ControlBase<" + MODEL_TYPE + @">
+		private sealed class " + CONTROL_TYPE_IDENTIFIER + @" : AutoForm.Blazor.Controls.Abstractions.ControlBase<" + MODEL_TYPE + @">
 		{
 			#pragma warning disable 1998
 			protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
@@ -55,7 +55,7 @@ namespace AutoForm.Generate.Blazor.Templates
 			}
 			public String Build()
 			{
-				Int32 lineIndex = 0;
+				var lineIndex = 0;
 
 				var subControls = String.Join("\n\n", _subControlTemplates.Select(t => t.Build()));
 

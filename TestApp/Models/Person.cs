@@ -1,10 +1,4 @@
 ﻿using AutoForm.Attributes;
-using AutoForm.Blazor;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
 using static TestApp.Models.AttributesFactory;
 
 namespace TestApp.Models
@@ -17,13 +11,17 @@ namespace TestApp.Models
 			Residency = new();
 		}
 
-		private String name;
+		private String? name;
+		private SByte age;
 
-		public String Name { get => name; set => Console.WriteLine(name = value); }
+		[UseControl(typeof(AutoForm.Blazor.Controls.SByteRange))]
+		[UseTemplate(typeof(AutoForm.Blazor.Templates.Empty))]
+		public SByte Age { get => age; set => Console.WriteLine(age = value); }
+		public String? Name { get => name; set => Console.WriteLine(name = value); }
 		public Address Residency { get; set; }
 
 		[AttributesProvider]
-		public PersonAttributesProvider AttributesProvider { get; } = new();
+		public PersonAttributesProvider AttributesProviderForPerson { get; } = new();
 	}
 
 	[Model]
@@ -43,22 +41,46 @@ namespace TestApp.Models
 
 	public sealed class AddressAttributesProvider
 	{
-		private readonly IDictionary<String, Object> _houseNumber = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.HouseNumber)));
-		private readonly IDictionary<String, Object> _street = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.Street)));
-		private readonly IDictionary<String, Object> _city = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.City)));
+		private readonly IEnumerable<KeyValuePair<String, Object>> _houseNumber = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.HouseNumber)));
+		private readonly IEnumerable<KeyValuePair<String, Object>> _street = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.Street)));
+		private readonly IEnumerable<KeyValuePair<String, Object>> _city = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Address.City)));
 
-		public IDictionary<String, Object> GetHouseNumberAttributes() => _houseNumber;
-		public IDictionary<String, Object> GetStreetAttributes() => _street;
-		public IDictionary<String, Object> GetCityAttributes() => _city;
+		public IEnumerable<KeyValuePair<String, Object>> GetHouseNumberAttributes()
+		{
+			return _houseNumber;
+		}
+
+		public IEnumerable<KeyValuePair<String, Object>> GetStreetAttributes()
+		{
+			return _street;
+		}
+
+		public IEnumerable<KeyValuePair<String, Object>> GetCityAttributes()
+		{
+			return _city;
+		}
 	}
 
 	public sealed class PersonAttributesProvider
 	{
-		private readonly IDictionary<String, Object> _residency = AttributesFactory.Create(Options.Id, ("label", nameof(Person.Residency)));
-		private readonly IDictionary<String, Object> _name = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Person.Name)));
+		private readonly IEnumerable<KeyValuePair<String, Object>> _residency = AttributesFactory.Create(Options.Id, ("label", nameof(Person.Residency)));
+		private readonly IEnumerable<KeyValuePair<String, Object>> _name = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Person.Name)));
+		private readonly IEnumerable<KeyValuePair<String, Object>> _age = AttributesFactory.Create(Options.Id | Options.FormControl, ("label", nameof(Person.Age)), ("class", "form-range"));
 
-		public IDictionary<String, Object> GetResidencyAttributes() => _residency;
-		public IDictionary<String, Object> GetNameAttributes() => _name;
+		public IEnumerable<KeyValuePair<String, Object>> GetResidencyAttributes()
+		{
+			return _residency;
+		}
+
+		public IEnumerable<KeyValuePair<String, Object>> GetNameAttributes()
+		{
+			return _name;
+		}
+
+		public IEnumerable<KeyValuePair<String, Object>> GetAgeAttributes()
+		{
+			return _age;
+		}
 	}
 
 	internal static class AttributesFactory
@@ -70,11 +92,11 @@ namespace TestApp.Models
 			Id = 1,
 			FormControl = 2
 		}
-		public static IDictionary<String, Object> Create(params (String, Object)[] attributes)
+		public static IEnumerable<KeyValuePair<String, Object>> Create(params (String, Object)[] attributes)
 		{
 			return Create(Options.Id, attributes);
 		}
-		public static IDictionary<String, Object> Create(Options options, params (String, Object)[] attributes)
+		public static IEnumerable<KeyValuePair<String, Object>> Create(Options options, params (String, Object)[] attributes)
 		{
 			var result = new Dictionary<String, Object>();
 

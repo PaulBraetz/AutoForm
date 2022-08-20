@@ -2,18 +2,72 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+		<PackageTargetFallback>portable-net45+win8+wp8+wpa81</PackageTargetFallback>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<developmentDependency>true</developmentDependency>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<NoPackageAnalysis>true</NoPackageAnalysis>
 		<IsRoslynComponent>true</IsRoslynComponent>
-		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Authors>Paul Brätz</Authors>
+		<Description>Json generator for Rhomicro.AutoForm, used for debugging purposes. This is a test deployment, use at your own risk!</Description>
+		<Copyright>2022</Copyright>
+		<PackageTags>Rhomicro</PackageTags>
+		<Version>0.0.8</Version>
+		<PackageId>RhoMicro.AutoForm.Json.Analysis</PackageId>
+		<AssemblyName>AutoForm.Json.Analysis</AssemblyName>
+		<RootNamespace>AutoForm.Json.Analysis</RootNamespace>
+		<Company>RhoMicro</Company>
+		<PackageProjectUrl>https://github.com/PaulBraetz/AutoForm/</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.1.0" />
+	  <Compile Include="..\AutoForm.Analysis\Extensions.cs" Link="AutoForm.Analysis\Extensions.cs" />
+	  <Compile Include="..\AutoForm.Analysis\GeneratorBase.cs" Link="AutoForm.Analysis\GeneratorBase.cs" />
+	  <Compile Include="..\AutoForm.Analysis\IControlsSourceGenerator.cs" Link="AutoForm.Analysis\IControlsSourceGenerator.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Json.cs" Link="AutoForm.Analysis\Json.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\Control.cs" Link="AutoForm.Analysis\Models\Control.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\Error.cs" Link="AutoForm.Analysis\Models\Error.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\Model.cs" Link="AutoForm.Analysis\Models\Model.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\ModelExtractor.cs" Link="AutoForm.Analysis\Models\ModelExtractor.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\ModelSpace.cs" Link="AutoForm.Analysis\Models\ModelSpace.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\Namespace.cs" Link="AutoForm.Analysis\Models\Namespace.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\Property.cs" Link="AutoForm.Analysis\Models\Property.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\PropertyIdentifier.cs" Link="AutoForm.Analysis\Models\PropertyIdentifier.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\Template.cs" Link="AutoForm.Analysis\Models\Template.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifier.cs" Link="AutoForm.Analysis\Models\TypeIdentifier.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifierName.cs" Link="AutoForm.Analysis\Models\TypeIdentifierName.cs" />
+	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifierNamePart.cs" Link="AutoForm.Analysis\Models\TypeIdentifierNamePart.cs" />
+	  <Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\ExcludeAttribute.cs" Link="AutoForm.Attributes\ExcludeAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\ModelAttribute.cs" Link="AutoForm.Attributes\ModelAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\OrderAttribute.cs" Link="AutoForm.Attributes\OrderAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Attributes\UseControlAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Attributes\UseTemplateAttribute.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AutoForm.Analysis\AutoForm.Analysis.csproj" />
+		<PackageReference Include="RhoMicro.AutoForm.Attributes" Version="0.0.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" PrivateAssets="all" />
+		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="AutoForm.Analysis\Models\" />
+	  <Folder Include="AutoForm.Attributes\" />
 	</ItemGroup>
 
 </Project>

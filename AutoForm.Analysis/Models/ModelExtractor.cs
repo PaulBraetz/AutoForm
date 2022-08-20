@@ -19,9 +19,9 @@ namespace AutoForm.Analysis.Models
 		public Error GetErrorModel(Exception ex)
 		{
 			var error = Error.Create();
-			IEnumerable<Exception> exceptions = Flatten(ex);
+			var exceptions = Flatten(ex);
 
-			foreach (Exception exception in exceptions)
+			foreach (var exception in exceptions)
 			{
 				error = error.With(exception);
 			}
@@ -31,9 +31,9 @@ namespace AutoForm.Analysis.Models
 
 		public ModelSpace ExtractModelSpace()
 		{
-			IEnumerable<Model> models = GetModels();
-			IEnumerable<Control> controls = GetControls();
-			IEnumerable<Template> templates = GetTemplates();
+			var models = GetModels();
+			var controls = GetControls();
+			var templates = GetTemplates();
 
 			var modelSpace = ModelSpace.Create()
 				.WithModels(models)
@@ -54,30 +54,30 @@ namespace AutoForm.Analysis.Models
 		#region Modelspace Methods
 		private IEnumerable<Model> GetModels()
 		{
-			IEnumerable<BaseTypeDeclarationSyntax> modelDeclarations = GetModelDeclarations();
-			IEnumerable<Model> models = modelDeclarations.Select(GetModel);
+			var modelDeclarations = GetModelDeclarations();
+			var models = modelDeclarations.Select(GetModel);
 
 			return models;
 		}
 		private IEnumerable<Control> GetControls()
 		{
-			IEnumerable<BaseTypeDeclarationSyntax> controlDeclarations = GetControlDeclarations();
-			IEnumerable<Control> controls = controlDeclarations.Select(GetControl);
+			var controlDeclarations = GetControlDeclarations();
+			var controls = controlDeclarations.Select(GetControl);
 
 			return controls;
 		}
 		private IEnumerable<Template> GetTemplates()
 		{
-			IEnumerable<BaseTypeDeclarationSyntax> templateDeclarations = GetTemplateDeclarations();
-			IEnumerable<Template> templates = templateDeclarations.Select(GetTemplate);
+			var templateDeclarations = GetTemplateDeclarations();
+			var templates = templateDeclarations.Select(GetTemplate);
 
 			return templates;
 		}
 
 		private IEnumerable<BaseTypeDeclarationSyntax> GetModelDeclarations()
 		{
-			IEnumerable<BaseTypeDeclarationSyntax> typeDeclarations = GetTypeDeclarations();
-			foreach (BaseTypeDeclarationSyntax typeDeclaration in typeDeclarations)
+			var typeDeclarations = GetTypeDeclarations();
+			foreach (var typeDeclaration in typeDeclarations)
 			{
 				if (TryGetAttributes(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.ModelAttribute, out var _))
 				{
@@ -87,35 +87,35 @@ namespace AutoForm.Analysis.Models
 		}
 		private Model GetModel(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			IEnumerable<Property> properties = GetProperties(typeDeclaration);
-			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
-			PropertyIdentifier attributesProvider = GetAttributesProvider(typeDeclaration);
-			TypeIdentifier control = GetControlIdentifier(typeDeclaration);
-			TypeIdentifier template = GetTemplateIdentifier(typeDeclaration);
+			var properties = GetProperties(typeDeclaration);
+			var identifier = GetTypeIdentifier(typeDeclaration);
+			var attributesProvider = GetAttributesProvider(typeDeclaration);
+			var control = GetControlIdentifier(typeDeclaration);
+			var template = GetTemplateIdentifier(typeDeclaration);
 
-			Model model = Model.Create(identifier, control, template, attributesProvider)
+			var model = Model.Create(identifier, control, template, attributesProvider)
 				.WithRange(properties);
 
 			return model;
 		}
 		private TypeIdentifier GetControlIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			TypeIdentifier templateIdentifier = GetTypeArgumentOrDefault(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.ControlAttribute);
+			var templateIdentifier = GetTypeArgumentOrDefault(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.ControlAttribute);
 
 			return templateIdentifier;
 		}
 		private TypeIdentifier GetTemplateIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			TypeIdentifier templateIdentifier = GetTypeArgumentOrDefault(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.TemplateAttribute);
+			var templateIdentifier = GetTypeArgumentOrDefault(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.TemplateAttribute);
 
 			return templateIdentifier;
 		}
 		private PropertyIdentifier GetAttributesProvider(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			IEnumerable<PropertyDeclarationSyntax> propertyDeclarations = typeDeclaration.ChildNodes()
+			var propertyDeclarations = typeDeclaration.ChildNodes()
 				.OfType<PropertyDeclarationSyntax>();
 
-			foreach (PropertyDeclarationSyntax propertyDeclaration in propertyDeclarations)
+			foreach (var propertyDeclaration in propertyDeclarations)
 			{
 				if (TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.AttributesProviderAttribute, out var _))
 				{
@@ -127,15 +127,15 @@ namespace AutoForm.Analysis.Models
 		}
 		private Property GetProperty(PropertyDeclarationSyntax propertyDeclaration)
 		{
-			TypeIdentifier control = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.ControlAttribute);
+			var control = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.ControlAttribute);
 
-			TypeIdentifier template = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.TemplateAttribute);
+			var template = GetTypeArgumentOrDefault(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.TemplateAttribute);
 
 			var identifier = PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString());
 
-			TypeIdentifier type = GetTypeIdentifier(propertyDeclaration);
+			var type = GetTypeIdentifier(propertyDeclaration);
 
-			Int32 order = GetOrderArgumentOrDefault(propertyDeclaration);
+			var order = GetOrderArgumentOrDefault(propertyDeclaration);
 
 			var property = Property.Create(identifier, type, control, template, order);
 
@@ -143,14 +143,14 @@ namespace AutoForm.Analysis.Models
 		}
 		private IEnumerable<Property> GetProperties(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			IEnumerable<PropertyDeclarationSyntax> propertyDeclarations = GetPropertyDeclarations(typeDeclaration);
-			IEnumerable<Property> properties = propertyDeclarations.Select(GetProperty);
+			var propertyDeclarations = GetPropertyDeclarations(typeDeclaration);
+			var properties = propertyDeclarations.Select(GetProperty);
 
 			return properties;
 		}
 		private IEnumerable<PropertyDeclarationSyntax> GetPropertyDeclarations(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			IEnumerable<PropertyDeclarationSyntax> propertyDeclarations = typeDeclaration.ChildNodes().OfType<PropertyDeclarationSyntax>();
+			var propertyDeclarations = typeDeclaration.ChildNodes().OfType<PropertyDeclarationSyntax>();
 
 			foreach (var propertyDeclaration in propertyDeclarations)
 			{
@@ -163,9 +163,9 @@ namespace AutoForm.Analysis.Models
 		}
 		private Control GetControl(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
+			var identifier = GetTypeIdentifier(typeDeclaration);
 
-			IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackControlAttribute);
+			var modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackControlAttribute);
 
 			var template = Control.Create(identifier)
 				.WithRange(modelTypes);
@@ -186,9 +186,9 @@ namespace AutoForm.Analysis.Models
 		}
 		private Template GetTemplate(BaseTypeDeclarationSyntax typeDeclaration)
 		{
-			TypeIdentifier identifier = GetTypeIdentifier(typeDeclaration);
+			var identifier = GetTypeIdentifier(typeDeclaration);
 
-			IEnumerable<TypeIdentifier> modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackTemplateAttribute);
+			var modelTypes = GetTypeArguments(typeDeclaration.AttributeLists, typeDeclaration, TypeIdentifier.FallbackTemplateAttribute);
 
 			var template = Template.Create(identifier).WithRange(modelTypes);
 
@@ -214,9 +214,9 @@ namespace AutoForm.Analysis.Models
 
 		private Int32 GetOrderArgumentOrDefault(PropertyDeclarationSyntax propertyDeclaration)
 		{
-			TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.OrderAttribute, out IEnumerable<AttributeSyntax> orderAttributes);
-			String orderString = orderAttributes.SingleOrDefault()?.DescendantNodes().OfType<AttributeArgumentSyntax>().Single().ToString() ?? "0";
-			Int32 order = 0;
+			TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.OrderAttribute, out var orderAttributes);
+			var orderString = orderAttributes.SingleOrDefault()?.DescendantNodes().OfType<AttributeArgumentSyntax>().Single().ToString() ?? "0";
+			var order = 0;
 
 			switch (orderString)
 			{
@@ -243,20 +243,21 @@ namespace AutoForm.Analysis.Models
 
 		private IEnumerable<TypeIdentifier> GetTypeArguments(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, TypeIdentifier attributeIdentifier)
 		{
-			if (TryGetAttributes(attributeLists, node, attributeIdentifier, out IEnumerable<AttributeSyntax> attributes))
+			if (TryGetAttributes(attributeLists, node, attributeIdentifier, out var attributes))
 			{
-				IEnumerable<TypeSyntax> modelTypeSyntaxes = attributes.SelectMany(a => a.DescendantNodes()).OfType<TypeOfExpressionSyntax>().Select(e => e.Type);
-				IEnumerable<TypeIdentifier> arguments = modelTypeSyntaxes.Select(GetTypeIdentifier);
+				var modelTypeSyntaxes = attributes.SelectMany(a => a.DescendantNodes()).OfType<TypeOfExpressionSyntax>().Select(e => e.Type);
+				var arguments = modelTypeSyntaxes.Select(GetTypeIdentifier);
 
 				return arguments;
 			}
+
 			return Array.Empty<TypeIdentifier>();
 		}
 
 		private Boolean TryGetAttributes(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, TypeIdentifier attributeIdentifier, out IEnumerable<AttributeSyntax> attributes)
 		{
-			IEnumerable<Namespace> availableUsings = GetAvailableUsings(node);
-			Boolean usingAutoForm = availableUsings.Contains(Namespace.Attributes);
+			var availableUsings = GetAvailableUsings(node);
+			var usingAutoForm = availableUsings.Contains(Namespace.Attributes);
 
 			attributes = attributeLists.SelectMany(al => al.Attributes).Where(a => equals(a));
 
@@ -275,11 +276,11 @@ namespace AutoForm.Analysis.Models
 
 			while (node.Parent != null)
 			{
-				IEnumerable<UsingDirectiveSyntax> namespaces = node.Parent.ChildNodes().OfType<UsingDirectiveSyntax>();
+				var namespaces = node.Parent.ChildNodes().OfType<UsingDirectiveSyntax>();
 
-				foreach (UsingDirectiveSyntax @namespace in namespaces)
+				foreach (var @namespace in namespaces)
 				{
-					Namespace item = Namespace.Create()
+					var item = Namespace.Create()
 						.WithRange(@namespace.Name.ToString().Split('.'));
 
 					result.Add(item);
@@ -293,36 +294,36 @@ namespace AutoForm.Analysis.Models
 		#region Type Methods
 		private TypeIdentifier GetTypeIdentifier(TypeSyntax type)
 		{
-			SemanticModel semanticModel = _compilation.GetSemanticModel(type.SyntaxTree);
-			ITypeSymbol symbol = semanticModel.GetDeclaredSymbol(type) as ITypeSymbol ?? semanticModel.GetTypeInfo(type).Type;
+			var semanticModel = _compilation.GetSemanticModel(type.SyntaxTree);
+			var symbol = semanticModel.GetDeclaredSymbol(type) as ITypeSymbol ?? semanticModel.GetTypeInfo(type).Type;
 
-			TypeIdentifier identifier = GetTypeIdentifier(symbol);
+			var identifier = GetTypeIdentifier(symbol);
 
 			return identifier;
 		}
 		private TypeIdentifier GetTypeIdentifier(PropertyDeclarationSyntax property)
 		{
-			SemanticModel semanticModel = _compilation.GetSemanticModel(property.SyntaxTree);
-			ITypeSymbol symbol = semanticModel.GetDeclaredSymbol(property).Type;
+			var semanticModel = _compilation.GetSemanticModel(property.SyntaxTree);
+			var symbol = semanticModel.GetDeclaredSymbol(property).Type;
 
-			TypeIdentifier identifier = GetTypeIdentifier(symbol);
+			var identifier = GetTypeIdentifier(symbol);
 
 			return identifier;
 		}
 		private TypeIdentifier GetTypeIdentifier(BaseTypeDeclarationSyntax declaration)
 		{
-			SemanticModel semanticModel = _compilation.GetSemanticModel(declaration.SyntaxTree);
-			INamedTypeSymbol symbol = semanticModel.GetDeclaredSymbol(declaration);
+			var semanticModel = _compilation.GetSemanticModel(declaration.SyntaxTree);
+			var symbol = semanticModel.GetDeclaredSymbol(declaration);
 
-			TypeIdentifier identifier = GetTypeIdentifier(symbol);
+			var identifier = GetTypeIdentifier(symbol);
 
 			return identifier;
 		}
 
 		private TypeIdentifier GetTypeIdentifier(ITypeSymbol symbol)
 		{
-			TypeIdentifierName identifier = GetTypeIdentifierName(symbol);
-			Namespace @namespace = GetNamespace(symbol);
+			var identifier = GetTypeIdentifierName(symbol);
+			var @namespace = GetNamespace(symbol);
 
 			return TypeIdentifier.Create(identifier, @namespace);
 		}
@@ -348,11 +349,11 @@ namespace AutoForm.Analysis.Models
 
 			if (symbol.ContainingType != null)
 			{
-				TypeIdentifierName containingType = GetTypeIdentifierName(symbol.ContainingType);
+				var containingType = GetTypeIdentifierName(symbol.ContainingType);
 				result = result.WithTypePart(containingType);
 			}
 
-			Boolean flag = false;
+			var flag = false;
 			if (symbol is IArrayTypeSymbol arraySymbol)
 			{
 				flag = true;
@@ -364,12 +365,12 @@ namespace AutoForm.Analysis.Models
 			if (symbol is INamedTypeSymbol namedSymbol && namedSymbol.TypeArguments.Any())
 			{
 				var arguments = new TypeIdentifier[namedSymbol.TypeArguments.Length];
-				
-				for(int i = 0; i < arguments.Length; i++)
+
+				for (var i = 0; i < arguments.Length; i++)
 				{
 					var typeArgument = namedSymbol.TypeArguments[i];
 					TypeIdentifier argument = default;
-					if (typeArgument.ContainingType == namedSymbol)
+					if (SymbolEqualityComparer.Default.Equals(typeArgument.ContainingType, namedSymbol))
 					{
 						argument = TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart(typeArgument.ToString()), Namespace.Create());
 					}

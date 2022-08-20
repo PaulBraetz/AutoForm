@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Blazor.Analysis", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Analysis", "AutoForm.Analysis\AutoForm.Analysis.csproj", "{7BE9DE56-F590-4285-8466-B77DB6F0B554}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Json", "AutoForm.Json\AutoForm.Json.csproj", "{B862B19E-3AA9-40B6-9002-32E34EF39515}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Json.Analysis", "AutoForm.Json.Analysis\AutoForm.Json.Analysis.csproj", "{D3896D4F-5E1A-493B-AA4A-DC5CE65AA43F}"
 EndProject
 Global
@@ -43,10 +41,6 @@ Global
 		{7BE9DE56-F590-4285-8466-B77DB6F0B554}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BE9DE56-F590-4285-8466-B77DB6F0B554}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BE9DE56-F590-4285-8466-B77DB6F0B554}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B862B19E-3AA9-40B6-9002-32E34EF39515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B862B19E-3AA9-40B6-9002-32E34EF39515}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B862B19E-3AA9-40B6-9002-32E34EF39515}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B862B19E-3AA9-40B6-9002-32E34EF39515}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D3896D4F-5E1A-493B-AA4A-DC5CE65AA43F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D3896D4F-5E1A-493B-AA4A-DC5CE65AA43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3896D4F-5E1A-493B-AA4A-DC5CE65AA43F}.Release|Any CPU.ActiveCfg = Release|Any CPU

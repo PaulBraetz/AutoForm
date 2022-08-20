@@ -9,18 +9,40 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.8" />
+	  <Content Remove="Templates\Empty.razor" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AutoForm.Attributes\AutoForm.Attributes.csproj" />
-		<ProjectReference Include="..\AutoForm.Blazor\AutoForm.Blazor.csproj" />
-		<ProjectReference Include="..\AutoForm.Json.Analysis\AutoForm.Json.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<ProjectReference Include="..\AutoForm.Blazor.Analysis\AutoForm.Blazor.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.8" />
+		<PackageReference Include="RhoMicro.AutoForm.Attributes" Version="0.0.1" />
+		<PackageReference Include="RhoMicro.AutoForm.Blazor" Version="0.0.2" />
+		<PackageReference Include="RhoMicro.AutoForm.Blazor.Analysis" Version="0.0.6">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="RhoMicro.AutoForm.Json.Analysis" Version="0.0.8">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<!--<ProjectReference Include="..\AutoForm.Json.Analysis\AutoForm.Json.Analysis.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />-->
 	</ItemGroup>
 
 	<PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	</PropertyGroup>
-	
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Templates\Empty.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Templates\Empty.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Templates\Empty.razor" />
+	</ItemGroup>
+
 </Project>

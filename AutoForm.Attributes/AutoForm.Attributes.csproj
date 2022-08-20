@@ -2,6 +2,18 @@
 
   <PropertyGroup>
 	  <TargetFramework>netstandard2.0</TargetFramework>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <Authors>Paul Brätz</Authors>
+	  <Description>Attributes for Rhomicro.AutoForm. This is a test deployment, use at your own risk!</Description>
+	  <Copyright>2022</Copyright>
+	  <PackageTags>Rhomicro</PackageTags>
+	  <Version>0.0.1</Version>
+	  <PackageId>RhoMicro.AutoForm.Attributes</PackageId>
+	  <AssemblyName>AutoForm.Attributes</AssemblyName>
+	  <RootNamespace>AutoForm.Attributes</RootNamespace>
+	  <Company>RhoMicro</Company>
+	  <PackageProjectUrl>https://github.com/PaulBraetz/AutoForm/</PackageProjectUrl>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

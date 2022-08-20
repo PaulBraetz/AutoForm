@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace AutoForm.Analysis.Models
 {
@@ -60,7 +59,7 @@ namespace AutoForm.Analysis.Models
 
 		private IEnumerable<Model> ApplyFallbacksToModels()
 		{
-			var generatedFallbackControls = Models.Select(m=>Control.CreateGenerated(m.Name));
+			var generatedFallbackControls = Models.Select(m => Control.CreateGenerated(m.Name));
 			var availableControls = FallbackControls.Where(c1 => !generatedFallbackControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedFallbackControls);
 
 			var fallbackAppliedModels = new List<Model>();
@@ -132,13 +131,14 @@ namespace AutoForm.Analysis.Models
 						exceptions.Add(new ArgumentException($"Unable to provide control for {requiredControlModel.ToEscapedString()}"));
 					}
 				}
+
 				if (exceptions.Any())
 				{
 					throw new AggregateException(exceptions);
 				}
 			}
 
-			ModelSpace modelSpace = Create()
+			var modelSpace = Create()
 				.WithModels(fallbackAppliedModels)
 				.WithFallbackControls(FallbackControls)
 				.WithTemplates(FallbackTemplates)

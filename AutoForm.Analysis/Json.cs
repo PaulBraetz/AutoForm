@@ -13,7 +13,7 @@ namespace AutoForm.Analysis
 		}
 		public static String KeyValuePair<T>(String name, T value)
 		{
-			String valueString = Value(value);
+			var valueString = Value(value);
 			return $"{Value(name)}:{valueString}";
 		}
 		public static String KeyValuePair<T>(String name, T[] values)

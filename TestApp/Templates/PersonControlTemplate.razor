@@ -9,7 +9,7 @@
 	[Parameter]
 	public Person Value { get; set; }
 	[Parameter]
-	public IDictionary<String, Object> Attributes { get; set; }
+	public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
 }

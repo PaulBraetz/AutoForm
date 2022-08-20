@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AutoForm.Generate.Blazor.Templates
+namespace AutoForm.Blazor.Analysis.Templates
 {
 	internal sealed partial class SourceFactory
 	{
 		private readonly struct ControlsTemplate
 		{
-			private ControlsTemplate(KeyValueTypesPairTemplate[] modelControlPairTemplates, KeyValueTypesPairTemplate[] modelTemplatePairTemplates, ControlTemplate[] controlTemplates, DefaultControlsTemplate defaultControlsTemplate)
+			private ControlsTemplate(KeyValueTypesPairTemplate[] modelControlPairTemplates, KeyValueTypesPairTemplate[] modelTemplatePairTemplates, ControlTemplate[] controlTemplates)
 			{
-				_defaultControlsTemplate = defaultControlsTemplate;
 				_modelControlPairTemplates = modelControlPairTemplates ?? Array.Empty<KeyValueTypesPairTemplate>();
 				_modelTemplatePairTemplates = modelTemplatePairTemplates ?? Array.Empty<KeyValueTypesPairTemplate>();
 				_controlTemplates = controlTemplates ?? Array.Empty<ControlTemplate>();
 			}
 
-			private readonly DefaultControlsTemplate _defaultControlsTemplate;
 			private readonly KeyValueTypesPairTemplate[] _modelControlPairTemplates;
 			private readonly KeyValueTypesPairTemplate[] _modelTemplatePairTemplates;
 			private readonly ControlTemplate[] _controlTemplates;
@@ -29,7 +27,7 @@ namespace AutoForm.Generate.Blazor.Templates
 using Microsoft.AspNetCore.Components;
 namespace AutoForm.Blazor
 {	
-	public static partial class GeneratedControls
+	public static class GeneratedControls
 	{
 #region Type Maps
 		public static readonly IReadOnlyDictionary<Type, Type> ModelControlMap = new global::System.Collections.ObjectModel.ReadOnlyDictionary<Type, Type>(new Dictionary<Type, Type>()
@@ -43,24 +41,6 @@ namespace AutoForm.Blazor
 		});
 #endregion
 
-#region Base Control Type
-        private abstract class __ControlBase<TModel> : global::Microsoft.AspNetCore.Components.ComponentBase
-		{				
-			[global::Microsoft.AspNetCore.Components.Parameter]
-			public TModel Value { get; set; }
-
-			[global::Microsoft.AspNetCore.Components.Parameter]
-			public global::Microsoft.AspNetCore.Components.EventCallback<TModel> ValueChanged { get; set; }
-
-			[global::Microsoft.AspNetCore.Components.Parameter]
-			public global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object> Attributes { get; set; }
-		}
-#endregion
-
-#region Default Controls
-" + DEFAULT_CONTROLS + @"
-#endregion
-
 #region Generated Controls
 " + CONTROLS + @"
 #endregion
@@ -70,34 +50,28 @@ namespace AutoForm.Blazor
 
 			public ControlsTemplate WithModelControlPairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates)
 			{
-				return new ControlsTemplate(modelControlPairTemplates.ToArray(), _modelTemplatePairTemplates, _controlTemplates, _defaultControlsTemplate);
+				return new ControlsTemplate(modelControlPairTemplates.ToArray(), _modelTemplatePairTemplates, _controlTemplates);
 			}
 			public ControlsTemplate WithModelTemplatePairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelTemplatePairTemplates)
 			{
-				return new ControlsTemplate(_modelControlPairTemplates, modelTemplatePairTemplates.ToArray(), _controlTemplates, _defaultControlsTemplate);
+				return new ControlsTemplate(_modelControlPairTemplates, modelTemplatePairTemplates.ToArray(), _controlTemplates);
 			}
 			public ControlsTemplate WithControlTemplates(IEnumerable<ControlTemplate> controlTemplates)
 			{
-				return new ControlsTemplate(_modelControlPairTemplates, _modelTemplatePairTemplates, controlTemplates.ToArray(), _defaultControlsTemplate);
-			}
-			public ControlsTemplate WithDefaultControlsTemplate(DefaultControlsTemplate defaultControlsTemplate)
-			{
-				return new ControlsTemplate(_modelControlPairTemplates, _modelTemplatePairTemplates, _controlTemplates, defaultControlsTemplate);
+				return new ControlsTemplate(_modelControlPairTemplates, _modelTemplatePairTemplates, controlTemplates.ToArray());
 			}
 
 			public String Build()
 			{
-				String controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build()));
-				String modelControlPairs = String.Join(",\n", _modelControlPairTemplates.Select(t => t.Build()));
-				String modelTemplatePairs = String.Join(",\n", _modelTemplatePairTemplates.Select(t => t.Build()));
-				String defaultControls = String.Join("\n\n", _defaultControlsTemplate.Build());
-				String generatedDate = DateTimeOffset.Now.ToString();
+				var controls = String.Join("\n\n", _controlTemplates.Select(t => t.Build()));
+				var modelControlPairs = String.Join(",\n", _modelControlPairTemplates.Select(t => t.Build()));
+				var modelTemplatePairs = String.Join(",\n", _modelTemplatePairTemplates.Select(t => t.Build()));
+				var generatedDate = DateTimeOffset.Now.ToString();
 
-				String template = TEMPLATE
+				var template = TEMPLATE
 					.Replace(GENERATED_DATE, generatedDate)
 					.Replace(MODEL_CONTROL_PAIRS, modelControlPairs)
 					.Replace(MODEL_TEMPLATE_PAIRS, modelTemplatePairs)
-					.Replace(DEFAULT_CONTROLS, defaultControls)
 					.Replace(CONTROLS, controls);
 
 				return template;

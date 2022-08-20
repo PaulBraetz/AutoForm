@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AutoForm.Generate.Blazor.Templates
+namespace AutoForm.Blazor.Analysis.Templates
 {
 	internal sealed partial class SourceFactory
 	{
@@ -32,8 +32,8 @@ namespace AutoForm.Generate.Blazor.Templates
 
 			public String Build()
 			{
-				String generatedDate = DateTimeOffset.Now.ToString();
-				String errorMessage = String.Join("\n\n", (IEnumerable<Exception>)_error.Exceptions);
+				var generatedDate = DateTimeOffset.Now.ToString();
+				var errorMessage = String.Join("\n\n", (IEnumerable<Exception>)_error.Exceptions);
 
 				return TEMPLATE
 					.Replace(GENERATED_DATE, generatedDate)
