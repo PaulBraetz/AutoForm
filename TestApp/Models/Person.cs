@@ -1,4 +1,6 @@
 ﻿using AutoForm.Attributes;
+using AutoForm.Blazor.Templates;
+using System.Collections.ObjectModel;
 using static TestApp.Models.AttributesFactory;
 
 namespace TestApp.Models
@@ -12,11 +14,15 @@ namespace TestApp.Models
 		}
 
 		private String? name;
-		private SByte age;
+		private Byte age;
 
-		[UseControl(typeof(AutoForm.Blazor.Controls.SByteRange))]
+		[UseControl(typeof(AutoForm.Blazor.Controls.ByteRange))]
 		[UseTemplate(typeof(AutoForm.Blazor.Templates.Empty))]
-		public SByte Age { get => age; set => Console.WriteLine(age = value); }
+		public Byte Age { get => age; set => Console.WriteLine(age = value); }
+		[UseControl(typeof(Controls.Progress))]
+		[UseTemplate(typeof(Empty))]
+		[Order(-1)]
+		public Byte AgeDisplay { get => Age; set => Age = value; }
 		public String? Name { get => name; set => Console.WriteLine(name = value); }
 		public Address Residency { get; set; }
 
@@ -63,6 +69,7 @@ namespace TestApp.Models
 
 	public sealed class PersonAttributesProvider
 	{
+		private readonly ReadOnlyDictionary<String, Object> _empty = new ReadOnlyDictionary<String, Object>(new Dictionary<String, Object>());
 		private readonly IEnumerable<KeyValuePair<String, Object>> _residency = AttributesFactory.Create(Options.Id, ("label", nameof(Person.Residency)));
 		private readonly IEnumerable<KeyValuePair<String, Object>> _name = AttributesFactory.Create(Options.Id | Options.FormControl, ("placeholder", nameof(Person.Name)));
 		private readonly IEnumerable<KeyValuePair<String, Object>> _age = AttributesFactory.Create(Options.Id | Options.FormControl, ("label", nameof(Person.Age)), ("class", "form-range"));
@@ -80,6 +87,11 @@ namespace TestApp.Models
 		public IEnumerable<KeyValuePair<String, Object>> GetAgeAttributes()
 		{
 			return _age;
+		}
+
+		public IEnumerable<KeyValuePair<String, Object>> GetAgeDisplayAttributes()
+		{
+			return _empty;
 		}
 	}
 
