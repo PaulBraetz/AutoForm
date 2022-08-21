@@ -14,7 +14,7 @@ AutoForm uses [Semantic Versioning 2.0.0](https://semver.org/).
 
 ## Installation ##
 
-Currently, there are multile packages published for generating code based on models:
+Currently, there are multiple packages published for generating code based on models:
 
 * For model discovery, an attribute collection is provided in the AutoForm.Attributes package.
 * For debug purposes, a json generator is provided in the AutoForm.Json.Analysis package.
