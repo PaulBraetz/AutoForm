@@ -1,15 +1,31 @@
 ﻿@page "/"
+@using TestApp.Models
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>TestApp For AutoForm Controls</h1>
 
-Welcome to your new app.
+<h5>Try it out:</h5>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<AutoForm.Blazor.AutoControl @bind-Value="Model" />
 
-<AutoControl @bind-Value="model"/>
+<h5>Here is the data you entered:</h5>
+<dl>
+	<dt>
+		@nameof(MyModel.Age)
+	</dt>
+	<dd>
+		@Model.Age
+	</dd>
+	<dt>
+		@nameof(MyModel.Name)
+	</dt>
+	<dd>
+		@Model.Name
+	</dd>
+</dl>
 
-@code{
-	private IModel model = Model.Create();
+
+@code {
+	private MyModel Model { get; set; } = new MyModel();
 }

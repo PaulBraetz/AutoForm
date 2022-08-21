@@ -1,8 +1,0 @@
-﻿@using AutoForm.Blazor.Controls.Abstractions
-@inherits ControlBase<Byte>
-<div class="progress">
-	<div class="progress-bar" role="progressbar" style="width: @((Byte)(((Single)Value/(Single)Byte.MaxValue)*100))%"></div>
-</div>
-<span>
-	@Value / @Byte.MaxValue = @((Byte)(((Single)Value / (Single)Byte.MaxValue) * 100)) %
-</span>

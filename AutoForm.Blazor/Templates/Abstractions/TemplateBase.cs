@@ -7,7 +7,7 @@ namespace AutoForm.Blazor.Templates.Abstractions
         [Parameter]
         public TModel? Value { get; set; }
         [Parameter]
-        public IEnumerable<KeyValuePair<string, object>>? Attributes { get; set; }
+        public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
         [Parameter]
         public RenderFragment? ChildContent { get; set; }
     }
