@@ -7,7 +7,7 @@
 	  <Description>Attributes for Rhomicro.AutoForm.</Description>
 	  <Copyright>2022</Copyright>
 	  <PackageTags>Rhomicro</PackageTags>
-	  <Version>1.0.1</Version>
+	  <Version>1.0.2</Version>
 	  <PackageId>RhoMicro.AutoForm.Attributes</PackageId>
 	  <AssemblyName>AutoForm.Attributes</AssemblyName>
 	  <RootNamespace>AutoForm.Attributes</RootNamespace>

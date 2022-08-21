@@ -8,8 +8,8 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<AutoControl @bind-Value="PersonList" />
+<AutoControl @bind-Value="model"/>
 
-@code {
-	private ICollection<Person> PersonList { get; set; } = new List<Person>();
+@code{
+	private IModel model = Model.Create();
 }
