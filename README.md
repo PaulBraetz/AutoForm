@@ -26,25 +26,33 @@ In order to use the generators, models have to be annotated using the attributes
 ### Installing AutoForm.Attributes ###
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Attributes
+
 Package Manager: `Install-Package RhoMicro.AutoForm.Attributes -Version 1.0.2`
+
 .Net CLI: `dotnet add package RhoMicro.AutoForm.Attributes --version 1.0.2`
 
 ### Installing the json generator ###
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Json.Analyzer
+
 Package Manager: `Install-Package RhoMicro.AutoForm.Json.Analyzer -Version 1.0.1`
+
 .Net CLI: `dotnet add package RhoMicro.AutoForm.Json.Analyzer --version 1.0.1`
 
 ### Installing the blazor generator ###
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor.Analyzer
+
 Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analyzer -Version 1.0.1`
+
 .Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor.Analyzer --version 1.0.1`
 
 ### Installing the blazor entry point ###
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor
+
 Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version 1.0.1`
+
 .Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version 1.0.1`
 
 ## How To Use ##
