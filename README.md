@@ -191,7 +191,7 @@ The html rendered will now look something like this:
 
 #### Using an attributes provider ####
 
-Attributes providers must implement a method "Get-PropertyIdentifier-Attributes()" for every property of the model that is not excluded from control generation. The return value must be assignable to `IEnumerable<KeyValuePair<String, Object>>`.
+Attributes providers must implement a method "Get-PropertyIdentifier-Attributes()" for every property of the model that is not excluded from control generation. The return value must be assignable to `IEnumerable<KeyValuePair<String, Object>>`. A data structure `AttributeCollection` is provided in the `AutoForm.Blazor.Attributes` namespace that makes managing attributes a bit less cumbersome. It is not required in general to use this data structure, as generators should expect any type that is assignable to `IEnumerable<KeyValuePair<String, Object>>` to be returned from an attribute providers methods. We are going to use it here for simplicity.
 
 Create an attributes provider like so:
 ```cs
@@ -199,18 +199,12 @@ public class MyAttributesProvider
 {
   public IEnumerable<KeyValuePair<String, Object>> GetNameAttributes()
 {
-    return new Dictionary<String, Object>()
-    {
-      {"placeholder", "Name" }
-    };
+    return new AttributeCollection("placeholder", "Name");
   }
 
   public IEnumerable<KeyValuePair<String, Object>> GetAgeAttributes()
 {
-    return new Dictionary<String, Object>()
-    {
-      {"min", "0" }
-    };
+    return new AttributeCollection("min", "0");
   }
 }
 ```
