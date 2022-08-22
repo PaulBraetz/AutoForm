@@ -126,7 +126,7 @@ public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
 public RenderFragment? ChildContent { get; set; }
 ```
 where TModel is the model type whose control this template should be applied to. These properties enable the template to access the controls attributes as well as the models current value. The control will be passed to `ChildContent`.
-These properties are implemented in ``AutoForm.Blazor.Templates.Abstractions.ControlBase`.
+These properties are implemented in `AutoForm.Blazor.Templates.Abstractions.TemplateBase`.
 
 Create a template like so:
 ```razor
