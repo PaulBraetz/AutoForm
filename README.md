@@ -210,7 +210,7 @@ public class MyAttributesProvider
 ```
 *Found here: [TestApp.AttributesProviders.MyAttributesProvider](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/AttributesProviders/MyAttributesProvider.cs)*
 
-Create a property to provider the attributes provider:
+Create a property for accessing the attributes provider:
 
 ```cs
 [Model]
@@ -266,6 +266,10 @@ private sealed class __Control_TestApp_Models_MyModel : AutoForm.Blazor.Controls
 The html rendered will now look something like this (notice the placeholder):
 
 ![Image Missing](https://static.rhomicro.com/files/images/github/autoform/3.png)
+
+Adding some more attributes to our attribute provider as well as editing our templates, the html rendered will now look something like this:
+
+![Image Missing](https://static.rhomicro.com/files/images/github/autoform/4.png)
 
 - - - -
 That's it for the basics, look around the `AutoForm.Attributes` namespace to find out more about how to use controls, fallback templates, ordering controls etc. This readme will likely be updated in the future to include more advanced instructions.
