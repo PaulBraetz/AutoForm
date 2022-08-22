@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace AutoForm.Blazor.Controls
 {
-    public class Checkbox : InputControlBase<String>
+    public class Checkbox : InputControlBase<Boolean>
     {
         public Checkbox() : base("checkbox", "checked") { }
 
