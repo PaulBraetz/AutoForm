@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<!--Needed for debugging-->
-	<!--<ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\AutoForm.Blazor.Analysis\AutoForm.Blazor.Analysis.csproj"
 						  OutputItemType="Analyzer"
 						  ReferenceOutputAssembly="false" />
@@ -16,16 +16,16 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-	</PropertyGroup>-->
+	</PropertyGroup>
 	
 	<!--Uses packages, unfit for debugging-->
-	<ItemGroup>
+	<!--<ItemGroup>
 		<PackageReference Include="RhoMicro.AutoForm.Attributes" Version="1.0.2" />
     <PackageReference Include="RhoMicro.AutoForm.Blazor" Version="1.0.1" />
     <PackageReference Include="RhoMicro.AutoForm.Blazor.Analysis" Version="1.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	</ItemGroup>
+	</ItemGroup>-->
 
 </Project>

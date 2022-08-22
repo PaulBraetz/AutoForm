@@ -1,4 +1,5 @@
-﻿using AutoForm.Blazor.Controls.Abstractions;
+﻿using AutoForm.Blazor.Attributes;
+using AutoForm.Blazor.Controls.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,13 +15,11 @@ namespace AutoForm.Blazor.Controls
         {
 
         }
-        private static readonly ReadOnlyDictionary<String, Object> _additionalAttributes = new(new Dictionary<String, Object>()
+        private static readonly AttributeCollection _additionalAttributes = new AttributeCollection("maxlength", "1")
+            ;
+        protected override AttributeCollection GetAdditionalAttributes()
         {
-            {"maxlength", "1" }
-        });
-        protected override IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
-        {
-            return Union(base.GetAdditionalAttributes(), _additionalAttributes);
+            return AttributeCollection.Union(_additionalAttributes, base.GetAdditionalAttributes());
         }
     }
 }

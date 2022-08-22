@@ -1,4 +1,5 @@
-﻿using AutoForm.Blazor.Controls.Abstractions;
+﻿using AutoForm.Blazor.Attributes;
+using AutoForm.Blazor.Controls.Abstractions;
 using System.Collections.ObjectModel;
 
 namespace AutoForm.Blazor.Controls
@@ -11,9 +12,9 @@ namespace AutoForm.Blazor.Controls
             {"max", UInt64.MaxValue.ToString() }
         });
 
-        protected override IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
+        protected override AttributeCollection GetAdditionalAttributes()
         {
-            return Union(base.GetAdditionalAttributes(), _additionalAttributes);
+            return AttributeCollection.Union(_additionalAttributes, base.GetAdditionalAttributes());
         }
     }
 }

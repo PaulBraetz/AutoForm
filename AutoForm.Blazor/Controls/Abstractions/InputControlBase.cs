@@ -1,4 +1,5 @@
-﻿using Fort;
+﻿using AutoForm.Blazor.Attributes;
+using Fort;
 using System.Collections.ObjectModel;
 
 namespace AutoForm.Blazor.Controls.Abstractions
@@ -9,17 +10,14 @@ namespace AutoForm.Blazor.Controls.Abstractions
         {
             type.ThrowIfDefault(nameof(type));
 
-            _additionalAttributes = new(new Dictionary<String, Object>()
-            {
-                {"type", type }
-            });
+            _additionalAttributes = new AttributeCollection("type", type);
         }
 
-        private readonly ReadOnlyDictionary<String, Object> _additionalAttributes;
+        private readonly AttributeCollection _additionalAttributes;
 
-        protected override IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
+        protected override AttributeCollection GetAdditionalAttributes()
         {
-            return Union(base.GetAdditionalAttributes(), _additionalAttributes);
+            return AttributeCollection.Union(_additionalAttributes, base.GetAdditionalAttributes());
         }
     }
 }

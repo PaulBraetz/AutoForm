@@ -1,4 +1,5 @@
-﻿using AutoForm.Blazor.Controls.Abstractions;
+﻿using AutoForm.Blazor.Attributes;
+using AutoForm.Blazor.Controls.Abstractions;
 using Microsoft.AspNetCore.Components;
 using System.Collections.ObjectModel;
 
@@ -10,17 +11,14 @@ namespace AutoForm.Blazor.Controls
 
         protected override void OnParametersSet()
         {
-            _additionalAttributes = new(new Dictionary<String, Object>()
-            {
-                {"checked", BindConverter.FormatValue(Value) }
-            });
+            _additionalAttributes = new AttributeCollection("checked", BindConverter.FormatValue(Value) );
             base.OnParametersSet();
         }
 
-        private ReadOnlyDictionary<String, Object> _additionalAttributes;
-        protected override IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
+        private AttributeCollection _additionalAttributes;
+        protected override AttributeCollection GetAdditionalAttributes()
         {
-            return Union(base.GetAdditionalAttributes(), _additionalAttributes);
+            return AttributeCollection.Union(_additionalAttributes, base.GetAdditionalAttributes());
         }
     }
 }

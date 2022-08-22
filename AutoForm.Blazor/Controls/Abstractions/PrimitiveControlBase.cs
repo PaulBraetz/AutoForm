@@ -1,4 +1,5 @@
-﻿using Fort;
+﻿using AutoForm.Blazor.Attributes;
+using Fort;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.CompilerServices;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -10,23 +11,6 @@ namespace AutoForm.Blazor.Controls.Abstractions
 {
     public abstract class PrimitiveControlBase<TModel> : OptimizedControlBase<TModel>
     {
-        private sealed class KeyValuePairComparer : IEqualityComparer<KeyValuePair<String, Object>>
-        {
-            private KeyValuePairComparer() { }
-
-            public static readonly KeyValuePairComparer Instance = new();
-
-            public Boolean Equals(KeyValuePair<String, Object> x, KeyValuePair<String, Object> y)
-            {
-                return x.Key == y.Key;
-            }
-
-            public Int32 GetHashCode([DisallowNull] KeyValuePair<String, Object> obj)
-            {
-                return obj.Key.GetHashCode();
-            }
-        }
-
         protected TModel? RootValue
         {
             get => Value;
@@ -40,8 +24,6 @@ namespace AutoForm.Blazor.Controls.Abstractions
         protected readonly string ElementName;
         protected readonly String UpdatesAttributeName;
 
-        private static readonly IEnumerable<KeyValuePair<String, Object>> _emptyAttributes = Array.Empty<KeyValuePair<String, Object>>();
-
         protected PrimitiveControlBase(String elementName, String updatesAttributeName = "value")
         {
             elementName.ThrowIfDefault(nameof(elementName));
@@ -51,22 +33,14 @@ namespace AutoForm.Blazor.Controls.Abstractions
             UpdatesAttributeName = updatesAttributeName;
         }
 
-        protected static IEnumerable<KeyValuePair<String, Object>> Union(IEnumerable<KeyValuePair<String, Object>>? first, IEnumerable<KeyValuePair<String, Object>>? second)
+        protected virtual AttributeCollection GetAdditionalAttributes()
         {
-            return first == null ? second ?? _emptyAttributes :
-                second == null ? first : first.Union(second);
+            return AttributeCollection.Empty;
         }
 
-
-        private static readonly ReadOnlyDictionary<String, Object> _additionalAttributes = new(new Dictionary<String, Object>() { });
-        protected virtual IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
+        protected AttributeCollection GetAttributes()
         {
-            return _additionalAttributes;
-        }
-
-        protected IEnumerable<KeyValuePair<String, Object>> GetAttributes()
-        {
-            return Union(Attributes, GetAdditionalAttributes());
+            return AttributeCollection.Union(Attributes, GetAdditionalAttributes());
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
