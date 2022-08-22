@@ -6,15 +6,19 @@
 		{
 			return new Dictionary<String, Object>()
 			{
-				{"placeholder", "Name" }
+				{"placeholder", "Name" },
+				{"class", "form-control" },
+				{"label", "User Name" }
 			};
 		}
 		public IEnumerable<KeyValuePair<String, Object>> GetAgeAttributes()
 		{
 			return new Dictionary<String, Object>()
 			{
-				{"min", "0" }
-			};
-		}
-	}
+				{"min", "0" },
+                {"class", "form-control" },
+				{"label", "User Age" }
+            };
+        }
+    }
 }

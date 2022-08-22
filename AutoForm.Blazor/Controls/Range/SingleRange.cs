@@ -5,7 +5,7 @@ namespace AutoForm.Blazor.Controls
 {
     public class SingleRange : RangeControlBase<Single>
     {
-        private static readonly ReadOnlyDictionary<String, Object> _attributes = new(new Dictionary<String, Object>()
+        private static readonly ReadOnlyDictionary<String, Object> _additionalAttributes = new(new Dictionary<String, Object>()
         {
             {"min", Single.MinValue.ToString() },
             {"max", Single.MaxValue.ToString() }
@@ -13,7 +13,7 @@ namespace AutoForm.Blazor.Controls
 
         protected override IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
         {
-            return Union(base.GetAdditionalAttributes(), _attributes);
+            return Union(base.GetAdditionalAttributes(), _additionalAttributes);
         }
     }
 }

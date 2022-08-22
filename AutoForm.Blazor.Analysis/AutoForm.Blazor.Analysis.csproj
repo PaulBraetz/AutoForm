@@ -15,7 +15,7 @@
 		<Description>Blazor component generator for Rhomicro.AutoForm.</Description>
 		<Copyright>2022</Copyright>
 		<PackageTags>Rhomicro</PackageTags>
-		<Version>1.0.1</Version>
+		<Version>1.1.0</Version>
 		<PackageId>RhoMicro.AutoForm.Blazor.Analysis</PackageId>
 		<AssemblyName>AutoForm.Blazor.Analysis</AssemblyName>
 		<RootNamespace>AutoForm.Blazor.Analysis</RootNamespace>

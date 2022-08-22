@@ -38,21 +38,51 @@ namespace AutoForm.Blazor.Analysis.Templates
         private static readonly Namespace ControlsNamespace = Namespace.Create().WithRange(new[] { "AutoForm", "Blazor", "Controls" });
         private static readonly IReadOnlyDictionary<TypeIdentifier, TypeIdentifier> AvailableDefaultControls = new ReadOnlyDictionary<TypeIdentifier, TypeIdentifier>(new Dictionary<TypeIdentifier, TypeIdentifier>()
         {
-            {TypeIdentifier.Create<String>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Text"), ControlsNamespace) },
-            {TypeIdentifier.Create<Boolean>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Checkbox"), ControlsNamespace) },
-            {TypeIdentifier.Create<Byte>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("ByteNumber"), ControlsNamespace) },
-            {TypeIdentifier.Create<SByte>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("SByteNumber"), ControlsNamespace) },
-            {TypeIdentifier.Create<Int16>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Int16Number"), ControlsNamespace) },
-            {TypeIdentifier.Create<UInt16>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("UInt16Number"), ControlsNamespace) },
-            {TypeIdentifier.Create<Int32>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Int32Number"), ControlsNamespace) },
-            {TypeIdentifier.Create<UInt32>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("UInt32Number"), ControlsNamespace) },
-            {TypeIdentifier.Create<Int64>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("Int64Number"), ControlsNamespace) },
-            {TypeIdentifier.Create<UInt64>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("UInt64Number"), ControlsNamespace) },
-            {TypeIdentifier.Create<Single>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("SingleNumber"), ControlsNamespace) },
-            {TypeIdentifier.Create<Double>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("DoubleNumber"), ControlsNamespace) },
-            {TypeIdentifier.Create<Decimal>(), TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart("DecimalNumber"), ControlsNamespace) }
+            {TypeIdentifier.Create<String>(), GetDefaultControl("Text") },
+            {TypeIdentifier.Create<Char>(), GetDefaultControl("CharControl") },
+            {TypeIdentifier.Create<DateTime>(), GetDefaultControl("DateControl") },
+            {TypeIdentifier.Create<Boolean>(), GetDefaultControl("Checkbox") },
+            {TypeIdentifier.Create<Byte>(), GetDefaultControl("ByteNumber") },
+            {TypeIdentifier.Create<SByte>(), GetDefaultControl("SByteNumber") },
+            {TypeIdentifier.Create<Int16>(), GetDefaultControl("Int16Number") },
+            {TypeIdentifier.Create<UInt16>(), GetDefaultControl("UInt16Number") },
+            {TypeIdentifier.Create<Int32>(), GetDefaultControl("Int32Number") },
+            {TypeIdentifier.Create<UInt32>(), GetDefaultControl("UInt32Number") },
+            {TypeIdentifier.Create<Int64>(), GetDefaultControl("Int64Number") },
+            {TypeIdentifier.Create<UInt64>(), GetDefaultControl("UInt64Number") },
+            {TypeIdentifier.Create<Single>(), GetDefaultControl("SingleNumber") },
+            {TypeIdentifier.Create<Double>(), GetDefaultControl("DoubleNumber") },
+            {TypeIdentifier.Create<Decimal>(), GetDefaultControl("DecimalNumber") }
         });
+        private static TypeIdentifier GetDefaultControl(String name)
+        {
+            return TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart(name), ControlsNamespace);
+        }
         #endregion
+
+        //#region Optimizable PropertyTypes
+        //private static readonly IEnumerable<TypeIdentifier> OptimizablePropertyTypeIdentifiers = new List<TypeIdentifier>()
+        //{
+        //    TypeIdentifier.Create<SByte>(),
+        //    TypeIdentifier.Create<Byte>(),
+        //    TypeIdentifier.Create<Int16>(),
+        //    TypeIdentifier.Create<UInt16>(),
+        //    TypeIdentifier.Create<Int32>(),
+        //    TypeIdentifier.Create<UInt32>(),
+        //    TypeIdentifier.Create<Int64>(),
+        //    TypeIdentifier.Create<UInt64>(),
+        //    TypeIdentifier.Create<Single>(),
+        //    TypeIdentifier.Create<Double>(),
+        //    TypeIdentifier.Create<Decimal>(),
+        //    TypeIdentifier.Create<String>(),
+        //    TypeIdentifier.Create<Boolean>(),
+        //    TypeIdentifier.Create<DateTime>(),
+        //    TypeIdentifier.Create<DateTimeOffset>(),
+        //    TypeIdentifier.Create<TimeSpan>(),
+        //    TypeIdentifier.Create<Guid>(),
+        //    TypeIdentifier.Create<Char>()
+        //}.AsReadOnly();
+        //#endregion
 
         private readonly ModelSpace _modelSpace;
         private readonly Error _error;

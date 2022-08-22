@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Analysis", "AutoFo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoForm.Json.Analysis", "AutoForm.Json.Analysis\AutoForm.Json.Analysis.csproj", "{D3896D4F-5E1A-493B-AA4A-DC5CE65AA43F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{FCBBBEB3-AF27-4556-A2EB-D917A28E5340}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{FCBBBEB3-AF27-4556-A2EB-D917A28E5340}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

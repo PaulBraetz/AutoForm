@@ -1,4 +1,5 @@
-﻿using TestApp.AttributesProviders;
+﻿using AutoForm.Attributes;
+using TestApp.AttributesProviders;
 using TestApp.Templates;
 
 namespace TestApp.Models
@@ -6,12 +7,13 @@ namespace TestApp.Models
 	[AutoForm.Attributes.Model]
 	public class MyModel
 	{
-		public Byte Age { get; set; }
+		[UseTemplate(typeof(ByteTemplate))]
+		public byte Age { get; set; }
 		
-		[AutoForm.Attributes.UseTemplate(typeof(TestApp.Templates.MyTemplate))]
-		public String? Name { get; set; }
+		[UseTemplate(typeof(StringTemplate))]
+		public string? Name { get; set; }
 
-		[AutoForm.Attributes.AttributesProvider]
+		[AttributesProvider]
 		public MyAttributesProvider AttributesProvider { get; } = new MyAttributesProvider();
 	}
 }

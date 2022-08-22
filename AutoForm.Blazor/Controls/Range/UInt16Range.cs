@@ -5,7 +5,7 @@ namespace AutoForm.Blazor.Controls
 {
     public class UInt16Range : RangeControlBase<UInt16>
     {
-        private static readonly ReadOnlyDictionary<String, Object> _attributes = new(new Dictionary<String, Object>()
+        private static readonly ReadOnlyDictionary<String, Object> _additionalAttributes = new(new Dictionary<String, Object>()
         {
             {"min", UInt16.MinValue.ToString() },
             {"max", UInt16.MaxValue.ToString() }
@@ -13,7 +13,7 @@ namespace AutoForm.Blazor.Controls
 
         protected override IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
         {
-            return Union(base.GetAdditionalAttributes(), _attributes);
+            return Union(base.GetAdditionalAttributes(), _additionalAttributes);
         }
     }
 }

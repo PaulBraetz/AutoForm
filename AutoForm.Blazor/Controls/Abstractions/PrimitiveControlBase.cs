@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.CompilerServices;
 using Microsoft.AspNetCore.Components.Rendering;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace AutoForm.Blazor.Controls.Abstractions
 {
-    public abstract class PrimitiveControlBase<TModel> : ControlBase<TModel>
+    public abstract class PrimitiveControlBase<TModel> : OptimizedControlBase<TModel>
     {
         private sealed class KeyValuePairComparer : IEqualityComparer<KeyValuePair<String, Object>>
         {
@@ -25,7 +27,7 @@ namespace AutoForm.Blazor.Controls.Abstractions
             }
         }
 
-        private TModel? RootValue
+        protected TModel? RootValue
         {
             get => Value;
             set
@@ -35,8 +37,8 @@ namespace AutoForm.Blazor.Controls.Abstractions
             }
         }
 
-        private readonly string _elementName;
-        private readonly String _updatesAttributeName;
+        protected readonly string ElementName;
+        protected readonly String UpdatesAttributeName;
 
         private static readonly IEnumerable<KeyValuePair<String, Object>> _emptyAttributes = Array.Empty<KeyValuePair<String, Object>>();
 
@@ -45,8 +47,8 @@ namespace AutoForm.Blazor.Controls.Abstractions
             elementName.ThrowIfDefault(nameof(elementName));
             updatesAttributeName.ThrowIfDefault(nameof(updatesAttributeName));
 
-            _elementName = elementName;
-            _updatesAttributeName = updatesAttributeName;
+            ElementName = elementName;
+            UpdatesAttributeName = updatesAttributeName;
         }
 
         protected static IEnumerable<KeyValuePair<String, Object>> Union(IEnumerable<KeyValuePair<String, Object>>? first, IEnumerable<KeyValuePair<String, Object>>? second)
@@ -55,28 +57,30 @@ namespace AutoForm.Blazor.Controls.Abstractions
                 second == null ? first : first.Union(second);
         }
 
+
+        private static readonly ReadOnlyDictionary<String, Object> _additionalAttributes = new(new Dictionary<String, Object>() { });
         protected virtual IEnumerable<KeyValuePair<String, Object>>? GetAdditionalAttributes()
         {
-            return null;
+            return _additionalAttributes;
         }
 
-        private IEnumerable<KeyValuePair<String, Object>> GetAttributes()
+        protected IEnumerable<KeyValuePair<String, Object>> GetAttributes()
         {
             return Union(Attributes, GetAdditionalAttributes());
         }
 
-        protected sealed override void BuildRenderTree(RenderTreeBuilder builder)
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            builder.OpenElement(1, _elementName);
-            builder.AddAttribute(2, "value", BindConverter.FormatValue(RootValue));
-            builder.AddAttribute(3, "oninput", EventCallback.Factory.CreateBinder(this, __value => RootValue = __value, RootValue));
+            builder.OpenElement(1, ElementName);
+            builder.AddAttribute(2, "value", BindConverter.FormatValue(RootValue, CultureInfo.CurrentCulture));
+            builder.AddAttribute(3, "oninput", EventCallback.Factory.CreateBinder(this, __value => RootValue = __value, RootValue, CultureInfo.CurrentCulture));
             var attributes = GetAttributes();
             if (attributes.Any())
             {
                 builder.AddMultipleAttributes(4, RuntimeHelpers.TypeCheck(attributes));
             }
 
-            builder.SetUpdatesAttributeName(_updatesAttributeName);
+            builder.SetUpdatesAttributeName(UpdatesAttributeName);
             builder.CloseElement();
         }
     }

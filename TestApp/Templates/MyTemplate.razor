@@ -1,6 +1,12 @@
-﻿@inherits AutoForm.Blazor.Templates.Abstractions.TemplateBase<String>
+﻿@typeparam TModel
+@inherits AutoForm.Blazor.Templates.Abstractions.TemplateBase<TModel>
 
 <div class="input-group mb-3">
-	<span class="input-group-text" >Enter Value:</span>
+	<span class="input-group-text" >@Text</span>
 	@ChildContent
 </div>
+
+@code{
+	private Object Text => Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ??
+								"Enter Value:";
+}
