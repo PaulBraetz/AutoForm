@@ -241,7 +241,7 @@ private sealed class __Control_TestApp_Models_MyModel : AutoForm.Blazor.Controls
       __builder.AddAttribute(2, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<System.Byte>>(EventCallback.Factory.Create<System.Byte>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Age = __value; ValueChanged.InvokeAsync(Value);}, Value.Age))));
       __builder.AddAttribute(3, "Attributes", RuntimeHelpers.TypeCheck<IEnumerable<KeyValuePair<String, Object>>>(Value.AttributesProvider.GetAgeAttributes()));
       __builder.CloseComponent();
-      
+
       //Template for Name
       __builder.OpenComponent<TestApp.Templates.MyTemplate>(4);
       __builder.AddAttribute(5, "Value", RuntimeHelpers.TypeCheck<System.String>(Value.Name));
