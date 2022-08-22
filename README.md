@@ -189,9 +189,9 @@ The html rendered will now look something like this:
 
 ![Image Missing](https://static.rhomicro.com/files/images/github/autoform/2.png)
 
-#### Using an attributes provider ####
+#### Using an attribute provider ####
 
-Attributes providers must implement a method "Get-PropertyIdentifier-Attributes()" for every property of the model that is not excluded from control generation. The return value must be assignable to `IEnumerable<KeyValuePair<String, Object>>`. A data structure `AttributeCollection` is provided in the `AutoForm.Blazor.Attributes` namespace that makes managing attributes a bit less cumbersome. It is not required in general to use this data structure, as generators should expect any type that is assignable to `IEnumerable<KeyValuePair<String, Object>>` to be returned from an attribute providers methods. We are going to use it here for simplicity.
+Attribute providers must implement a method "Get-PropertyIdentifier-Attributes()" for every property of the model that is not excluded from control generation. The return value must be assignable to `IEnumerable<KeyValuePair<String, Object>>`. A data structure `AttributeCollection` is provided in the `AutoForm.Blazor.Attributes` namespace that makes managing attributes a bit less cumbersome. It is not required in general to use this data structure, as generators should expect any type that is assignable to `IEnumerable<KeyValuePair<String, Object>>` to be returned from an attribute providers methods. We are going to use it here for simplicity.
 
 Create an attributes provider like so:
 ```cs
