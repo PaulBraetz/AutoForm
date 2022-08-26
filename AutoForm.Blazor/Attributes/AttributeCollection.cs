@@ -27,7 +27,7 @@ namespace AutoForm.Blazor.Attributes
 
         public static readonly AttributeCollection Empty = default;
 
-        private readonly KeyValuePair<String, Object>[] _attributes;
+        private readonly Dictionary<String, Object> _attributes;
 
         private static readonly IEnumerable<KeyValuePair<String, Object>> _emptyAttributes = Array.Empty<KeyValuePair<String, Object>>();
         public AttributeCollection(String key , Object value) : this((key, value))
@@ -38,7 +38,7 @@ namespace AutoForm.Blazor.Attributes
         }
         public AttributeCollection(IEnumerable<KeyValuePair<String, Object>> attributes)
         {
-            _attributes = attributes.Distinct(KeyValuePairComparer.Instance).ToArray();
+            _attributes = new Dictionary<string, object>(attributes.Distinct(KeyValuePairComparer.Instance));
         }
         /// <summary>
         /// Returns a new <see cref="AttributeCollection"/> the elements of which will be the union set of <paramref name="first"/> and <paramref name="second"/>.
@@ -64,6 +64,11 @@ namespace AutoForm.Blazor.Attributes
         public AttributeCollection Union(IEnumerable<KeyValuePair<String, Object>> attributes)
         {
             return new AttributeCollection(Union(attributes, this._attributes));
+        }
+
+        public Boolean TryGetAttribute(String key, out Object? value)
+        {
+            return _attributes.TryGetValue(key, out value);
         }
 
         public IEnumerator<KeyValuePair<String, Object>> GetEnumerator()
