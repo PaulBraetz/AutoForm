@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
-    public readonly struct Property : IEquatable<Property>
+    internal readonly struct Property : IEquatable<Property>
     {
-        public readonly Int32 Order;
+        public readonly int Order;
         public readonly TypeIdentifier Control;
         public readonly TypeIdentifier Template;
         public readonly PropertyIdentifier Name;
         public readonly TypeIdentifier Type;
-        private readonly String _json;
-        private readonly String _string;
+        private readonly string _json;
+        private readonly string _string;
 
-        private Property(PropertyIdentifier name, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, Int32 order)
+        private Property(PropertyIdentifier name, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, int order)
         {
             Name = name;
             Type = type;
@@ -28,41 +28,41 @@ namespace AutoForm.Analysis.Models
                                 Json.KeyValuePair(nameof(Template), Template));
             _string = _json;
         }
-        public static Property Create(PropertyIdentifier name, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, Int32 order)
+        public static Property Create(PropertyIdentifier name, TypeIdentifier type, TypeIdentifier control, TypeIdentifier template, int order)
         {
             return new Property(name, type, control, template, order);
         }
 
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is Property property && Equals(property);
         }
 
-        public Boolean Equals(Property other)
+        public bool Equals(Property other)
         {
             return _json == other._json;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_json);
+            return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return _json ?? "null";
         }
-        public String ToEscapedString()
+        public string ToEscapedString()
         {
-            return _string ?? String.Empty;
+            return _string ?? string.Empty;
         }
 
-        public static Boolean operator ==(Property left, Property right)
+        public static bool operator ==(Property left, Property right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(Property left, Property right)
+        public static bool operator !=(Property left, Property right)
         {
             return !(left == right);
         }

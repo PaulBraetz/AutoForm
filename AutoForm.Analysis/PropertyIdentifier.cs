@@ -1,32 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
-    public readonly struct PropertyIdentifier : IEquatable<PropertyIdentifier>
+    internal readonly struct PropertyIdentifier : IEquatable<PropertyIdentifier>
     {
-        public readonly String Name;
-        private readonly String _json;
-        private readonly String _string;
+        public readonly string Name;
+        private readonly string _string;
 
-        private PropertyIdentifier(String name) : this()
+        private PropertyIdentifier(string name) : this()
         {
             Name = name;
-
             _string = Name;
-            _json = Json.Value(_string);
+		}
+
+        public override string ToString()
+        {
+            return _string;
         }
 
-        public override String ToString()
-        {
-            return _json ?? "null";
-        }
-        public String ToEscapedString()
-        {
-            return _string ?? String.Empty;
-        }
-
-        public static PropertyIdentifier Create(String name)
+        public static PropertyIdentifier Create(string name)
         {
             return new PropertyIdentifier(name);
         }
@@ -38,12 +31,12 @@ namespace AutoForm.Analysis.Models
 
         public Boolean Equals(PropertyIdentifier other)
         {
-            return _json == other._json;
+            return _string == other._string;
         }
 
         public override Int32 GetHashCode()
         {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_json);
+            return -219028617 + EqualityComparer<String>.Default.GetHashCode(_string);
         }
 
         public static Boolean operator ==(PropertyIdentifier left, PropertyIdentifier right)

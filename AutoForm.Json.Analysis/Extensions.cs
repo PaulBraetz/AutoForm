@@ -1,4 +1,4 @@
-﻿using AutoForm.Analysis.Models;
+﻿using AutoForm.Analysis;
 using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
@@ -8,21 +8,33 @@ namespace AutoForm.Json.Analysis
 {
 	internal static class Extensions
 	{
-		public static IdentifierPartJsonDecorator AsJson(this IdentifierPart part)
+		public static IJsonDecorator<IdentifierPart> AsJson(this IdentifierPart part)
 		{
 			return new IdentifierPartJsonDecorator(part);
 		}
-		public static TypeIdentifierNameJsonDecorator AsJson(this TypeIdentifierName name)
+		public static IJsonDecorator<TypeIdentifierName> AsJson(this TypeIdentifierName name)
 		{
 			return new TypeIdentifierNameJsonDecorator(name);
 		}
-		public static NamespaceJsonDecorator AsJson(this RhoMicro.CodeAnalysis.Namespace @namespace)
+		public static IJsonDecorator<Namespace> AsJson(this Namespace @namespace)
 		{
 			return new NamespaceJsonDecorator(@namespace);
 		}
-		public static TypeIdentifierJsonDecorator AsJson(this TypeIdentifier identifier)
+		public static IJsonDecorator<TypeIdentifier> AsJson(this TypeIdentifier identifier)
 		{
 			return new TypeIdentifierJsonDecorator(identifier);
+		}
+		public static IJsonDecorator<Error> AsJson(this Error error)
+		{
+			return new ErrorJsonDecorator(error);
+		}
+		public static IJsonDecorator<PropertyIdentifier> AsJson(this PropertyIdentifier propertyIdentifier)
+		{
+			return new PropertyIdentifierJsonDecorator(propertyIdentifier);
+		}
+		public static IJsonDecorator<Template> AsJson(this Template template)
+		{
+			return new TemplateJsonDecorator(template);
 		}
 	}
 }

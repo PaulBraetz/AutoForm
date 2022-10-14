@@ -25,40 +25,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\AutoForm.Analysis\Extensions.cs" Link="AutoForm.Analysis\Extensions.cs" />
-	  <Compile Include="..\AutoForm.Analysis\GeneratorBase.cs" Link="AutoForm.Analysis\GeneratorBase.cs" />
-	  <Compile Include="..\AutoForm.Analysis\IControlsSourceGenerator.cs" Link="AutoForm.Analysis\IControlsSourceGenerator.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Json.cs" Link="AutoForm.Analysis\Json.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\Control.cs" Link="AutoForm.Analysis\Models\Control.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\Error.cs" Link="AutoForm.Analysis\Models\Error.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\Model.cs" Link="AutoForm.Analysis\Models\Model.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\ModelExtractor.cs" Link="AutoForm.Analysis\Models\ModelExtractor.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\ModelSpace.cs" Link="AutoForm.Analysis\Models\ModelSpace.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\Namespace.cs" Link="AutoForm.Analysis\Models\Namespace.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\Property.cs" Link="AutoForm.Analysis\Models\Property.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\PropertyIdentifier.cs" Link="AutoForm.Analysis\Models\PropertyIdentifier.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\Template.cs" Link="AutoForm.Analysis\Models\Template.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifier.cs" Link="AutoForm.Analysis\Models\TypeIdentifier.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifierName.cs" Link="AutoForm.Analysis\Models\TypeIdentifierName.cs" />
-	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifierNamePart.cs" Link="AutoForm.Analysis\Models\TypeIdentifierNamePart.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeAnalysisUnit.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeAnalysisUnit.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeFactory.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeFactory.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeFactoryCollection.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeFactoryCollection.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeFactoryStrategy.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeFactoryStrategy.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\Extensions.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\Extensions.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\GeneratedSource.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\GeneratedSource.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\GeneratedType.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\GeneratedType.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\IAttributeFactory.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\IAttributeFactory.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\IdentifierPart.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\IdentifierPart.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\Namespace.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\Namespace.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\TypeIdentifier.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\TypeIdentifier.cs" />
-	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\TypeIdentifierName.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\TypeIdentifierName.cs" />
-	  <Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\AttributesProviderAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\FallbackControlAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\FallbackTemplateAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\ModelPropertySettingsAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\ModelPropertySettingsAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\UseControlAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\UseTemplateAttribute.cs" />
+	  <Compile Remove="AutoForm.Analysis\RhoMicro.Analysis\**" />
+	  <EmbeddedResource Remove="AutoForm.Analysis\RhoMicro.Analysis\**" />
+	  <None Remove="AutoForm.Analysis\RhoMicro.Analysis\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -76,9 +45,44 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="AutoForm.Analysis\AutoForm.Attributes\" />
-	  <Folder Include="AutoForm.Analysis\Models\" />
-	  <Folder Include="AutoForm.Analysis\RhoMicro.Analysis\" />
+		<Folder Include="AutoForm.Attributes\" />
+		<Compile Include="..\AutoForm.Analysis\Control.cs" Link="AutoForm.Analysis\Control.cs" />
+		<Compile Include="..\AutoForm.Analysis\Error.cs" Link="AutoForm.Analysis\Error.cs" />
+		<Compile Include="..\AutoForm.Analysis\Extensions.cs" Link="AutoForm.Analysis\Extensions.cs" />
+		<Compile Include="..\AutoForm.Analysis\GeneratorBase.cs" Link="AutoForm.Analysis\GeneratorBase.cs" />
+		<Compile Include="..\AutoForm.Analysis\IControlsSourceGenerator.cs" Link="AutoForm.Analysis\IControlsSourceGenerator.cs" />
+		<Compile Include="..\AutoForm.Analysis\Model.cs" Link="AutoForm.Analysis\Model.cs" />
+		<Compile Include="..\AutoForm.Analysis\ModelExtractor.cs" Link="AutoForm.Analysis\ModelExtractor.cs" />
+		<Compile Include="..\AutoForm.Analysis\ModelSpace.cs" Link="AutoForm.Analysis\ModelSpace.cs" />
+		<Compile Include="..\AutoForm.Analysis\Property.cs" Link="AutoForm.Analysis\Property.cs" />
+		<Compile Include="..\AutoForm.Analysis\PropertyIdentifier.cs" Link="AutoForm.Analysis\PropertyIdentifier.cs" />
+		<Compile Include="..\AutoForm.Analysis\Template.cs" Link="AutoForm.Analysis\Template.cs" />
+		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\ModelPropertySettingsAttribute.cs" Link="AutoForm.Attributes\ModelPropertySettingsAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Attributes\UseControlAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Attributes\UseTemplateAttribute.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="RhoMicro.CodeAnalaysis" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeAnalysisUnit.cs" Link="RhoMicro.CodeAnalaysis\AttributeAnalysisUnit.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeFactory.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactory.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeFactoryCollection.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactoryCollection.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeFactoryStrategy.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactoryStrategy.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\Extensions.cs" Link="RhoMicro.CodeAnalaysis\Extensions.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\GeneratedSource.cs" Link="RhoMicro.CodeAnalaysis\GeneratedSource.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\GeneratedType.cs" Link="RhoMicro.CodeAnalaysis\GeneratedType.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\IAttributeFactory.cs" Link="RhoMicro.CodeAnalaysis\IAttributeFactory.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\IdentifierPart.cs" Link="RhoMicro.CodeAnalaysis\IdentifierPart.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\Namespace.cs" Link="RhoMicro.CodeAnalaysis\Namespace.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\TypeIdentifier.cs" Link="RhoMicro.CodeAnalaysis\TypeIdentifier.cs" />
+		<Compile Include="..\codeanalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalaysis\TypeIdentifierName.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="AutoForm.Analysis\" />
 	</ItemGroup>
 
 </Project>

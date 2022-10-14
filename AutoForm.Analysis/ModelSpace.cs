@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoForm.Analysis;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
-    public readonly struct ModelSpace : IEquatable<ModelSpace>
+    internal readonly struct ModelSpace : IEquatable<ModelSpace>
     {
         public readonly Model[] Models;
         public readonly Control[] FallbackControls;
         public readonly Template[] FallbackTemplates;
         public readonly Control[] RequiredGeneratedControls;
-        private readonly String _json;
-        private readonly String _string;
+        private readonly string _json;
+        private readonly string _string;
 
         private ModelSpace(Model[] models, Control[] controls, Template[] templates, Control[] requiredGeneratedControls)
         {
@@ -107,7 +108,7 @@ namespace AutoForm.Analysis.Models
             return fallbackAppliedModels;
         }
 
-        public ModelSpace WithRequiredGeneratedControls(Boolean checkModelViability = false)
+        public ModelSpace WithRequiredGeneratedControls(bool checkModelViability = false)
         {
             var fallbackAppliedModels = ApplyFallbacksToModels();
 
@@ -147,36 +148,36 @@ namespace AutoForm.Analysis.Models
             return modelSpace;
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return _json ?? "null";
         }
-        public String ToEscapedString()
+        public string ToEscapedString()
         {
-            return _string ?? String.Empty;
+            return _string ?? string.Empty;
         }
 
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is ModelSpace space && Equals(space);
         }
 
-        public Boolean Equals(ModelSpace other)
+        public bool Equals(ModelSpace other)
         {
             return _json == other._json;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_json);
+            return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
         }
 
-        public static Boolean operator ==(ModelSpace left, ModelSpace right)
+        public static bool operator ==(ModelSpace left, ModelSpace right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(ModelSpace left, ModelSpace right)
+        public static bool operator !=(ModelSpace left, ModelSpace right)
         {
             return !(left == right);
         }

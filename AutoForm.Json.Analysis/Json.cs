@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AutoForm.Analysis
+namespace AutoForm.Json.Analysis
 {
     internal static class Json
     {

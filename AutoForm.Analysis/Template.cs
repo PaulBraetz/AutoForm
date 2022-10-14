@@ -1,15 +1,17 @@
-﻿using System;
+﻿using AutoForm.Analysis;
+using RhoMicro.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
-    public readonly struct Template : IEquatable<Template>
+    internal readonly struct Template : IEquatable<Template>
     {
         public readonly TypeIdentifier Name;
         public readonly TypeIdentifier[] Models;
-        private readonly String _json;
-        private readonly String _string;
+        private readonly string _json;
+        private readonly string _string;
 
         private Template(TypeIdentifier name, TypeIdentifier[] models)
         {
@@ -18,8 +20,6 @@ namespace AutoForm.Analysis.Models
             Name = name;
             Models = models ?? Array.Empty<TypeIdentifier>();
 
-            _json = Json.Object(Json.KeyValuePair(nameof(Name), Name),
-                                Json.KeyValuePair(nameof(Models), Models));
             _string = _json;
         }
 
@@ -36,36 +36,36 @@ namespace AutoForm.Analysis.Models
             return new Template(Name, Models.Concat(modelIdentifiers).ToArray());
         }
 
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is Template template && Equals(template);
         }
 
-        public Boolean Equals(Template other)
+        public bool Equals(Template other)
         {
             return _json == other._json;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_json);
+            return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return _json ?? "null";
         }
-        public String ToEscapedString()
+        public string ToEscapedString()
         {
-            return _string ?? String.Empty;
+            return _string ?? string.Empty;
         }
 
-        public static Boolean operator ==(Template left, Template right)
+        public static bool operator ==(Template left, Template right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(Template left, Template right)
+        public static bool operator !=(Template left, Template right)
         {
             return !(left == right);
         }

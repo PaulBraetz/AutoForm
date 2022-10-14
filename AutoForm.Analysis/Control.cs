@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoForm.Analysis;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
-    public readonly struct Control : IEquatable<Control>
+    internal readonly struct Control : IEquatable<Control>
     {
         public readonly TypeIdentifier Name;
         public readonly TypeIdentifier[] Models;
-        private readonly String _json;
-        private readonly String _string;
+        private readonly string _json;
+        private readonly string _string;
 
         private Control(TypeIdentifier name, TypeIdentifier[] models)
         {
@@ -46,36 +47,36 @@ namespace AutoForm.Analysis.Models
             return new Control(Name, Models.Concat(modelIdentifiers).ToArray());
         }
 
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is Control control && Equals(control);
         }
 
-        public Boolean Equals(Control other)
+        public bool Equals(Control other)
         {
             return _json == other._json;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_json);
+            return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return _json ?? "null";
         }
-        public String ToEscapedString()
+        public string ToEscapedString()
         {
-            return _string ?? String.Empty;
+            return _string ?? string.Empty;
         }
 
-        public static Boolean operator ==(Control left, Control right)
+        public static bool operator ==(Control left, Control right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(Control left, Control right)
+        public static bool operator !=(Control left, Control right)
         {
             return !(left == right);
         }

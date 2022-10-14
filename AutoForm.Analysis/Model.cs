@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
-    public readonly struct Model : IEquatable<Model>
+    internal readonly struct Model : IEquatable<Model>
     {
         public readonly TypeIdentifier Name;
         public readonly TypeIdentifier Control;
         public readonly TypeIdentifier Template;
         public readonly PropertyIdentifier AttributesProvider;
         public readonly Property[] Properties;
-        private readonly String _json;
-        private readonly String _string;
+        private readonly string _json;
+        private readonly string _string;
 
         private Model(TypeIdentifier name, TypeIdentifier control, TypeIdentifier template, Property[] properties, PropertyIdentifier attributesProvider)
         {
@@ -45,36 +45,36 @@ namespace AutoForm.Analysis.Models
             return new Model(Name, Control, Template, Properties.Concat(properties).ToArray(), AttributesProvider);
         }
 
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is Model type && Equals(type);
         }
 
-        public Boolean Equals(Model other)
+        public bool Equals(Model other)
         {
             return _json == other._json;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            return -992964542 + EqualityComparer<String>.Default.GetHashCode(_json);
+            return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             return _json ?? "null";
         }
-        public String ToEscapedString()
+        public string ToEscapedString()
         {
-            return _string ?? String.Empty;
+            return _string ?? string.Empty;
         }
 
-        public static Boolean operator ==(Model left, Model right)
+        public static bool operator ==(Model left, Model right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(Model left, Model right)
+        public static bool operator !=(Model left, Model right)
         {
             return !(left == right);
         }

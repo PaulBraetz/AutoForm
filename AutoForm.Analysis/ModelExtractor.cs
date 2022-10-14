@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AutoForm.Analysis.Models
+namespace AutoForm.Analysis
 {
     internal readonly struct ModelExtractor
     {
@@ -212,7 +212,7 @@ namespace AutoForm.Analysis.Models
             return declarations;
         }
 
-        private Int32 GetOrderArgumentOrDefault(PropertyDeclarationSyntax propertyDeclaration)
+        private int GetOrderArgumentOrDefault(PropertyDeclarationSyntax propertyDeclaration)
         {
             TryGetAttributes(propertyDeclaration.AttributeLists, propertyDeclaration, TypeIdentifier.OrderAttribute, out var orderAttributes);
             var orderString = orderAttributes.SingleOrDefault()?.DescendantNodes().OfType<AttributeArgumentSyntax>().Single().ToString() ?? "0";
@@ -222,14 +222,14 @@ namespace AutoForm.Analysis.Models
             {
                 case "int.MaxValue":
                 case "Int32.MaxValue":
-                    order = Int32.MaxValue;
+                    order = int.MaxValue;
                     break;
                 case "int.MinValue":
                 case "Int32.MinValue":
-                    order = Int32.MaxValue;
+                    order = int.MaxValue;
                     break;
                 default:
-                    order = Int32.Parse(orderString);
+                    order = int.Parse(orderString);
                     break;
             }
 
@@ -254,7 +254,7 @@ namespace AutoForm.Analysis.Models
             return Array.Empty<TypeIdentifier>();
         }
 
-        private Boolean TryGetAttributes(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, TypeIdentifier attributeIdentifier, out IEnumerable<AttributeSyntax> attributes)
+        private bool TryGetAttributes(SyntaxList<AttributeListSyntax> attributeLists, SyntaxNode node, TypeIdentifier attributeIdentifier, out IEnumerable<AttributeSyntax> attributes)
         {
             var availableUsings = GetAvailableUsings(node);
             var usingAutoForm = availableUsings.Contains(Namespace.Attributes);
@@ -263,7 +263,7 @@ namespace AutoForm.Analysis.Models
 
             return attributes.Any();
 
-            Boolean equals(AttributeSyntax attributeSyntax)
+            bool equals(AttributeSyntax attributeSyntax)
             {
                 return attributeSyntax.Name.ToString() == attributeIdentifier.ToEscapedString() ||
                     usingAutoForm && attributeSyntax.Name.ToString() == attributeIdentifier.Name.ToEscapedString();
@@ -331,7 +331,7 @@ namespace AutoForm.Analysis.Models
         {
             var result = Namespace.Create();
 
-            while (symbol != null && symbol.Name != String.Empty)
+            while (symbol != null && symbol.Name != string.Empty)
             {
                 if (symbol is INamespaceSymbol)
                 {
