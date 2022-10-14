@@ -41,14 +41,24 @@
 	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifier.cs" Link="AutoForm.Analysis\Models\TypeIdentifier.cs" />
 	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifierName.cs" Link="AutoForm.Analysis\Models\TypeIdentifierName.cs" />
 	  <Compile Include="..\AutoForm.Analysis\Models\TypeIdentifierNamePart.cs" Link="AutoForm.Analysis\Models\TypeIdentifierNamePart.cs" />
-	  <Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\ExcludeAttribute.cs" Link="AutoForm.Attributes\ExcludeAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\ModelAttribute.cs" Link="AutoForm.Attributes\ModelAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\OrderAttribute.cs" Link="AutoForm.Attributes\OrderAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Attributes\UseControlAttribute.cs" />
-	  <Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Attributes\UseTemplateAttribute.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeAnalysisUnit.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeAnalysisUnit.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeFactory.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeFactory.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeFactoryCollection.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeFactoryCollection.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\AttributeFactoryStrategy.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\AttributeFactoryStrategy.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\Extensions.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\Extensions.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\GeneratedSource.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\GeneratedSource.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\GeneratedType.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\GeneratedType.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\IAttributeFactory.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\IAttributeFactory.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\IdentifierPart.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\IdentifierPart.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\Namespace.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\Namespace.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\TypeIdentifier.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\TypeIdentifier.cs" />
+	  <Compile Include="..\AutoForm.Analysis\RhoMicro.CodeAnalysis\TypeIdentifierName.cs" Link="AutoForm.Analysis\RhoMicro.Analysis\TypeIdentifierName.cs" />
+	  <Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\AttributesProviderAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\FallbackControlAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\FallbackTemplateAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\ModelPropertySettingsAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\ModelPropertySettingsAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\UseControlAttribute.cs" />
+	  <Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Analysis\AutoForm.Attributes\UseTemplateAttribute.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -66,8 +76,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="AutoForm.Analysis\AutoForm.Attributes\" />
 	  <Folder Include="AutoForm.Analysis\Models\" />
-	  <Folder Include="AutoForm.Attributes\" />
+	  <Folder Include="AutoForm.Analysis\RhoMicro.Analysis\" />
 	</ItemGroup>
 
 </Project>
