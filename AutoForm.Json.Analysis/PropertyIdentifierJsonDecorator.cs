@@ -12,7 +12,7 @@ namespace AutoForm.Json.Analysis
 		public PropertyIdentifierJsonDecorator(PropertyIdentifier value) : this()
 		{
 			Value = value;
-			_json = Analysis.Json.Value(value.ToString());
+			_json = Analysis.
 		}
 
 		private readonly String _json;

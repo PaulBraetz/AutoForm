@@ -31,7 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="RhoMicro.AutoForm.Attributes" Version="0.0.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" PrivateAssets="all" />
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
@@ -46,6 +45,7 @@
 
 	<ItemGroup>
 		<Folder Include="AutoForm.Attributes\" />
+		<Compile Include="..\AutoForm.Analysis\Attributes.cs" Link="AutoForm.Attributes\Attributes.cs" />
 		<Compile Include="..\AutoForm.Analysis\Control.cs" Link="AutoForm.Analysis\Control.cs" />
 		<Compile Include="..\AutoForm.Analysis\Error.cs" Link="AutoForm.Analysis\Error.cs" />
 		<Compile Include="..\AutoForm.Analysis\Extensions.cs" Link="AutoForm.Analysis\Extensions.cs" />

@@ -8,29 +8,19 @@ namespace AutoForm.Json.Analysis
 	internal readonly struct TypeIdentifierJsonDecorator : IJsonDecorator<TypeIdentifier>, IEquatable<IJson>
 	{
 		public static readonly IJsonDecorator<TypeIdentifier> FallbackControlAttribute
-			= TypeIdentifier.Create(
-				TypeIdentifierNameJsonDecorator.FallbackControlAttribute.Value,
-				NamespaceJsonDecorator.Attributes.Value)
+			= AutoForm.Analysis.Attributes.FallbackControlAttribute
 			.AsJson();
 		public static readonly IJsonDecorator<TypeIdentifier> AttributesProviderAttribute
-			= TypeIdentifier.Create(
-				TypeIdentifierNameJsonDecorator.AttributesProviderAttribute.Value,
-				NamespaceJsonDecorator.Attributes.Value)
+			= AutoForm.Analysis.Attributes.AttributesProviderAttribute
 			.AsJson();
 		public static readonly IJsonDecorator<TypeIdentifier> TemplateAttribute
-			= TypeIdentifier.Create(
-				TypeIdentifierNameJsonDecorator.TemplateAttribute.Value,
-				NamespaceJsonDecorator.Attributes.Value)
+			= AutoForm.Analysis.Attributes.TemplateAttribute
 			.AsJson();
 		public static readonly IJsonDecorator<TypeIdentifier> ControlAttribute
-			= TypeIdentifier.Create(
-				TypeIdentifierNameJsonDecorator.ControlAttribute.Value,
-				NamespaceJsonDecorator.Attributes.Value)
+			= AutoForm.Analysis.Attributes.ControlAttribute
 			.AsJson();
 		public static readonly IJsonDecorator<TypeIdentifier> FallbackTemplateAttribute
-			= TypeIdentifier.Create(
-				TypeIdentifierNameJsonDecorator.FallbackTemplateAttribute.Value,
-				NamespaceJsonDecorator.Attributes.Value)
+			= AutoForm.Analysis.Attributes.FallbackControlAttribute
 			.AsJson();
 
 		public TypeIdentifier Value { get; }
@@ -38,7 +28,7 @@ namespace AutoForm.Json.Analysis
 		public TypeIdentifierJsonDecorator(TypeIdentifier value) : this()
 		{
 			Value = value;
-			_json = Analysis.Json.Value(value.ToString());
+			_json = 
 		}
 
 		private readonly String _json;

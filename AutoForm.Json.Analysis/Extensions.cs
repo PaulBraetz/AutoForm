@@ -2,39 +2,41 @@
 using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AutoForm.Json.Analysis
 {
 	internal static class Extensions
 	{
-		public static IJsonDecorator<IdentifierPart> AsJson(this IdentifierPart part)
+		public static String ToJson(this IdentifierPart part)
 		{
-			return new IdentifierPartJsonDecorator(part);
+			return Json.Value(part.ToString());
 		}
-		public static IJsonDecorator<TypeIdentifierName> AsJson(this TypeIdentifierName name)
+		public static String AsJson(this TypeIdentifierName name)
 		{
-			return new TypeIdentifierNameJsonDecorator(name);
+			return Analysis.Json.Value(name.ToString());
 		}
-		public static IJsonDecorator<Namespace> AsJson(this Namespace @namespace)
+		public static String AsJson(this Namespace @namespace)
 		{
-			return new NamespaceJsonDecorator(@namespace);
+			return Analysis.Json.Value(@namespace.ToString());
 		}
-		public static IJsonDecorator<TypeIdentifier> AsJson(this TypeIdentifier identifier)
+		public static String AsJson(this TypeIdentifier identifier)
 		{
-			return new TypeIdentifierJsonDecorator(identifier);
+			return Analysis.Json.Value(identifier.ToString());
 		}
-		public static IJsonDecorator<Error> AsJson(this Error error)
+		public static String AsJson(this Error error)
 		{
-			return new ErrorJsonDecorator(error);
+			return Json.Object(Json.KeyValuePair(nameof(error.Exceptions), error.Exceptions.Select(m => m.Message)));
 		}
-		public static IJsonDecorator<PropertyIdentifier> AsJson(this PropertyIdentifier propertyIdentifier)
+		public static String AsJson(this PropertyIdentifier propertyIdentifier)
 		{
-			return new PropertyIdentifierJsonDecorator(propertyIdentifier);
+			return Json.Value(propertyIdentifier.ToString());
 		}
-		public static IJsonDecorator<Template> AsJson(this Template template)
+		public static String AsJson(this Template template)
 		{
-			return new TemplateJsonDecorator(template);
+			return Json.Object(Json.KeyValuePair(nameof(template.Name), template.Name.AsJson()),
+								Json.KeyValuePair(nameof(template.Models), template.Models.Select(m=>m.AsJson())));
 		}
 	}
 }

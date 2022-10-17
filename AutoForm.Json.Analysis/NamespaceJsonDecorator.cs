@@ -10,7 +10,7 @@ namespace AutoForm.Json.Analysis
 		public NamespaceJsonDecorator(Namespace value) : this()
 		{
 			Value = value;
-			_json = Analysis.Json.Value(value.ToString());
+			_json = 
 		}
 
 		private readonly String _json;
@@ -47,9 +47,8 @@ namespace AutoForm.Json.Analysis
 		{
 			return !(left == right);
 		}
-		public static readonly IJsonDecorator<Namespace> Attributes = Namespace.Create()
-			.Append("AutoForm")
-			.Append("Attributes")
+		public static readonly IJsonDecorator<Namespace> Attributes
+			= AutoForm.Analysis.Attributes.AttrbutesNamespace
 			.AsJson();
 	}
 }

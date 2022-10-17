@@ -10,8 +10,6 @@ namespace AutoForm.Analysis
     {
         public readonly TypeIdentifier Name;
         public readonly TypeIdentifier[] Models;
-        private readonly string _json;
-        private readonly string _string;
 
         private Template(TypeIdentifier name, TypeIdentifier[] models)
         {
@@ -19,8 +17,6 @@ namespace AutoForm.Analysis
 
             Name = name;
             Models = models ?? Array.Empty<TypeIdentifier>();
-
-            _string = _json;
         }
 
         public static Template Create(TypeIdentifier identifier)
@@ -49,15 +45,6 @@ namespace AutoForm.Analysis
         public override int GetHashCode()
         {
             return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
-        }
-
-        public override string ToString()
-        {
-            return _json ?? "null";
-        }
-        public string ToEscapedString()
-        {
-            return _string ?? string.Empty;
         }
 
         public static bool operator ==(Template left, Template right)

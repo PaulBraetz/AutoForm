@@ -14,8 +14,7 @@ namespace AutoForm.Json.Analysis
 		public TemplateJsonDecorator(Template value) : this()
 		{
 			Value = value;
-			_json = Analysis.Json.Object(Analysis.Json.KeyValuePair(nameof(value.Name), value.Name),
-										Analysis.Json.KeyValuePair(nameof(value.Models), value.Models));
+			_json = Analysis.
 		}
 
 		private readonly String _json;
