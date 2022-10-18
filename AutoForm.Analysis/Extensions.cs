@@ -1,5 +1,4 @@
-﻿using AutoForm.Analysis.Models;
-using RhoMicro.CodeAnalysis;
+﻿using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +15,21 @@ namespace AutoForm.Analysis
 			{
 				throw new ArgumentException($"Cannot register {name} {duplicate} multiple times.");
 			}
+		}
+		public static ITypeIdentifier AsGenerated(this ITypeIdentifier identifier)
+		{
+			var generatedName = $"__Control_{identifier.ToString().Replace(".", "_")}";
+			var name = TypeIdentifierName.Create().AppendNamePart(generatedName);
+			var @namespace = Namespace.Create();
+			var generated = new GeneratedTypeIdentifierDecorator(TypeIdentifier.Create(name, @namespace));
+
+			return generated;
+		}
+		public static Boolean IsGenerated(this ITypeIdentifier identifier)
+		{
+			var isGenerated = identifier is GeneratedTypeIdentifierDecorator;
+
+			return isGenerated;
 		}
 	}
 }

@@ -1,66 +1,83 @@
-﻿using AutoForm.Analysis.Models;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace AutoForm.Analysis
 {
-    public abstract class GeneratorBase : ISourceGenerator
-    {
-        protected abstract IEnumerable<IControlsSourceGenerator> GetControlGenerators();
+	internal abstract class GeneratorBase : ISourceGenerator
+	{
+		protected abstract void OnModelSpaceCreated(GeneratorExecutionContext context, ModelSpace modelSpace);
+		protected abstract void OnError(GeneratorExecutionContext context, Error error);
 
-        private ModelExtractor Helper { get; set; }
+		public void Execute(GeneratorExecutionContext context)
+		{
+			try
+			{
+				var extractor = new ModelExtractor(context.Compilation);
+				var modelSpace = extractor.ExtractModelSpace();
+				OnModelSpaceCreated(context, modelSpace);
+			}
+			catch (Exception ex)
+			{
+				var error = Error.Create().WithFlattened(ex);
+				OnError(context, error);
+			}
+		}
+		public virtual void Initialize(GeneratorInitializationContext context)
+		{
+			context.RegisterForSyntaxNotifications(() => new SyntaxContextReceiver());
+		}
 
-        public void Execute(GeneratorExecutionContext context)
-        {
-            Helper = new ModelExtractor(context.Compilation);
+		private sealed class SyntaxContextReceiver : ISyntaxContextReceiver
+		{
+			public List<BaseTypeDeclarationSyntax> Models { get; } = new List<BaseTypeDeclarationSyntax>();
+			public List<BaseTypeDeclarationSyntax> FallbackControls { get; } = new List<BaseTypeDeclarationSyntax>();
+			public List<BaseTypeDeclarationSyntax> FallbackTemplates { get; } = new List<BaseTypeDeclarationSyntax>();
+			public List<BaseTypeDeclarationSyntax> UseControls { get; } = new List<BaseTypeDeclarationSyntax>();
+			public List<BaseTypeDeclarationSyntax> UseTemplates { get; } = new List<BaseTypeDeclarationSyntax>();
+			public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
+			{
+				if (context.Node is BaseTypeDeclarationSyntax typeDeclaration)
+				{
+					var semanticModel = context.SemanticModel;
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.UseControl))
+					{
+						UseControls.Add(typeDeclaration);
+					}
 
-            var source = String.Empty;
-            var controlGenerators = GetControlGenerators();
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.FallbackControl))
+					{
+						FallbackControls.Add(typeDeclaration);
+					}
 
-            var sourceNames = controlGenerators.Select(g => g.Filename);
-            var duplicates = new List<String>();
-            foreach (var sourceName in sourceNames)
-            {
-                if (sourceNames.Count(s => s == sourceName) > 1)
-                {
-                    duplicates.Add(sourceName);
-                }
-            }
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.UseTemplate))
+					{
+						UseTemplates.Add(typeDeclaration);
+					}
 
-            if (duplicates.Any())
-            {
-                throw new Exception($"Duplicate source filenames have been registered: {String.Join(", ", duplicates)}");
-            }
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.FallbackTemplate))
+					{
+						FallbackTemplates.Add(typeDeclaration);
+					}
+				}
+				else if (context.Node is PropertyDeclarationSyntax propertyDeclaration &&
+						propertyDeclaration.AttributeLists.HasAttributes(
+							context.SemanticModel,
+							Attributes.AttributesProvider,
+							Attributes.ModelProperty))
+				{
+					SyntaxNode parent = propertyDeclaration;
+					while (!(parent is BaseTypeDeclarationSyntax))
+					{
+						parent = parent.Parent;
+					}
 
-            foreach (var controlGenerator in controlGenerators)
-            {
-                try
-                {
-                    var compilation = context.Compilation;
-
-                    var modelSpace = Helper.ExtractModelSpace();
-
-                    source = controlGenerator.Generate(modelSpace);
-                }
-                catch (Exception ex)
-                {
-                    var error = Helper.GetErrorModel(ex);
-
-                    source = controlGenerator.Generate(error);
-                }
-                finally
-                {
-                    var filename = controlGenerator.Filename;
-
-                    context.AddSource(filename, source);
-                }
-            }
-        }
-        public virtual void Initialize(GeneratorInitializationContext context)
-        {
-
-        }
-    }
+					Models.Add((BaseTypeDeclarationSyntax)parent);
+				}
+			}
+		}
+	}
 }

@@ -2,36 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoForm.Analysis;
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
-    internal readonly struct ModelSpace : IEquatable<ModelSpace>
+    internal readonly struct ModelSpace
     {
         public readonly Model[] Models;
         public readonly Control[] FallbackControls;
         public readonly Template[] FallbackTemplates;
         public readonly Control[] RequiredGeneratedControls;
-        private readonly string _json;
-        private readonly string _string;
 
         private ModelSpace(Model[] models, Control[] controls, Template[] templates, Control[] requiredGeneratedControls)
         {
-            models.ThrowOnDuplicate(TypeIdentifierName.ModelAttribute.ToString());
-            controls.ThrowOnDuplicate(TypeIdentifierName.FallbackControlAttribute.ToString());
-            templates.ThrowOnDuplicate(TypeIdentifierName.FallbackTemplateAttribute.ToString());
+            models.ThrowOnDuplicate(nameof(models));
+            controls.ThrowOnDuplicate(Attributes.FallbackControl);
+            templates.ThrowOnDuplicate(Attributes.FallbackTemplate);
             requiredGeneratedControls.ThrowOnDuplicate("required generated control");
 
             Models = models ?? Array.Empty<Model>();
             FallbackControls = controls ?? Array.Empty<Control>();
             FallbackTemplates = templates ?? Array.Empty<Template>();
             RequiredGeneratedControls = requiredGeneratedControls ?? Array.Empty<Control>();
-
-            _json = Json.Object(Json.KeyValuePair(nameof(Models), Models),
-                                Json.KeyValuePair(nameof(FallbackControls), FallbackControls),
-                                Json.KeyValuePair(nameof(FallbackTemplates), FallbackTemplates),
-                                Json.KeyValuePair(nameof(RequiredGeneratedControls), RequiredGeneratedControls));
-            _string = _json;
-        }
+		}
 
         public static ModelSpace Create()
         {
@@ -113,11 +106,11 @@ namespace AutoForm.Analysis
             var fallbackAppliedModels = ApplyFallbacksToModels();
 
             var requiredGeneratedControls = fallbackAppliedModels
-                .Where(m => !m.Control.IsNotGenerated)
+                .Where(m => m.Control.IsGenerated())
                 .Select(m => m.Name)
                 .Concat(fallbackAppliedModels
                     .SelectMany(m => m.Properties)
-                    .Where(p => !p.Control.IsNotGenerated)
+                    .Where(p => p.Control.IsGenerated())
                     .Select(p => p.Type))
                 .Distinct()
                 .Select(Control.CreateGenerated);
@@ -129,7 +122,7 @@ namespace AutoForm.Analysis
                 {
                     if (!fallbackAppliedModels.Any(m => m.Name == requiredControlModel))
                     {
-                        exceptions.Add(new ArgumentException($"Unable to provide control for {requiredControlModel.ToEscapedString()}"));
+                        exceptions.Add(new ArgumentException($"Unable to provide control for {requiredControlModel}"));
                     }
                 }
 
@@ -146,40 +139,6 @@ namespace AutoForm.Analysis
                 .WithRequiredGeneratedControls(requiredGeneratedControls);
 
             return modelSpace;
-        }
-
-        public override string ToString()
-        {
-            return _json ?? "null";
-        }
-        public string ToEscapedString()
-        {
-            return _string ?? string.Empty;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ModelSpace space && Equals(space);
-        }
-
-        public bool Equals(ModelSpace other)
-        {
-            return _json == other._json;
-        }
-
-        public override int GetHashCode()
-        {
-            return -992964542 + EqualityComparer<string>.Default.GetHashCode(_json);
-        }
-
-        public static bool operator ==(ModelSpace left, ModelSpace right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(ModelSpace left, ModelSpace right)
-        {
-            return !(left == right);
         }
     }
 }

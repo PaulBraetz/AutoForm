@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace AutoForm.Json.Analysis
 {
-    internal static class Json
-    {
-    }
+	internal interface IJson
+	{
+		String Json { get; }
+	}
 }

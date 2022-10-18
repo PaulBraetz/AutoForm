@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoForm.Json.Analysis
 {
-	internal readonly struct JsonDecorator<T> : IEquatable<JsonDecorator<T>>
+	internal readonly struct JsonDecorator<T> : IEquatable<JsonDecorator<T>>, IJson
 	{
 		private JsonDecorator(T value, String json) : this()
 		{
@@ -14,71 +14,82 @@ namespace AutoForm.Json.Analysis
 		}
 
 		public readonly T OriginalValue;
-		public readonly String Json;
+		public String Json { get; }
 
 		public override String ToString()
 		{
 			return Json;
 		}
 
-		public static JsonDecorator<T> StringValue(T value)
+		public static JsonDecorator<T> Null()
 		{
-			var valueString = value is String stringValue ?
-				$"\"{stringValue.Replace("\"", "\\\"")}\"" :
-				value?.ToString() ?? "null";
-			var decorator = new JsonDecorator<T>(value, valueString);
+			var json = "null";
+			var decorator = new JsonDecorator<T>(default, json);
 
 			return decorator;
 		}
-		public static String Value(String value)
+		public static JsonDecorator<T> String(T value)
 		{
-			value = value?.Replace("\"", "\\\"");
-			return value != null ? $"\"{value}\"" : "null";
+			var valueString = value?.ToString()?.Replace("\"", "\\\"").Prepend('\"').Append('\"');
+			var json = valueString == null ?
+				"null" :
+				System.String.Concat(valueString);
+			var decorator = new JsonDecorator<T>(value, json);
+
+			return decorator;
 		}
-		public static String Object(IEnumerable<String> keyValuepairs)
+		public static JsonDecorator<T> Number(T value)
 		{
-			return $"{{{String.Join(",", keyValuepairs)}}}";
+			var json = value?.ToString() ?? "null";
+			var decorator = new JsonDecorator<T>(value, json);
+
+			return decorator;
+		}
+		public static JsonDecorator<T[]> StringArray(T[] values)
+		{
+			var json = $"[{System.String.Join(",", values.Select(v => String(v).Json))}]";
+			var decorator = new JsonDecorator<T[]>(values, json);
+
+			return decorator;
+		}
+		public static JsonDecorator<T[]> NumberArray(T[] values)
+		{
+			var json = $"[{System.String.Join(",", values.Select(v => Number(v).Json))}]";
+			var decorator = new JsonDecorator<T[]>(values, json);
+
+			return decorator;
+		}
+		public static JsonDecorator<T> KeyValuePair(String key, JsonDecorator<T> decoratedValue)
+		{
+			var json = $"{JsonDecorator<String>.String(key)}:{decoratedValue}";
+			var decorator = new JsonDecorator<T>(decoratedValue.OriginalValue, json);
+
+			return decorator;
+		}
+		public static JsonDecorator<T> Object(T value, Func<T, IJson[]> memberFactory)
+		{
+			var json = value != null ?
+				$"{{{System.String.Join(",", memberFactory.Invoke(value).Select(kvp => kvp.Json))}}}" :
+				"null";
+			var decorator = new JsonDecorator<T>(value, json);
+
+			return decorator;
+		}
+		public static JsonDecorator<T[]> ObjectArray(T[] values, Func<T, IJson[]> memberFactory)
+		{
+			var json = $"[{System.String.Join(",", values.Select(v => Object(v, memberFactory).Json))}]";
+			var decorator = new JsonDecorator<T[]>(values, json);
+
+			return decorator;
 		}
 
-
-		public static String KeyValuePair<T>(String name, T value)
-		{
-			var nameString = Value(name);
-			var valueString = StringValue(value);
-			var kvpString =
-			return $"{Value(name)}:{valueString}";
-		}
-		public static String KeyValuePair<T>(String name, T[] values)
-		{
-			return KeyValuePair(name, (IEnumerable<T>)values);
-		}
-		public static String KeyValuePair<T>(String name, IEnumerable<T> values)
-		{
-			return values != null ? $"{Value(name)}:[{String.Join(",", values.Select(i => StringValue(i)))}]" : $"{Value(name)}:null";
-		}
-
-		public static String KeyValuePair(String name, String value)
-		{
-			return $"{Value(name)}:{Value(value)}";
-		}
-		public static String KeyValuePair(String name, String[] values)
-		{
-			return KeyValuePair(name, (IEnumerable<String>)values);
-		}
-		public static String KeyValuePair(String name, IEnumerable<String> values)
-		{
-			return values != null ? $"{Value(name)}:[{String.Join(",", values.Select(i => Value(i)))}]" : $"{Value(name)}:null";
-		}
-
-		public static String KeyValuePair(String name, Int32 value)
-		{
-			return $"{Value(name)}:{value}";
-		}
-
+#pragma warning disable
 		public override Boolean Equals(Object obj)
 		{
 			return obj is JsonDecorator<T> decorator && Equals(decorator);
 		}
+#pragma warning restore
+
 		public Boolean Equals(JsonDecorator<T> other)
 		{
 			return Json == other.Json;
