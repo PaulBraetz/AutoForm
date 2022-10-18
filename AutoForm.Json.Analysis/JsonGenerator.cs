@@ -7,6 +7,8 @@ namespace AutoForm.Json.Analysis
 	[Generator]
 	internal sealed class JsonGenerator : GeneratorBase
 	{
+		private const System.String FILE_NAME = "AutoForm_Json";
+
 		protected override void OnError(GeneratorExecutionContext context, Error error)
 		{
 			var json = JsonDecorator<Error>.Object(
@@ -17,10 +19,7 @@ namespace AutoForm.Json.Analysis
 					nameof(Error),
 					error.ToJson())
 				});
-			var source = $"//{json}";
-			var fileName = GeneratedIdentifiers.GeneratedControls.ToString().Replace('.', '_');
-			var generatedSource = new GeneratedSource(source, fileName);
-			context.AddSource(generatedSource);
+			AddSource(context, json);
 		}
 
 		protected override void OnModelSpaceCreated(GeneratorExecutionContext context, ModelSpace modelSpace)
@@ -33,10 +32,13 @@ namespace AutoForm.Json.Analysis
 					nameof(ModelSpace),
 					modelSpace.WithRequiredGeneratedControls(false).ToJson())
 				});
-			var source = $"//{json}";
-			var fileName = GeneratedIdentifiers.GeneratedControls.ToString().Replace('.', '_');
-			var generatedSource = new GeneratedSource(source, fileName);
-			context.AddSource(generatedSource);
+			AddSource(context, json);
+		}
+
+		private void AddSource(GeneratorExecutionContext context, IJson json)
+		{
+			var source = new GeneratedSource($"//{json.Json}", FILE_NAME);
+			context.AddSource(source);
 		}
 	}
 }
