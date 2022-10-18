@@ -9,7 +9,7 @@ namespace TestApp.Models
 	{
 		[UseTemplate(typeof(ByteTemplate))]
 		public byte Age { get; set; }
-		
+
 		[UseTemplate(typeof(StringTemplate))]
 		public string? Name { get; set; }
 

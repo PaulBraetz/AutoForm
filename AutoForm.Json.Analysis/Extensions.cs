@@ -1,9 +1,7 @@
 ﻿using AutoForm.Analysis;
 using RhoMicro.CodeAnalysis;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AutoForm.Json.Analysis
 {

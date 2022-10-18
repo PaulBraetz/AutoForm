@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AutoForm.Analysis
 {

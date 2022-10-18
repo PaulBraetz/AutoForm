@@ -1,9 +1,6 @@
 ﻿using AutoForm.Attributes;
 using RhoMicro.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AutoForm.Analysis
 {

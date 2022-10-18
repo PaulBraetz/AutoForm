@@ -1,11 +1,9 @@
-﻿using AutoForm.Blazor.Templates.Abstractions;
-
-namespace TestApp.Templates
+﻿namespace TestApp.Templates
 {
-    public abstract partial class MyTemplate<TModel> : TemplateBase<TModel>
-    {
-    }
+	public abstract partial class MyTemplate<TModel> : TemplateBase<TModel>
+	{
+	}
 
-    public sealed class StringTemplate : MyTemplate<String> { }
-    public sealed class ByteTemplate : MyTemplate<Byte> { }
+	public sealed class StringTemplate : MyTemplate<String> { }
+	public sealed class ByteTemplate : MyTemplate<Byte> { }
 }

@@ -1,10 +1,4 @@
 using AutoForm.Json.Analysis;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using System.Numerics;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Xml.Linq;
 
 namespace Test
 {
@@ -189,6 +183,5 @@ namespace Test
 				Assert.AreEqual(expected, actual);
 			}
 		}
-
 	}
 }

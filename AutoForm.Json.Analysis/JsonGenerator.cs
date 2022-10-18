@@ -1,8 +1,6 @@
 ﻿using AutoForm.Analysis;
 using Microsoft.CodeAnalysis;
 using RhoMicro.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 
 namespace AutoForm.Json.Analysis
 {

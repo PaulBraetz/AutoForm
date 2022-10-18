@@ -1,8 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
+/* Unmerged change from project 'AutoForm.Json.Analysis'
+Before:
+using System;
+After:
+using AutoForm.Analysis;
+*/
+using RhoMicro.CodeAnalysis;
+using RhoMicro.CodeAnalysis;
+
+/* Unmerged change from project 'AutoForm.Json.Analysis'
+Before:
+using RhoMicro.CodeAnalysis;
+After:
+using System;
+*/
+/* Unmerged change from project 'AutoForm.Json.Analysis'
+Before:
 using AutoForm.Analysis;
 using RhoMicro.CodeAnalysis;
+After:
+using System.Collections.Generic;
+using System.Linq;
+*/
 
 namespace AutoForm.Analysis
 {
