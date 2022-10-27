@@ -1,4 +1,5 @@
-﻿using Fort;
+﻿using AutoForm.Attributes;
+using Fort;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -20,7 +21,7 @@ namespace AutoForm.Blazor
 
 				var autoControls = autoControlModelAssembly
 									.GetTypes()
-									.Where(t => t.GetPropert.CustomAttributes.Any(a => a.AttributeType == typeof(ModelAttribute)))
+									.Where(isModel)
 									.Select(m => typeof(AutoControl<>).MakeGenericType(m));
 
 				foreach (var autoControl in autoControls)
@@ -47,6 +48,22 @@ namespace AutoForm.Blazor
 					{
 						exceptions.Add(ex);
 					}
+				}
+
+				Boolean isModel(Type type)
+				{
+					if (type == null)
+					{
+						return false;
+					}
+
+					var match = type != null &&
+						(type.GetProperties()
+							.Where(p => p.CustomAttributes.Any(a => a.GetType() == typeof(ModelPropertyAttribute)))
+							.Any()/* ||
+						isModel(type.BaseType)*/);
+
+					return match;
 				}
 			}
 			catch (TypeInitializationException ex)
