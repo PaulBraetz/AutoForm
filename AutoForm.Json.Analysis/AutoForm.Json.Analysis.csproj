@@ -15,7 +15,7 @@
 		<Description>Json generator for Rhomicro.AutoForm, used for debugging purposes.</Description>
 		<Copyright>2022</Copyright>
 		<PackageTags>Rhomicro</PackageTags>
-		<Version>1.0.1</Version>
+		<Version>2.0.0</Version>
 		<PackageId>RhoMicro.AutoForm.Json.Analysis</PackageId>
 		<AssemblyName>AutoForm.Json.Analysis</AssemblyName>
 		<RootNamespace>AutoForm.Json.Analysis</RootNamespace>
@@ -40,11 +40,9 @@
 	<ItemGroup>
 		<Folder Include="AutoForm.Attributes\" />
 		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\ModelPropertySettingsAttribute.cs" Link="AutoForm.Attributes\ModelPropertySettingsAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\UseControlAttribute.cs" Link="AutoForm.Attributes\UseControlAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\UseTemplateAttribute.cs" Link="AutoForm.Attributes\UseTemplateAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\TemplateAttribute.cs" Link="AutoForm.Attributes\TemplateAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\ControlAttribute.cs" Link="AutoForm.Attributes\ControlAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\ModelPropertyAttribute.cs" Link="AutoForm.Attributes\ModelPropertyAttribute.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

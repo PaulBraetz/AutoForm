@@ -41,14 +41,14 @@ namespace AutoForm.Analysis
 		}
 		private IEnumerable<Control> GetControls()
 		{
-			var controlDeclarations = _data.FallbackControls;
+			var controlDeclarations = _data.Controls;
 			var controls = controlDeclarations.Select(GetControl);
 
 			return controls;
 		}
 		private IEnumerable<Template> GetTemplates()
 		{
-			var templateDeclarations = _data.FallbackTemplates;
+			var templateDeclarations = _data.Templates;
 			var templates = templateDeclarations.Select(GetTemplate);
 
 			return templates;
@@ -69,6 +69,15 @@ namespace AutoForm.Analysis
 		}
 		private ITypeIdentifier GetControlIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
 		{
+			var declarationIdentifier = GetType(typeDeclaration);
+			
+			_data.Controls
+				.Select(a =>
+				{
+					var semanticModel = GetSemanticModel(a);
+					return (success: Attributes.Factories.Control.TryBuild(a, , out var attribute), attribute);
+				})
+
 			var semanticModel = GetSemanticModel(typeDeclaration);
 			var controlIdentifier = typeDeclaration.AttributeLists
 				.OfAttributeClasses(semanticModel, Attributes.UseControl)
@@ -154,8 +163,8 @@ namespace AutoForm.Analysis
 		{
 			var semanticModel = GetSemanticModel(typeDeclaration);
 			var modelTypes = typeDeclaration.AttributeLists
-					.OfAttributeClasses(semanticModel, Attributes.FallbackControl)
-					.Select(a => (success: Attributes.Factories.FallbackControl.TryBuild(a, semanticModel, out var attribute), attribute))
+					.OfAttributeClasses(semanticModel, Attributes.Control)
+					.Select(a => (success: Attributes.Factories.Control.TryBuild(a, semanticModel, out var attribute), attribute))
 					.Where(t => t.success)
 					.Select(t => t.attribute.GetTypeParameter("modelType") as ITypeIdentifier);
 
@@ -171,7 +180,7 @@ namespace AutoForm.Analysis
 			var semanticModel = GetSemanticModel(typeDeclaration);
 			var modelTypes = typeDeclaration.AttributeLists
 					.OfAttributeClasses(semanticModel, Attributes.FallbackTemplate)
-					.Select(a => (success: Attributes.Factories.FallbackTemplate.TryBuild(a, semanticModel, out var attribute), attribute))
+					.Select(a => (success: Attributes.Factories.Template.TryBuild(a, semanticModel, out var attribute), attribute))
 					.Where(t => t.success)
 					.Select(t => t.attribute.GetTypeParameter("modelType") as ITypeIdentifier);
 

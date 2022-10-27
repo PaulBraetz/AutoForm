@@ -10,7 +10,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\AutoForm.Json.Analysis\AutoForm.Json.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\AutoForm.Blazor.Analysis\AutoForm.Blazor.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<ProjectReference Include="..\AutoForm.Blazor\AutoForm.Blazor.csproj"/>
+		<ProjectReference Include="..\AutoForm.Blazor\AutoForm.Blazor.csproj" />
 		<ProjectReference Include="..\AutoForm.Attributes\AutoForm.Attributes.csproj" />
 	</ItemGroup>
 	<PropertyGroup>

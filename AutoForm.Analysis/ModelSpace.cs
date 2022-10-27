@@ -7,20 +7,20 @@ namespace AutoForm.Analysis
 	internal readonly struct ModelSpace
 	{
 		public readonly Model[] Models;
-		public readonly Control[] FallbackControls;
-		public readonly Template[] FallbackTemplates;
+		public readonly Control[] Controls;
+		public readonly Template[] Templates;
 		public readonly Control[] RequiredGeneratedControls;
 
 		private ModelSpace(Model[] models, Control[] controls, Template[] templates, Control[] requiredGeneratedControls)
 		{
 			models.ThrowOnDuplicate(nameof(models));
-			controls.ThrowOnDuplicate(Attributes.FallbackControl);
+			controls.ThrowOnDuplicate(Attributes.Control);
 			templates.ThrowOnDuplicate(Attributes.FallbackTemplate);
 			requiredGeneratedControls.ThrowOnDuplicate("required generated control");
 
 			Models = models ?? Array.Empty<Model>();
-			FallbackControls = controls ?? Array.Empty<Control>();
-			FallbackTemplates = templates ?? Array.Empty<Template>();
+			Controls = controls ?? Array.Empty<Control>();
+			Templates = templates ?? Array.Empty<Template>();
 			RequiredGeneratedControls = requiredGeneratedControls ?? Array.Empty<Control>();
 		}
 
@@ -31,28 +31,28 @@ namespace AutoForm.Analysis
 
 		public ModelSpace WithModels(IEnumerable<Model> models)
 		{
-			return new ModelSpace(Models.Concat(models).ToArray(), FallbackControls, FallbackTemplates, RequiredGeneratedControls);
+			return new ModelSpace(Models.Concat(models).ToArray(), Controls, Templates, RequiredGeneratedControls);
 		}
 
 		public ModelSpace WithFallbackControls(IEnumerable<Control> controls)
 		{
-			return new ModelSpace(Models, FallbackControls.Concat(controls).ToArray(), FallbackTemplates, RequiredGeneratedControls);
+			return new ModelSpace(Models, Controls.Concat(controls).ToArray(), Templates, RequiredGeneratedControls);
 		}
 
 		public ModelSpace WithTemplates(IEnumerable<Template> templates)
 		{
-			return new ModelSpace(Models, FallbackControls, FallbackTemplates.Concat(templates).ToArray(), RequiredGeneratedControls);
+			return new ModelSpace(Models, Controls, Templates.Concat(templates).ToArray(), RequiredGeneratedControls);
 		}
 
 		private ModelSpace WithRequiredGeneratedControls(IEnumerable<Control> requiredGeneratedControls)
 		{
-			return new ModelSpace(Models, FallbackControls, FallbackTemplates, RequiredGeneratedControls.Concat(requiredGeneratedControls).ToArray());
+			return new ModelSpace(Models, Controls, Templates, RequiredGeneratedControls.Concat(requiredGeneratedControls).ToArray());
 		}
 
 		private IEnumerable<Model> ApplyFallbacksToModels()
 		{
 			var generatedFallbackControls = Models.Select(m => Control.CreateGenerated(m.Name));
-			var availableControls = FallbackControls.Where(c1 => !generatedFallbackControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedFallbackControls);
+			var availableControls = Controls.Where(c1 => !generatedFallbackControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedFallbackControls);
 
 			var fallbackAppliedModels = new List<Model>();
 
@@ -67,7 +67,7 @@ namespace AutoForm.Analysis
 				var template = model.Template;
 				if (template == default)
 				{
-					template = FallbackTemplates.SingleOrDefault(t => t.Models.Contains(model.Name)).Name;
+					template = Templates.SingleOrDefault(t => t.Models.Contains(model.Name)).Name;
 				}
 
 				var fallbackAppliedProperties = new List<Property>();
@@ -83,7 +83,7 @@ namespace AutoForm.Analysis
 					var subTemplate = property.Template;
 					if (subTemplate == default)
 					{
-						subTemplate = FallbackTemplates.SingleOrDefault(t => t.Models.Contains(property.Type)).Name;
+						subTemplate = Templates.SingleOrDefault(t => t.Models.Contains(property.Type)).Name;
 					}
 
 					var fallbackAppliedProperty = Property.Create(property.Name, property.Type, subControl, subTemplate, property.Order);
@@ -132,8 +132,8 @@ namespace AutoForm.Analysis
 
 			var modelSpace = Create()
 				.WithModels(fallbackAppliedModels)
-				.WithFallbackControls(FallbackControls)
-				.WithTemplates(FallbackTemplates)
+				.WithFallbackControls(Controls)
+				.WithTemplates(Templates)
 				.WithRequiredGeneratedControls(requiredGeneratedControls);
 
 			return modelSpace;

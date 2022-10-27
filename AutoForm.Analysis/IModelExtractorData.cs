@@ -6,10 +6,8 @@ namespace AutoForm.Analysis
 {
 	internal interface IModelExtractorData
 	{
-		IEnumerable<BaseTypeDeclarationSyntax> FallbackControls { get; }
-		IEnumerable<BaseTypeDeclarationSyntax> FallbackTemplates { get; }
+		IEnumerable<BaseTypeDeclarationSyntax> Controls { get; }
+		IEnumerable<BaseTypeDeclarationSyntax> Templates { get; }
 		IEnumerable<BaseTypeDeclarationSyntax> Models { get; }
-		IEnumerable<BaseTypeDeclarationSyntax> UseControls { get; }
-		IEnumerable<BaseTypeDeclarationSyntax> UseTemplates { get; }
 	}
 }

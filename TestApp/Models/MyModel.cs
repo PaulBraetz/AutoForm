@@ -6,10 +6,10 @@ namespace TestApp.Models
 {
 	public class MyModel
 	{
-		[ModelProperty(templateType: typeof(ByteTemplate))]
+		[ModelProperty]
 		public byte Age { get; set; }
 
-		[ModelProperty(templateType: typeof(StringTemplate))]
+		[ModelProperty]
 		public string? Name { get; set; }
 
 		[AttributesProvider]

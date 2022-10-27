@@ -94,7 +94,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 			if (!isError)
 			{
 				var defaultFallbackControls = AvailableDefaultControls
-					.Where(kvp => !modelSpace.FallbackControls.SelectMany(c => c.Models).Contains(kvp.Key))
+					.Where(kvp => !modelSpace.Controls.SelectMany(c => c.Models).Contains(kvp.Key))
 					.GroupBy(kvp => kvp.Value)
 					.Select(group => Control.Create(group.Key).WithRange(group.Select(kvp => kvp.Key)));
 
@@ -153,14 +153,14 @@ namespace AutoForm.Blazor.Analysis.Templates
 
 		private IEnumerable<KeyValueTypesPairTemplate> GetModelTemplatePairTemplates()
 		{
-			return _modelSpace.FallbackTemplates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
+			return _modelSpace.Templates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
 		}
 		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates()
 		{
 			var requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
 
 			return GetControlsToBeGenerated().SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name)))//)
-				.Concat(_modelSpace.FallbackControls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
+				.Concat(_modelSpace.Controls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
 		}
 		private KeyValueTypesPairTemplate GetModelControlPairTemplate(ITypeIdentifier key, ITypeIdentifier value)
 		{

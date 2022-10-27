@@ -12,21 +12,15 @@ namespace AutoForm.Analysis
 				= AttributeFactory<AttributesProviderAttribute>.Create();
 			public static readonly IAttributeFactory<ModelPropertyAttribute> ModelProperty
 				= AttributeFactory<ModelPropertyAttribute>.Create();
-			public static readonly IAttributeFactory<UseControlAttribute> UseControl
-				= AttributeFactory<UseControlAttribute>.Create();
-			public static readonly IAttributeFactory<FallbackControlAttribute> FallbackControl
-				= AttributeFactory<FallbackControlAttribute>.Create();
-			public static readonly IAttributeFactory<UseTemplateAttribute> UseTemplate
-				= AttributeFactory<UseTemplateAttribute>.Create();
-			public static readonly IAttributeFactory<FallbackTemplateAttribute> FallbackTemplate
-				= AttributeFactory<FallbackTemplateAttribute>.Create();
+			public static readonly IAttributeFactory<ControlAttribute> Control
+				= AttributeFactory<ControlAttribute>.Create();
+			public static readonly IAttributeFactory<TemplateAttribute> Template
+				= AttributeFactory<TemplateAttribute>.Create();
 		}
 		public static readonly Namespace Namespace = Namespace.Create<ModelPropertyAttribute>();
 		public static readonly TypeIdentifier AttributesProvider = TypeIdentifier.Create<AttributesProviderAttribute>();
 		public static readonly TypeIdentifier ModelProperty = TypeIdentifier.Create<ModelPropertyAttribute>();
-		public static readonly TypeIdentifier UseControl = TypeIdentifier.Create<UseControlAttribute>();
-		public static readonly TypeIdentifier FallbackControl = TypeIdentifier.Create<FallbackControlAttribute>();
-		public static readonly TypeIdentifier UseTemplate = TypeIdentifier.Create<UseTemplateAttribute>();
-		public static readonly TypeIdentifier FallbackTemplate = TypeIdentifier.Create<FallbackTemplateAttribute>();
+		public static readonly TypeIdentifier Control = TypeIdentifier.Create<ControlAttribute>();
+		public static readonly TypeIdentifier FallbackTemplate = TypeIdentifier.Create<TemplateAttribute>();
 	}
 }

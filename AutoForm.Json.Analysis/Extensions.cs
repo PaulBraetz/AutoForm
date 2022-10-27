@@ -23,14 +23,14 @@ namespace AutoForm.Json.Analysis
 						modelSpace.Models,
 						JsonMembers)),
 				JsonDecorator<Control[]>.KeyValuePair(
-					nameof(ModelSpace.FallbackControls),
+					nameof(ModelSpace.Controls),
 					JsonDecorator<Control>.ObjectArray(
-						modelSpace.FallbackControls,
+						modelSpace.Controls,
 						JsonMembers)),
 				JsonDecorator<Template[]>.KeyValuePair(
-					nameof(ModelSpace.FallbackTemplates),
+					nameof(ModelSpace.Templates),
 					JsonDecorator<Template>.ObjectArray(
-						modelSpace.FallbackTemplates,
+						modelSpace.Templates,
 						JsonMembers)),
 				JsonDecorator<Control[]>.KeyValuePair(
 					nameof(ModelSpace.RequiredGeneratedControls),
@@ -87,6 +87,11 @@ namespace AutoForm.Json.Analysis
 					nameof(Control.Models),
 					JsonDecorator<ITypeIdentifier>.ObjectArray(
 						control.Models,
+						JsonMembers)),
+				JsonDecorator<PropertyIdentifier[]>.KeyValuePair(
+					nameof(Control.Properties),
+					JsonDecorator<PropertyIdentifier>.ObjectArray(
+						control.Properties,
 						JsonMembers))
 			};
 
@@ -105,6 +110,11 @@ namespace AutoForm.Json.Analysis
 					nameof(Template.Models),
 					JsonDecorator<ITypeIdentifier>.ObjectArray(
 						template.Models,
+						JsonMembers)),
+				JsonDecorator<PropertyIdentifier[]>.KeyValuePair(
+					nameof(Control.Properties),
+					JsonDecorator<PropertyIdentifier>.ObjectArray(
+						template.Properties,
 						JsonMembers))
 			};
 

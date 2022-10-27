@@ -38,38 +38,25 @@ namespace AutoForm.Analysis
 		{
 			private HashSet<BaseTypeDeclarationSyntax> Models { get; } = new HashSet<BaseTypeDeclarationSyntax>();
 			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Models => Models;
-			private HashSet<BaseTypeDeclarationSyntax> FallbackControls { get; } = new HashSet<BaseTypeDeclarationSyntax>();
-			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.FallbackControls => FallbackControls;
-			private HashSet<BaseTypeDeclarationSyntax> FallbackTemplates { get; } = new HashSet<BaseTypeDeclarationSyntax>();
-			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.FallbackTemplates => FallbackTemplates;
-			private HashSet<BaseTypeDeclarationSyntax> UseControls { get; } = new HashSet<BaseTypeDeclarationSyntax>();
-			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.UseControls => UseControls;
-			private HashSet<BaseTypeDeclarationSyntax> UseTemplates { get; } = new HashSet<BaseTypeDeclarationSyntax>();
-			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.UseTemplates => UseTemplates;
+			private HashSet<BaseTypeDeclarationSyntax> Controls { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Controls => Controls;
+			private HashSet<BaseTypeDeclarationSyntax> Templates { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Templates => Templates;
 
 			public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
 			{
 				if (context.Node is BaseTypeDeclarationSyntax typeDeclaration)
 				{
 					var semanticModel = context.SemanticModel;
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.UseControl))
-					{
-						UseControls.Add(typeDeclaration);
-					}
 
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.FallbackControl))
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.Control))
 					{
-						FallbackControls.Add(typeDeclaration);
-					}
-
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.UseTemplate))
-					{
-						UseTemplates.Add(typeDeclaration);
+						Controls.Add(typeDeclaration);
 					}
 
 					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.FallbackTemplate))
 					{
-						FallbackTemplates.Add(typeDeclaration);
+						Templates.Add(typeDeclaration);
 					}
 				}
 				else if (context.Node is PropertyDeclarationSyntax propertyDeclaration &&
