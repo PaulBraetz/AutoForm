@@ -1,4 +1,5 @@
-﻿using AutoForm.Blazor.Controls.Abstractions;
+﻿using AutoForm.Attributes;
+using AutoForm.Blazor.Controls.Abstractions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.CompilerServices;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -10,7 +11,7 @@ namespace AutoForm.Blazor
 	{
 		private static readonly Type _controlType = GeneratedControls.ModelControlMap?.TryGetValue(typeof(TModel), out var controlType) ?? false ?
 			controlType :
-			throw new Exception($"Unable to locate control for {nameof(TModel)} of {typeof(TModel).FullName}. Make sure that {typeof(TModel).FullName} is annotated with {nameof(ModelAttribute)}.");
+			throw new Exception($"Unable to locate control for {nameof(TModel)} of {typeof(TModel).FullName}. Make sure that {typeof(TModel).FullName} contains members annotated with {nameof(ModelPropertyAttribute)} or {nameof(AttributesProviderAttribute)}.");
 
 		private static readonly Type? _templateType = GeneratedControls.ModelTemplateMap?.TryGetValue(typeof(TModel), out var templateType) ?? false ?
 			templateType :

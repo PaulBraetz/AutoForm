@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RhoMicro.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 
 namespace AutoForm.Blazor.Analysis.Templates

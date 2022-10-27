@@ -66,7 +66,7 @@ namespace AutoForm.Json.Analysis
 						model.AttributesProvider,
 						JsonMembers)),
 				JsonDecorator<Property[]>.KeyValuePair(
-					nameof(Model.AttributesProvider),
+					nameof(Model.Properties),
 					JsonDecorator<Property>.ObjectArray(
 						model.Properties,
 						JsonMembers))
@@ -114,16 +114,20 @@ namespace AutoForm.Json.Analysis
 		{
 			var members = new IJson[]
 			{
-				JsonDecorator<INamespace>.KeyValuePair(
-					nameof(ITypeIdentifier.Namespace),
-					JsonDecorator<INamespace>.Object(
-						identifier.Namespace,
-						JsonMembers)),
-				JsonDecorator<ITypeIdentifierName>.KeyValuePair(
-					nameof(ITypeIdentifier.Name),
-					JsonDecorator<ITypeIdentifierName>.Object(
-						identifier.Name,
-						JsonMembers))
+				JsonDecorator<String>.KeyValuePair(
+					"Value",
+					JsonDecorator<String>.String(
+						identifier?.ToString())),
+				//JsonDecorator<INamespace>.KeyValuePair(
+				//	nameof(ITypeIdentifier.Namespace),
+				//	JsonDecorator<INamespace>.Object(
+				//		identifier.Namespace,
+				//		JsonMembers)),
+				//JsonDecorator<ITypeIdentifierName>.KeyValuePair(
+				//	nameof(ITypeIdentifier.Name),
+				//	JsonDecorator<ITypeIdentifierName>.Object(
+				//		identifier.Name,
+				//		JsonMembers))
 			};
 
 			return members;

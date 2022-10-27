@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RhoMicro.CodeAnalysis;
+using System;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -6,23 +7,23 @@ namespace AutoForm.Blazor.Analysis.Templates
 	{
 		private readonly struct KeyValueTypesPairTemplate
 		{
-			private KeyValueTypesPairTemplate(TypeIdentifier keyType, TypeIdentifier valueType)
+			private KeyValueTypesPairTemplate(ITypeIdentifier keyType, ITypeIdentifier valueType)
 			{
 				ModelType = keyType;
 				MappedType = valueType;
 			}
 
-			public readonly TypeIdentifier ModelType;
-			public readonly TypeIdentifier MappedType;
+			public readonly ITypeIdentifier ModelType;
+			public readonly ITypeIdentifier MappedType;
 
 			private const String TEMPLATE = "			{typeof(" + MODEL_TYPE + "), typeof(" + CONTROL_TYPE + ")}";
 
-			public KeyValueTypesPairTemplate WithKeyType(TypeIdentifier modelType)
+			public KeyValueTypesPairTemplate WithKeyType(ITypeIdentifier modelType)
 			{
 				return new KeyValueTypesPairTemplate(modelType, MappedType);
 			}
 
-			public KeyValueTypesPairTemplate WithValueType(TypeIdentifier controlType)
+			public KeyValueTypesPairTemplate WithValueType(ITypeIdentifier controlType)
 			{
 				return new KeyValueTypesPairTemplate(ModelType, controlType);
 			}
@@ -30,8 +31,8 @@ namespace AutoForm.Blazor.Analysis.Templates
 			public String Build()
 			{
 				return TEMPLATE
-					.Replace(MODEL_TYPE, ModelType.ToEscapedString())
-					.Replace(CONTROL_TYPE, MappedType.ToEscapedString());
+					.Replace(MODEL_TYPE, ModelType.ToString())
+					.Replace(CONTROL_TYPE, MappedType.ToString());
 			}
 
 			public override String ToString()

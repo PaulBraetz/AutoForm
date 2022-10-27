@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RhoMicro.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,17 +10,17 @@ namespace AutoForm.Blazor.Analysis.Templates
 	{
 		private readonly struct ControlTemplate
 		{
-			private ControlTemplate(TypeIdentifier modelType,
+			private ControlTemplate(ITypeIdentifier modelType,
 									SubControlTemplate[] subControlTemplates,
-									TypeIdentifier controlType)
+									ITypeIdentifier controlType)
 			{
 				_modelType = modelType;
 				_subControlTemplates = subControlTemplates ?? Array.Empty<SubControlTemplate>();
 				_controlType = controlType;
 			}
 
-			private readonly TypeIdentifier _modelType;
-			private readonly TypeIdentifier _controlType;
+			private readonly ITypeIdentifier _modelType;
+			private readonly ITypeIdentifier _controlType;
 
 			private readonly SubControlTemplate[] _subControlTemplates;
 
@@ -40,11 +41,11 @@ namespace AutoForm.Blazor.Analysis.Templates
             #pragma warning restore 1998
 		}";
 
-			public ControlTemplate WithModelType(TypeIdentifier modelType)
+			public ControlTemplate WithModelType(ITypeIdentifier modelType)
 			{
 				return new ControlTemplate(modelType, _subControlTemplates, _controlType);
 			}
-			public ControlTemplate WithControlType(TypeIdentifier controlType)
+			public ControlTemplate WithControlType(ITypeIdentifier controlType)
 			{
 				return new ControlTemplate(_modelType, _subControlTemplates, controlType);
 			}
@@ -59,9 +60,9 @@ namespace AutoForm.Blazor.Analysis.Templates
 				var subControls = String.Join("\n\n", _subControlTemplates.Select(t => t.Build()));
 
 				var template = TEMPLATE
-					.Replace(MODEL_TYPE, _modelType.ToEscapedString())
+					.Replace(MODEL_TYPE, _modelType.ToString())
 					.Replace(SUB_CONTROLS, subControls)
-					.Replace(CONTROL_TYPE_IDENTIFIER, _controlType.ToEscapedString());
+					.Replace(CONTROL_TYPE_IDENTIFIER, _controlType.ToString());
 
 				var regex = new Regex(Regex.Escape(LINE_INDEX));
 				while (regex.IsMatch(template))

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoForm.Analysis;
+using System;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -64,12 +65,12 @@ namespace AutoForm.Blazor.Analysis.Templates
 				var template = (_property.Template == default ?
 								TEMPLATE :
 								TEMPLATED_TEMPLATE
-									.Replace(TEMPLATE_TYPE, _property.Template.ToEscapedString()))
+									.Replace(TEMPLATE_TYPE, _property.Template.ToString()))
 									.Replace(SUB_CONTROL_PASS_ATTRIBUTES, subControlPassAttributes)
-									.Replace(MODEL_TYPE, _model.Name.ToEscapedString())
-									.Replace(PROPERTY_IDENTIFIER, _property.Name.ToEscapedString())
-									.Replace(PROPERTY_TYPE, _property.Type.ToEscapedString())
-									.Replace(CONTROL_TYPE, _property.Control.ToEscapedString());
+									.Replace(MODEL_TYPE, _model.Name.ToString())
+									.Replace(PROPERTY_IDENTIFIER, _property.Name.ToString())
+									.Replace(PROPERTY_TYPE, _property.Type.ToString())
+									.Replace(CONTROL_TYPE, _property.Control.ToString());
 
 				return template;
 			}

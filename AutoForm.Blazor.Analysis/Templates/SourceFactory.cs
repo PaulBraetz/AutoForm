@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoForm.Analysis;
+using RhoMicro.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -34,8 +36,8 @@ namespace AutoForm.Blazor.Analysis.Templates
 		#endregion
 
 		#region Available Default Controls
-		private static readonly Namespace ControlsNamespace = Namespace.Create().WithRange(new[] { "AutoForm", "Blazor", "Controls" });
-		private static readonly IReadOnlyDictionary<TypeIdentifier, TypeIdentifier> AvailableDefaultControls = new ReadOnlyDictionary<TypeIdentifier, TypeIdentifier>(new Dictionary<TypeIdentifier, TypeIdentifier>()
+		private static readonly Namespace ControlsNamespace = Namespace.Create().AppendRange(new[] { "AutoForm", "Blazor", "Controls" });
+		private static readonly IReadOnlyDictionary<ITypeIdentifier, ITypeIdentifier> AvailableDefaultControls = new ReadOnlyDictionary<ITypeIdentifier, ITypeIdentifier>(new Dictionary<ITypeIdentifier, ITypeIdentifier>()
 		{
 			{TypeIdentifier.Create<String>(), GetDefaultControl("Text") },
 			{TypeIdentifier.Create<Char>(), GetDefaultControl("CharControl") },
@@ -53,14 +55,14 @@ namespace AutoForm.Blazor.Analysis.Templates
 			{TypeIdentifier.Create<Double>(), GetDefaultControl("DoubleNumber") },
 			{TypeIdentifier.Create<Decimal>(), GetDefaultControl("DecimalNumber") }
 		});
-		private static TypeIdentifier GetDefaultControl(String name)
+		private static ITypeIdentifier GetDefaultControl(String name)
 		{
-			return TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart(name), ControlsNamespace);
+			return TypeIdentifier.Create(TypeIdentifierName.Create().AppendNamePart(name), ControlsNamespace);
 		}
 		#endregion
 
 		//#region Optimizable PropertyTypes
-		//private static readonly IEnumerable<TypeIdentifier> OptimizablePropertyTypeIdentifiers = new List<TypeIdentifier>()
+		//private static readonly IEnumerable<ITypeIdentifier> OptimizablePropertyTypeIdentifiers = new List<ITypeIdentifier>()
 		//{
 		//    TypeIdentifier.Create<SByte>(),
 		//    TypeIdentifier.Create<Byte>(),
@@ -160,13 +162,13 @@ namespace AutoForm.Blazor.Analysis.Templates
 			return GetControlsToBeGenerated().SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name)))//)
 				.Concat(_modelSpace.FallbackControls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
 		}
-		private KeyValueTypesPairTemplate GetModelControlPairTemplate(TypeIdentifier key, TypeIdentifier value)
+		private KeyValueTypesPairTemplate GetModelControlPairTemplate(ITypeIdentifier key, ITypeIdentifier value)
 		{
 			return new KeyValueTypesPairTemplate()
 				.WithValueType(value)
 				.WithKeyType(key);
 		}
-		private IEnumerable<TypeIdentifier> GetRequiredDefaultControlTypes()
+		private IEnumerable<ITypeIdentifier> GetRequiredDefaultControlTypes()
 		{
 			return AvailableDefaultControls.Keys
 				.Except(GetControlsToBeGenerated().SelectMany(c => c.Models));
@@ -241,7 +243,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 
 			if (exceptions.Any())
 			{
-				var message = $"Error while generating control for {model.Name.ToEscapedString()}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
+				var message = $"Error while generating control for {model.Name}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
 				throw new AggregateException(message, exceptions);
 			}
 

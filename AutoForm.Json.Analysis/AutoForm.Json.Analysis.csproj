@@ -58,24 +58,26 @@
 	
 	<ItemGroup>
 		<Folder Include="RhoMicro.CodeAnalaysis" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeAnalysisUnit.cs" Link="RhoMicro.CodeAnalaysis\AttributeAnalysisUnit.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeFactory.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactory.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeFactoryCollection.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactoryCollection.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\AttributeFactoryStrategy.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactoryStrategy.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\Error.cs" Link="RhoMicro.CodeAnalaysis\Error.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\Extensions.cs" Link="RhoMicro.CodeAnalaysis\Extensions.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\GeneratedSource.cs" Link="RhoMicro.CodeAnalaysis\GeneratedSource.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\GeneratedType.cs" Link="RhoMicro.CodeAnalaysis\GeneratedType.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\IAttributeFactory.cs" Link="RhoMicro.CodeAnalaysis\IAttributeFactory.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\IdentifierPart.cs" Link="RhoMicro.CodeAnalaysis\IdentifierPart.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\IdentifierParts.cs" Link="RhoMicro.CodeAnalaysis\IdentifierParts.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\IIdentifierPart.cs" Link="RhoMicro.CodeAnalaysis\IIdentifierPart.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\INamespace.cs" Link="RhoMicro.CodeAnalaysis\INamespace.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\ITypeIdentifier.cs" Link="RhoMicro.CodeAnalaysis\ITypeIdentifier.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\ITypeIdentifierName.cs" Link="RhoMicro.CodeAnalaysis\ITypeIdentifierName.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\Namespace.cs" Link="RhoMicro.CodeAnalaysis\Namespace.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\TypeIdentifier.cs" Link="RhoMicro.CodeAnalaysis\TypeIdentifier.cs" />
-		<Compile Include="..\codeanalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalaysis\TypeIdentifierName.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\AttributeAnalysisUnit.cs" Link="RhoMicro.CodeAnalaysis\AttributeAnalysisUnit.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\AttributeFactory.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactory.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\AttributeFactoryCollection.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactoryCollection.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\AttributeFactoryStrategy.cs" Link="RhoMicro.CodeAnalaysis\AttributeFactoryStrategy.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\Error.cs" Link="RhoMicro.CodeAnalaysis\Error.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\Extensions.cs" Link="RhoMicro.CodeAnalaysis\Extensions.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\GeneratedSource.cs" Link="RhoMicro.CodeAnalaysis\GeneratedSource.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\GeneratedType.cs" Link="RhoMicro.CodeAnalaysis\GeneratedType.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IAttributeFactory.cs" Link="RhoMicro.CodeAnalaysis\IAttributeFactory.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IdentifierPart.cs" Link="RhoMicro.CodeAnalaysis\IdentifierPart.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IdentifierParts.cs" Link="RhoMicro.CodeAnalaysis\IdentifierParts.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IHasTypeParameter.cs" Link="RhoMicro.CodeAnalaysis\IHasTypeParameter.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IHasTypeProperty.cs" Link="RhoMicro.CodeAnalaysis\IHasTypeProperty.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IIdentifierPart.cs" Link="RhoMicro.CodeAnalaysis\IIdentifierPart.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\INamespace.cs" Link="RhoMicro.CodeAnalaysis\INamespace.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\ITypeIdentifier.cs" Link="RhoMicro.CodeAnalaysis\ITypeIdentifier.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\ITypeIdentifierName.cs" Link="RhoMicro.CodeAnalaysis\ITypeIdentifierName.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\Namespace.cs" Link="RhoMicro.CodeAnalaysis\Namespace.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifier.cs" Link="RhoMicro.CodeAnalaysis\TypeIdentifier.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalaysis\TypeIdentifierName.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -85,6 +87,7 @@
 		<Compile Include="..\AutoForm.Analysis\Extensions.cs" Link="AutoForm.Analysis\Extensions.cs" />
 		<Compile Include="..\AutoForm.Analysis\GeneratedTypeIdentifierDecorator.cs" Link="AutoForm.Analysis\GeneratedTypeIdentifierDecorator.cs" />
 		<Compile Include="..\AutoForm.Analysis\GeneratorBase.cs" Link="AutoForm.Analysis\GeneratorBase.cs" />
+		<Compile Include="..\AutoForm.Analysis\IModelExtractorData.cs" Link="AutoForm.Analysis\IModelExtractorData.cs" />
 		<Compile Include="..\AutoForm.Analysis\Model.cs" Link="AutoForm.Analysis\Model.cs" />
 		<Compile Include="..\AutoForm.Analysis\ModelExtractor.cs" Link="AutoForm.Analysis\ModelExtractor.cs" />
 		<Compile Include="..\AutoForm.Analysis\ModelSpace.cs" Link="AutoForm.Analysis\ModelSpace.cs" />

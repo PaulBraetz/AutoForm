@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoForm.Analysis;
+using System;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -27,7 +28,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 				return _attributesProviderIdentifier == default ?
 					String.Empty :
 					TEMPLATE
-						.Replace(ATTRIBUTES_PROVIDER_IDENTIFIER, _attributesProviderIdentifier.ToEscapedString());
+						.Replace(ATTRIBUTES_PROVIDER_IDENTIFIER, _attributesProviderIdentifier.ToString());
 			}
 
 			public override String ToString()

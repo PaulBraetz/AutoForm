@@ -13,16 +13,20 @@ namespace AutoForm.Analysis
 
 		public void Execute(GeneratorExecutionContext context)
 		{
-			try
+			if (context.SyntaxContextReceiver is IModelExtractorData data)
 			{
-				var extractor = new ModelExtractor(context.Compilation);
-				var modelSpace = extractor.ExtractModelSpace();
-				OnModelSpaceCreated(context, modelSpace);
-			}
-			catch (Exception ex)
-			{
-				var error = Error.Create().WithFlattened(ex);
-				OnError(context, error);
+				try
+				{
+					var extractor = new ModelExtractor(context.Compilation, data);
+					var modelSpace = extractor.ExtractModelSpace();
+					OnModelSpaceCreated(context, modelSpace);
+				}
+				catch (Exception ex)
+				{
+					var error = Error.Create().WithFlattened(ex);
+					OnError(context, error);
+					throw;
+				}
 			}
 		}
 		public virtual void Initialize(GeneratorInitializationContext context)
@@ -30,13 +34,19 @@ namespace AutoForm.Analysis
 			context.RegisterForSyntaxNotifications(() => new SyntaxContextReceiver());
 		}
 
-		private sealed class SyntaxContextReceiver : ISyntaxContextReceiver
+		private sealed class SyntaxContextReceiver : ISyntaxContextReceiver, IModelExtractorData
 		{
-			public List<BaseTypeDeclarationSyntax> Models { get; } = new List<BaseTypeDeclarationSyntax>();
-			public List<BaseTypeDeclarationSyntax> FallbackControls { get; } = new List<BaseTypeDeclarationSyntax>();
-			public List<BaseTypeDeclarationSyntax> FallbackTemplates { get; } = new List<BaseTypeDeclarationSyntax>();
-			public List<BaseTypeDeclarationSyntax> UseControls { get; } = new List<BaseTypeDeclarationSyntax>();
-			public List<BaseTypeDeclarationSyntax> UseTemplates { get; } = new List<BaseTypeDeclarationSyntax>();
+			private HashSet<BaseTypeDeclarationSyntax> Models { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Models => Models;
+			private HashSet<BaseTypeDeclarationSyntax> FallbackControls { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.FallbackControls => FallbackControls;
+			private HashSet<BaseTypeDeclarationSyntax> FallbackTemplates { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.FallbackTemplates => FallbackTemplates;
+			private HashSet<BaseTypeDeclarationSyntax> UseControls { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.UseControls => UseControls;
+			private HashSet<BaseTypeDeclarationSyntax> UseTemplates { get; } = new HashSet<BaseTypeDeclarationSyntax>();
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.UseTemplates => UseTemplates;
+
 			public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
 			{
 				if (context.Node is BaseTypeDeclarationSyntax typeDeclaration)

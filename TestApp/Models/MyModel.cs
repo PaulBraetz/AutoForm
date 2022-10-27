@@ -4,13 +4,12 @@ using TestApp.Templates;
 
 namespace TestApp.Models
 {
-	[AutoForm.Attributes.Model]
 	public class MyModel
 	{
-		[UseTemplate(typeof(ByteTemplate))]
+		[ModelProperty(templateType: typeof(ByteTemplate))]
 		public byte Age { get; set; }
 
-		[UseTemplate(typeof(StringTemplate))]
+		[ModelProperty(templateType: typeof(StringTemplate))]
 		public string? Name { get; set; }
 
 		[AttributesProvider]

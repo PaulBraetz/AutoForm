@@ -1,4 +1,6 @@
-﻿namespace TestApp.AttributesProviders
+﻿using AutoForm.Blazor.Attributes;
+
+namespace TestApp.AttributesProviders
 {
 	public class MyAttributesProvider
 	{

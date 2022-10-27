@@ -16,9 +16,11 @@ namespace AutoForm.Blazor
 				RuntimeHelpers.RunClassConstructor(typeof(GeneratedControls).TypeHandle);
 				var exceptions = new List<Exception>();
 
+				//TODO: continue here
+
 				var autoControls = autoControlModelAssembly
 									.GetTypes()
-									.Where(t => t.CustomAttributes.Any(a => a.AttributeType == typeof(ModelAttribute)))
+									.Where(t => t.GetPropert.CustomAttributes.Any(a => a.AttributeType == typeof(ModelAttribute)))
 									.Select(m => typeof(AutoControl<>).MakeGenericType(m));
 
 				foreach (var autoControl in autoControls)

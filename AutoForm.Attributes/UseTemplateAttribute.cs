@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AutoForm.Attributes
 {
@@ -11,9 +12,25 @@ namespace AutoForm.Attributes
 	{
 		public UseTemplateAttribute(Type templateType)
 		{
-			TemplateType = templateType;
 		}
 
-		public Type TemplateType { get; }
+		private readonly IDictionary<String, Object> _typeProperties = new Dictionary<String, Object>();
+		public void SetTypeParameter(String parameterName, Object type)
+		{
+			if (_typeProperties.ContainsKey(parameterName))
+			{
+				_typeProperties[parameterName] = type;
+			}
+			else
+			{
+				_typeProperties.Add(parameterName, type);
+			}
+		}
+		public Object GetTypeParameter(String parameterName)
+		{
+			var type = _typeProperties.TryGetValue(parameterName, out var value) ? value : null;
+
+			return type;
+		}
 	}
 }
