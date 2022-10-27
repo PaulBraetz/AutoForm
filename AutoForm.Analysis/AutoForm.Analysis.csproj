@@ -21,7 +21,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="AutoForm.Attributes\" />		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifierName.cs" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" PrivateAssets="all" />
+		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="AutoForm.Attributes\" />
 		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />
@@ -54,7 +67,4 @@
 		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifierName.cs" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" />
-	</ItemGroup>
 </Project>

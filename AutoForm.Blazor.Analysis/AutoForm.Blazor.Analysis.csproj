@@ -39,7 +39,6 @@
 
 	<ItemGroup>
 		<Folder Include="AutoForm.Attributes\" />
-		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifierName.cs" />
 		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\FallbackControlAttribute.cs" Link="AutoForm.Attributes\FallbackControlAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\FallbackTemplateAttribute.cs" Link="AutoForm.Attributes\FallbackTemplateAttribute.cs" />

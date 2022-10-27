@@ -17,8 +17,6 @@ namespace AutoForm.Blazor
 				RuntimeHelpers.RunClassConstructor(typeof(GeneratedControls).TypeHandle);
 				var exceptions = new List<Exception>();
 
-				//TODO: continue here
-
 				var autoControls = autoControlModelAssembly
 									.GetTypes()
 									.Where(isModel)
@@ -52,14 +50,9 @@ namespace AutoForm.Blazor
 
 				Boolean isModel(Type type)
 				{
-					if (type == null)
-					{
-						return false;
-					}
-
 					var match = type != null &&
 						(type.GetProperties()
-							.Where(p => p.CustomAttributes.Any(a => a.GetType() == typeof(ModelPropertyAttribute)))
+							.Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(ModelPropertyAttribute)))
 							.Any()/* ||
 						isModel(type.BaseType)*/);
 
