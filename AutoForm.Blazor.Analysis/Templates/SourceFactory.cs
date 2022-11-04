@@ -1,4 +1,5 @@
-﻿using AutoForm.Analysis.Models;
+﻿using AutoForm.Analysis;
+using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,269 +7,240 @@ using System.Linq;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
-    internal sealed partial class SourceFactory
-    {
-        #region Placeholders
-        private const String GENERATED_DATE = "{" + nameof(GENERATED_DATE) + "}";
-        private const String MODEL_CONTROL_PAIRS = "{" + nameof(MODEL_CONTROL_PAIRS) + "}";
-        private const String MODEL_TEMPLATE_PAIRS = "{" + nameof(MODEL_TEMPLATE_PAIRS) + "}";
-        private const String CONTROLS = "{" + nameof(CONTROLS) + "}";
+	internal sealed partial class SourceFactory
+	{
+		#region Placeholders
+		private const String MODEL_CONTROL_PAIRS = "{" + nameof(MODEL_CONTROL_PAIRS) + "}";
+		private const String MODEL_TEMPLATE_PAIRS = "{" + nameof(MODEL_TEMPLATE_PAIRS) + "}";
+		private const String CONTROLS = "{" + nameof(CONTROLS) + "}";
 
-        private const String CONTROL_TYPE = "{" + nameof(CONTROL_TYPE) + "}";
-        private const String CONTROL_TYPE_IDENTIFIER = "{" + nameof(CONTROL_TYPE_IDENTIFIER) + "}";
+		private const String CONTROL_TYPE = "{" + nameof(CONTROL_TYPE) + "}";
+		private const String CONTROL_TYPE_IDENTIFIER = "{" + nameof(CONTROL_TYPE_IDENTIFIER) + "}";
 
-        private const String TEMPLATE_TYPE = "{" + nameof(TEMPLATE_TYPE) + "}";
+		private const String TEMPLATE_TYPE = "{" + nameof(TEMPLATE_TYPE) + "}";
 
-        private const String LINE_INDEX = "{" + nameof(LINE_INDEX) + "}";
-        private const String SUB_CONTROL_PASS_ATTRIBUTES = "{" + nameof(SUB_CONTROL_PASS_ATTRIBUTES) + "}";
+		private const String LINE_INDEX = "{" + nameof(LINE_INDEX) + "}";
+		private const String SUB_CONTROL_PASS_ATTRIBUTES = "{" + nameof(SUB_CONTROL_PASS_ATTRIBUTES) + "}";
 
-        private const String MODEL_TYPE = "{" + nameof(MODEL_TYPE) + "}";
+		private const String MODEL_TYPE = "{" + nameof(MODEL_TYPE) + "}";
 
-        private const String SUB_CONTROLS = "{" + nameof(SUB_CONTROLS) + "}";
+		private const String SUB_CONTROLS = "{" + nameof(SUB_CONTROLS) + "}";
 
-        private const String PROPERTY_TYPE = "{" + nameof(PROPERTY_TYPE) + "}";
-        private const String PROPERTY_IDENTIFIER = "{" + nameof(PROPERTY_IDENTIFIER) + "}";
+		private const String PROPERTY_TYPE = "{" + nameof(PROPERTY_TYPE) + "}";
+		private const String PROPERTY_IDENTIFIER = "{" + nameof(PROPERTY_IDENTIFIER) + "}";
 
-        private const String ATTRIBUTES_PROVIDER_IDENTIFIER = "{" + nameof(ATTRIBUTES_PROVIDER_IDENTIFIER) + "}";
+		private const String ATTRIBUTES_PROVIDER_IDENTIFIER = "{" + nameof(ATTRIBUTES_PROVIDER_IDENTIFIER) + "}";
 
-        private const String ERROR_MESSAGE = "{" + nameof(ERROR_MESSAGE) + "}";
-        #endregion
+		private const String ERROR_MESSAGE = "{" + nameof(ERROR_MESSAGE) + "}";
+		#endregion
 
-        #region Available Default Controls
-        private static readonly Namespace ControlsNamespace = Namespace.Create().WithRange(new[] { "AutoForm", "Blazor", "Controls" });
-        private static readonly IReadOnlyDictionary<TypeIdentifier, TypeIdentifier> AvailableDefaultControls = new ReadOnlyDictionary<TypeIdentifier, TypeIdentifier>(new Dictionary<TypeIdentifier, TypeIdentifier>()
-        {
-            {TypeIdentifier.Create<String>(), GetDefaultControl("Text") },
-            {TypeIdentifier.Create<Char>(), GetDefaultControl("CharControl") },
-            {TypeIdentifier.Create<DateTime>(), GetDefaultControl("DateControl") },
-            {TypeIdentifier.Create<Boolean>(), GetDefaultControl("Checkbox") },
-            {TypeIdentifier.Create<Byte>(), GetDefaultControl("ByteNumber") },
-            {TypeIdentifier.Create<SByte>(), GetDefaultControl("SByteNumber") },
-            {TypeIdentifier.Create<Int16>(), GetDefaultControl("Int16Number") },
-            {TypeIdentifier.Create<UInt16>(), GetDefaultControl("UInt16Number") },
-            {TypeIdentifier.Create<Int32>(), GetDefaultControl("Int32Number") },
-            {TypeIdentifier.Create<UInt32>(), GetDefaultControl("UInt32Number") },
-            {TypeIdentifier.Create<Int64>(), GetDefaultControl("Int64Number") },
-            {TypeIdentifier.Create<UInt64>(), GetDefaultControl("UInt64Number") },
-            {TypeIdentifier.Create<Single>(), GetDefaultControl("SingleNumber") },
-            {TypeIdentifier.Create<Double>(), GetDefaultControl("DoubleNumber") },
-            {TypeIdentifier.Create<Decimal>(), GetDefaultControl("DecimalNumber") }
-        });
-        private static TypeIdentifier GetDefaultControl(String name)
-        {
-            return TypeIdentifier.Create(TypeIdentifierName.Create().WithNamePart(name), ControlsNamespace);
-        }
-        #endregion
+		#region Available Default Controls
+		private static readonly Namespace ControlsNamespace = Namespace.Create().AppendRange(new[] { "AutoForm", "Blazor", "Controls" });
+		private static readonly IReadOnlyDictionary<ITypeIdentifier, ITypeIdentifier> AvailableDefaultControls = new ReadOnlyDictionary<ITypeIdentifier, ITypeIdentifier>(new Dictionary<ITypeIdentifier, ITypeIdentifier>()
+		{
+			{TypeIdentifier.Create<String>(), GetDefaultControl("Text") },
+			{TypeIdentifier.Create<Char>(), GetDefaultControl("CharControl") },
+			{TypeIdentifier.Create<DateTime>(), GetDefaultControl("DateControl") },
+			{TypeIdentifier.Create<Boolean>(), GetDefaultControl("Checkbox") },
+			{TypeIdentifier.Create<Byte>(), GetDefaultControl("ByteNumber") },
+			{TypeIdentifier.Create<SByte>(), GetDefaultControl("SByteNumber") },
+			{TypeIdentifier.Create<Int16>(), GetDefaultControl("Int16Number") },
+			{TypeIdentifier.Create<UInt16>(), GetDefaultControl("UInt16Number") },
+			{TypeIdentifier.Create<Int32>(), GetDefaultControl("Int32Number") },
+			{TypeIdentifier.Create<UInt32>(), GetDefaultControl("UInt32Number") },
+			{TypeIdentifier.Create<Int64>(), GetDefaultControl("Int64Number") },
+			{TypeIdentifier.Create<UInt64>(), GetDefaultControl("UInt64Number") },
+			{TypeIdentifier.Create<Single>(), GetDefaultControl("SingleNumber") },
+			{TypeIdentifier.Create<Double>(), GetDefaultControl("DoubleNumber") },
+			{TypeIdentifier.Create<Decimal>(), GetDefaultControl("DecimalNumber") }
+		});
+		private static ITypeIdentifier GetDefaultControl(String name)
+		{
+			return TypeIdentifier.Create(TypeIdentifierName.Create().AppendNamePart(name), ControlsNamespace);
+		}
+		#endregion
 
-        //#region Optimizable PropertyTypes
-        //private static readonly IEnumerable<TypeIdentifier> OptimizablePropertyTypeIdentifiers = new List<TypeIdentifier>()
-        //{
-        //    TypeIdentifier.Create<SByte>(),
-        //    TypeIdentifier.Create<Byte>(),
-        //    TypeIdentifier.Create<Int16>(),
-        //    TypeIdentifier.Create<UInt16>(),
-        //    TypeIdentifier.Create<Int32>(),
-        //    TypeIdentifier.Create<UInt32>(),
-        //    TypeIdentifier.Create<Int64>(),
-        //    TypeIdentifier.Create<UInt64>(),
-        //    TypeIdentifier.Create<Single>(),
-        //    TypeIdentifier.Create<Double>(),
-        //    TypeIdentifier.Create<Decimal>(),
-        //    TypeIdentifier.Create<String>(),
-        //    TypeIdentifier.Create<Boolean>(),
-        //    TypeIdentifier.Create<DateTime>(),
-        //    TypeIdentifier.Create<DateTimeOffset>(),
-        //    TypeIdentifier.Create<TimeSpan>(),
-        //    TypeIdentifier.Create<Guid>(),
-        //    TypeIdentifier.Create<Char>()
-        //}.AsReadOnly();
-        //#endregion
+		private readonly ModelSpace _modelSpace;
+		private readonly Error _error;
+		private readonly Boolean _isError;
 
-        private readonly ModelSpace _modelSpace;
-        private readonly Error _error;
-        private readonly Boolean _isError;
+		private SourceFactory(ModelSpace modelSpace, Error error, Boolean isError)
+		{
+			_modelSpace = modelSpace;
+			_error = error;
+			_isError = isError;
+		}
+		private SourceFactory(ModelSpace modelSpace) : this(modelSpace, default, false)
+		{
+			var defaultFallbackControls = AvailableDefaultControls
+				.Where(kvp => !_modelSpace.Controls.SelectMany(c => c.Models).Contains(kvp.Key))
+				.GroupBy(kvp => kvp.Value)
+				.Select(group => Control.Create(group.Key).WithModels(group.Select(kvp => kvp.Key)));
 
-        private SourceFactory(ModelSpace modelSpace, Error error, Boolean isError)
-        {
-            if (!isError)
-            {
-                var defaultFallbackControls = AvailableDefaultControls
-                    .Where(kvp => !modelSpace.FallbackControls.SelectMany(c => c.Models).Contains(kvp.Key))
-                    .GroupBy(kvp => kvp.Value)
-                    .Select(group => Control.Create(group.Key).WithRange(group.Select(kvp => kvp.Key)));
+			_modelSpace = _modelSpace.WithFallbackControls(defaultFallbackControls).WithRequiredGeneratedControls();
+		}
+		private SourceFactory(Error error) : this(default, error, true)
+		{
+		}
 
-                modelSpace = modelSpace.WithFallbackControls(defaultFallbackControls).WithRequiredGeneratedControls();
-            }
+		public static SourceFactory Create(ModelSpace modelSpace)
+		{
+			return new SourceFactory(modelSpace);
+		}
+		public static SourceFactory Create(Error error)
+		{
+			return new SourceFactory(error);
+		}
 
-            _modelSpace = modelSpace;
-            _error = error;
-            _isError = isError;
-        }
+		public String Build()
+		{
+			var result = _isError ?
+				GetError() :
+				GetControls();
 
-        public static SourceFactory Create(ModelSpace modelSpace)
-        {
-            return new SourceFactory(modelSpace, default, false);
-        }
-        public static SourceFactory Create(Error error)
-        {
-            return new SourceFactory(default, error, true);
-        }
+			return result;
+		}
 
-        public String Build()
-        {
-            return _isError ?
-                GetError() :
-                GetControls();
-        }
+		#region Methods
+		private String GetError()
+		{
+			return GetErrorTemplate().Build();
+		}
 
-        #region Methods
-        private String GetError()
-        {
-            return GetErrorTemplate().Build();
-        }
+		private ErrorTemplate GetErrorTemplate()
+		{
+			return new ErrorTemplate()
+				.WithError(_error);
+		}
 
-        private ErrorTemplate GetErrorTemplate()
-        {
-            return new ErrorTemplate()
-                .WithError(_error);
-        }
+		private String GetControls()
+		{
+			return GetControlsTemplate().Build();
+		}
 
-        private String GetControls()
-        {
-            return GetControlsTemplate().Build();
-        }
+		private ControlsTemplate GetControlsTemplate()
+		{
+			var modelControlPairTemplates = GetModelControlPairTemplates();
+			var modelTemplatePairTemplates = GetModelTemplatePairTemplates();
+			var controlTemplates = GetControlTemplates();
 
-        private ControlsTemplate GetControlsTemplate()
-        {
-            var modelControlPairTemplates = GetModelControlPairTemplates();
-            var modelTemplatePairTemplates = GetModelTemplatePairTemplates();
-            var controlTemplates = GetControlTemplates();
+			return new ControlsTemplate()
+				.WithControlTemplates(controlTemplates)
+				.WithModelControlPairTemplates(modelControlPairTemplates)
+				.WithModelTemplatePairTemplates(modelTemplatePairTemplates);
+		}
 
-            return new ControlsTemplate()
-                .WithControlTemplates(controlTemplates)
-                .WithModelControlPairTemplates(modelControlPairTemplates)
-                .WithModelTemplatePairTemplates(modelTemplatePairTemplates);
-        }
+		private IEnumerable<KeyValueTypesPairTemplate> GetModelTemplatePairTemplates()
+		{
+			return _modelSpace.Templates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
+		}
+		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates()
+		{
+			var requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
 
-        private IEnumerable<KeyValueTypesPairTemplate> GetModelTemplatePairTemplates()
-        {
-            return _modelSpace.FallbackTemplates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
-        }
-        private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates()
-        {
-            var requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
+			return GetControlsToBeGenerated().SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name)))//)
+				.Concat(_modelSpace.Controls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
+		}
+		private KeyValueTypesPairTemplate GetModelControlPairTemplate(ITypeIdentifier key, ITypeIdentifier value)
+		{
+			return new KeyValueTypesPairTemplate()
+				.WithValueType(value)
+				.WithKeyType(key);
+		}
+		private IEnumerable<ITypeIdentifier> GetRequiredDefaultControlTypes()
+		{
+			return AvailableDefaultControls.Keys
+				.Except(GetControlsToBeGenerated().SelectMany(c => c.Models));
+		}
 
-            return GetControlsToBeGenerated().SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name)))//)
-                .Concat(_modelSpace.FallbackControls.SelectMany(c => c.Models.Select(m => GetModelControlPairTemplate(m, c.Name))));
-        }
-        private KeyValueTypesPairTemplate GetModelControlPairTemplate(TypeIdentifier key, TypeIdentifier value)
-        {
-            return new KeyValueTypesPairTemplate()
-                .WithValueType(value)
-                .WithKeyType(key);
-        }
-        private IEnumerable<TypeIdentifier> GetRequiredDefaultControlTypes()
-        {
-            return AvailableDefaultControls.Keys
-                .Except(GetControlsToBeGenerated().SelectMany(c => c.Models));
-        }
+		private IEnumerable<Control> GetControlsToBeGenerated()
+		{
+			return _modelSpace.RequiredGeneratedControls.Where(c => !AvailableDefaultControls.Values.Contains(c.Name));
+		}
 
-        private IEnumerable<Control> GetControlsToBeGenerated()
-        {
-            return _modelSpace.RequiredGeneratedControls.Where(c => !AvailableDefaultControls.Values.Contains(c.Name));
-        }
+		private IEnumerable<ControlTemplate> GetControlTemplates()
+		{
+			var result = new List<ControlTemplate>();
+			var exceptions = new List<Exception>();
+			var defaults = AvailableDefaultControls.Select(kvp => kvp.Value);
+			foreach (var requiredControl in _modelSpace.RequiredGeneratedControls.Where(c => !defaults.Contains(c.Name)))
+			{
+				try
+				{
+					result.Add(GetControlTemplate(requiredControl));
+				}
+				catch (Exception ex)
+				{
+					exceptions.Add(ex);
+				}
+			}
 
-        private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates(Control control)
-        {
-            return control.Models
-                    .Select(t => new KeyValueTypesPairTemplate()
-                        .WithKeyType(t)
-                        .WithValueType(control.Name));
-        }
+			if (exceptions.Any())
+			{
+				var message = String.Join("\n\n", exceptions.Select(e => e.Message));
+				throw new AggregateException(message, exceptions);
+			}
 
-        private IEnumerable<ControlTemplate> GetControlTemplates()
-        {
-            var result = new List<ControlTemplate>();
-            var exceptions = new List<Exception>();
-            var defaults = AvailableDefaultControls.Select(kvp => kvp.Value);
-            foreach (var requiredControl in _modelSpace.RequiredGeneratedControls.Where(c => !defaults.Contains(c.Name)))
-            {
-                try
-                {
-                    result.Add(GetControlTemplate(requiredControl));
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
+			return result;
+		}
+		private ControlTemplate GetControlTemplate(Control requiredControl)
+		{
+			var model = _modelSpace.Models.Single(m => requiredControl.Models.Contains(m.Name));
 
-            if (exceptions.Any())
-            {
-                var message = String.Join("\n\n", exceptions.Select(e => e.Message));
-                throw new AggregateException(message, exceptions);
-            }
+			var subControlTemplates = GetSubControlTemplates(model);
 
-            return result;
-        }
-        private ControlTemplate GetControlTemplate(Control requiredControl)
-        {
-            var model = _modelSpace.Models.Single(m => requiredControl.Models.Contains(m.Name));
+			return new ControlTemplate()
+				.WithModelType(model.Name)
+				.WithControlType(requiredControl.Name)
+				.WithSubControlTemplates(subControlTemplates);
+		}
 
-            var subControlTemplates = GetSubControlTemplates(model);
+		private IEnumerable<SubControlTemplate> GetSubControlTemplates(Model model)
+		{
+			var exceptions = new List<Exception>();
+			var subControlTemplates = new List<SubControlTemplate>();
+			var properties = model.Properties.OrderBy(p => p.Order);
+			foreach (var property in properties)
+			{
+				try
+				{
+					subControlTemplates.Add(GetSubControlTemplate(model, property));
+				}
+				catch (Exception ex)
+				{
+					exceptions.Add(ex);
+				}
+			}
 
-            return new ControlTemplate()
-                .WithModelType(model.Name)
-                .WithControlType(requiredControl.Name)
-                .WithSubControlTemplates(subControlTemplates);
-        }
+			if (exceptions.Any())
+			{
+				var message = $"Error while generating control for {model.Name}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
+				throw new AggregateException(message, exceptions);
+			}
 
-        private IEnumerable<SubControlTemplate> GetSubControlTemplates(Model model)
-        {
-            var exceptions = new List<Exception>();
-            var subControlTemplates = new List<SubControlTemplate>();
-            var properties = model.Properties.OrderBy(p => p.Order);
-            foreach (var property in properties)
-            {
-                try
-                {
-                    subControlTemplates.Add(GetSubControlTemplate(model, property));
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
+			return subControlTemplates;
+		}
+		private SubControlTemplate GetSubControlTemplate(Model model, Property property)
+		{
+			if (property.Control == default)
+			{
+				throw new Exception($"Unable to locate control for {property.Name}. Make sure a control for {property.Type} is registered.");
+			}
 
-            if (exceptions.Any())
-            {
-                var message = $"Error while generating control for {model.Name.ToEscapedString()}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
-                throw new AggregateException(message, exceptions);
-            }
+			var subControlPassAttributesTemplate = GetSubControlPassAttributesTemplate(model);
 
-            return subControlTemplates;
-        }
-        private SubControlTemplate GetSubControlTemplate(Model model, Property property)
-        {
-            if (property.Control == default)
-            {
-                throw new Exception($"Unable to locate control for {property.Name}. Make sure a control for {property.Type} is registered.");
-            }
+			return new SubControlTemplate()
+				.WithModel(model)
+				.WithProperty(property)
+				.WithSubControlPassAttributesTemplate(subControlPassAttributesTemplate);
+		}
 
-            var subControlPassAttributesTemplate = GetSubControlPassAttributesTemplate(model);
+		private SubControlPassAttributesTemplate GetSubControlPassAttributesTemplate(Model model)
+		{
+			return new SubControlPassAttributesTemplate()
+				.WithAttributesProviderIdentifier(model.AttributesProvider);
+		}
 
-            return new SubControlTemplate()
-                .WithModel(model)
-                .WithProperty(property)
-                .WithSubControlPassAttributesTemplate(subControlPassAttributesTemplate);
-        }
-
-        private SubControlPassAttributesTemplate GetSubControlPassAttributesTemplate(Model model)
-        {
-            return new SubControlPassAttributesTemplate()
-                .WithAttributesProviderIdentifier(model.AttributesProvider);
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

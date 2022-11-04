@@ -23,9 +23,14 @@
 	<dd>
 		@Model.Name
 	</dd>
+	<dt>
+		@nameof(MyModel.ToString)
+	</dt>
+	<dd>
+		@Model.ToString()
+	</dd>
 </dl>
 
-
 @code {
-	private MyModel Model { get; set; } = new MyModel();
+	private IMyModel Model { get; set; } = new MyModel();
 }

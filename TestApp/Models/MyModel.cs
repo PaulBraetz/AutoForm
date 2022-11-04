@@ -4,16 +4,18 @@ using TestApp.Templates;
 
 namespace TestApp.Models
 {
-	[AutoForm.Attributes.Model]
-	public class MyModel
+	[SubModel(typeof(IMyModel))]
+	public class MyModel : IMyModel
 	{
-		[UseTemplate(typeof(ByteTemplate))]
 		public byte Age { get; set; }
-		
-		[UseTemplate(typeof(StringTemplate))]
+
 		public string? Name { get; set; }
 
-		[AttributesProvider]
 		public MyAttributesProvider AttributesProvider { get; } = new MyAttributesProvider();
+
+		public override String ToString()
+		{
+			return $"In Model! {Name}, {Age}";
+		}
 	}
 }

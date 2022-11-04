@@ -2,13 +2,13 @@
 
 namespace AutoForm.Blazor.Templates.Abstractions
 {
-    public abstract class TemplateBase<TModel> : ComponentBase
-    {
-        [Parameter]
-        public TModel? Value { get; set; }
-        [Parameter]
-        public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
-        [Parameter]
-        public RenderFragment? ChildContent { get; set; }
-    }
+	public abstract class TemplateBase<TModel> : ComponentBase
+	{
+		[Parameter]
+		public TModel? Value { get; set; }
+		[Parameter]
+		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+		[Parameter]
+		public RenderFragment? ChildContent { get; set; }
+	}
 }
