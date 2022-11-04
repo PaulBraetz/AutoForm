@@ -1,6 +1,6 @@
 ﻿using AutoForm.Blazor.Attributes;
 
-namespace TestApp.AttributesProviders
+namespace TestLib.AttributesProviders
 {
 	public class MyAttributesProvider
 	{

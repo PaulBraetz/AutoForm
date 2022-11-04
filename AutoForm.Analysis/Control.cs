@@ -14,8 +14,8 @@ namespace AutoForm.Analysis
 
 		private Control(ITypeIdentifier name, ITypeIdentifier[] models, PropertyIdentifier[] properties)
 		{
-			models.ThrowOnDuplicate(Attributes.Control);
-			properties.ThrowOnDuplicate(Attributes.Control);
+			models.ThrowOnDuplicate(Attributes.DefaultControl);
+			properties.ThrowOnDuplicate(Attributes.DefaultControl);
 
 			Name = name;
 			Models = models ?? Array.Empty<ITypeIdentifier>();
@@ -27,28 +27,28 @@ namespace AutoForm.Analysis
 			var identifier = modelType.AsGenerated();
 
 			var control = Create(identifier)
-				.With(modelType);
+				.WithModel(modelType);
 
 			return control;
 		}
 
-		public static Control Create(ITypeIdentifier identifier)
+		public static Control Create(ITypeIdentifier model)
 		{
-			return new Control(identifier, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
+			return new Control(model, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
 		}
-		public Control With(ITypeIdentifier modelIdentifier)
+		public Control WithModel(ITypeIdentifier modelIdentifier)
 		{
 			return new Control(Name, Models.Append(modelIdentifier).ToArray(), Properties);
 		}
-		public Control WithRange(IEnumerable<ITypeIdentifier> modelIdentifiers)
+		public Control WithModels(IEnumerable<ITypeIdentifier> models)
 		{
-			return new Control(Name, Models.Concat(modelIdentifiers).ToArray(), Properties);
+			return new Control(Name, Models.Concat(models).ToArray(), Properties);
 		}
-		public Control With(PropertyIdentifier property)
+		public Control WithProperty(PropertyIdentifier property)
 		{
 			return new Control(Name, Models, Properties.Append(property).ToArray());
 		}
-		public Control WithRange(IEnumerable<PropertyIdentifier> properties)
+		public Control WithProperties(IEnumerable<PropertyIdentifier> properties)
 		{
 			return new Control(Name, Models, Properties.Concat(properties).ToArray());
 		}

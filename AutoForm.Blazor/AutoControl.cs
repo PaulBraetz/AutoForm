@@ -17,8 +17,8 @@ namespace AutoForm.Blazor
 			templateType :
 			null;
 
-		private Action<RenderTreeBuilder>? _renderStrategy;
-		private Action<RenderTreeBuilder> RenderStrategy => _renderStrategy ??= _templateType == null ?
+		private RenderFragment? _renderStrategy;
+		private RenderFragment RenderStrategy => _renderStrategy ??= _templateType == null ?
 																				RenderSubControl :
 																				RenderTemplatedSubControl;
 

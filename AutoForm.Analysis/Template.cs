@@ -13,8 +13,8 @@ namespace AutoForm.Analysis
 
 		private Template(ITypeIdentifier name, ITypeIdentifier[] models, PropertyIdentifier[] properties)
 		{
-			models.ThrowOnDuplicate(Attributes.Control);
-			properties.ThrowOnDuplicate(Attributes.Control);
+			models.ThrowOnDuplicate(Attributes.DefaultControl);
+			properties.ThrowOnDuplicate(Attributes.DefaultControl);
 
 			Name = name;
 			Models = models ?? Array.Empty<ITypeIdentifier>();
@@ -25,19 +25,19 @@ namespace AutoForm.Analysis
 		{
 			return new Template(identifier, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
 		}
-		public Template With(ITypeIdentifier modelIdentifier)
+		public Template WithModel(ITypeIdentifier model)
 		{
-			return new Template(Name, Models.Append(modelIdentifier).ToArray(), Properties);
+			return new Template(Name, Models.Append(model).ToArray(), Properties);
 		}
-		public Template WithRange(IEnumerable<ITypeIdentifier> modelIdentifiers)
+		public Template WithModels(IEnumerable<ITypeIdentifier> models)
 		{
-			return new Template(Name, Models.Concat(modelIdentifiers).ToArray(), Properties);
+			return new Template(Name, Models.Concat(models).ToArray(), Properties);
 		}
-		public Template With(PropertyIdentifier property)
+		public Template WithProperty(PropertyIdentifier property)
 		{
 			return new Template(Name, Models, Properties.Append(property).ToArray());
 		}
-		public Template WithRange(IEnumerable<PropertyIdentifier> properties)
+		public Template WithProperties(IEnumerable<PropertyIdentifier> properties)
 		{
 			return new Template(Name, Models, Properties.Concat(properties).ToArray());
 		}

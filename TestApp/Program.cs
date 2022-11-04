@@ -1,7 +1,7 @@
 using System.Reflection;
 using TestApp.Data;
 
-AutoForm.Blazor.Initialization.TryInitialize(Assembly.GetExecutingAssembly(), out var _);
+AutoForm.Blazor.Initialization.TryInitialize(Assembly.GetExecutingAssembly(), out var ex);
 
 var builder = WebApplication.CreateBuilder(args);
 

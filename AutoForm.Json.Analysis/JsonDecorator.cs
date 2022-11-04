@@ -23,13 +23,13 @@ namespace AutoForm.Json.Analysis
 		public static JsonDecorator<T> Null()
 		{
 			var json = "null";
-			var decorator = new JsonDecorator<T>(default, json);
+			var decorator = new JsonDecorator<T>(default(T), json);
 
 			return decorator;
 		}
-		public static JsonDecorator<T> String(T value)
+		public static JsonDecorator<T> String(T value, Func<T, String> converter = null)
 		{
-			var valueString = value?.ToString()?.Replace("\"", "\\\"").Prepend('\"').Append('\"');
+			var valueString = (converter?.Invoke(value) ?? value?.ToString())?.Replace("\"", "\\\"").Prepend('\"').Append('\"');
 			var json = valueString == null ?
 				"null" :
 				System.String.Concat(valueString);
@@ -37,23 +37,23 @@ namespace AutoForm.Json.Analysis
 
 			return decorator;
 		}
-		public static JsonDecorator<T> Number(T value)
+		public static JsonDecorator<T> Number(T value, Func<T, String> converter = null)
 		{
-			var json = value?.ToString() ?? "null";
+			var json = converter?.Invoke(value) ?? value?.ToString() ?? "null";
 			var decorator = new JsonDecorator<T>(value, json);
 
 			return decorator;
 		}
-		public static JsonDecorator<T[]> StringArray(T[] values)
+		public static JsonDecorator<T[]> StringArray(T[] values, Func<T, String> converter = null)
 		{
-			var json = $"[{System.String.Join(",", values.Select(v => String(v).Json))}]";
+			var json = $"[{System.String.Join(",", values.Select(v => String(v, converter).Json))}]";
 			var decorator = new JsonDecorator<T[]>(values, json);
 
 			return decorator;
 		}
-		public static JsonDecorator<T[]> NumberArray(T[] values)
+		public static JsonDecorator<T[]> NumberArray(T[] values, Func<T, String> converter = null)
 		{
-			var json = $"[{System.String.Join(",", values.Select(v => Number(v).Json))}]";
+			var json = $"[{System.String.Join(",", values.Select(v => Number(v, converter).Json))}]";
 			var decorator = new JsonDecorator<T[]>(values, json);
 
 			return decorator;

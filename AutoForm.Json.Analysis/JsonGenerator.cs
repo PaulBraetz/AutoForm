@@ -30,7 +30,7 @@ namespace AutoForm.Json.Analysis
 				{
 					JsonDecorator<ModelSpace>.KeyValuePair(
 					nameof(ModelSpace),
-					modelSpace.WithRequiredGeneratedControls(false).ToJson())
+					modelSpace.WithRequiredGeneratedControls(checkModelViability: false).ToJson())
 				});
 			AddSource(context, json);
 		}

@@ -2,22 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<developmentDependency>true</developmentDependency>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<NoPackageAnalysis>true</NoPackageAnalysis>
-
-		<Authors>Paul Brätz</Authors>
-		<Description>Models and base generator for Rhomicro.AutoForm.</Description>
-		<Copyright>2022</Copyright>
-		<PackageTags>Rhomicro</PackageTags>
-		<Version>0.0.3</Version>
-		<PackageId>RhoMicro.AutoForm.Analysis</PackageId>
-		<AssemblyName>AutoForm.Analysis</AssemblyName>
-		<RootNamespace>AutoForm.Analysis</RootNamespace>
-		<Company>RhoMicro</Company>
-		<PackageProjectUrl>https://github.com/PaulBraetz/AutoForm.Analysis/</PackageProjectUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>

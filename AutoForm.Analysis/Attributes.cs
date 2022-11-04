@@ -12,15 +12,18 @@ namespace AutoForm.Analysis
 				= AttributeFactory<AttributesProviderAttribute>.Create();
 			public static readonly IAttributeFactory<ModelPropertyAttribute> ModelProperty
 				= AttributeFactory<ModelPropertyAttribute>.Create();
-			public static readonly IAttributeFactory<ControlAttribute> Control
-				= AttributeFactory<ControlAttribute>.Create();
-			public static readonly IAttributeFactory<TemplateAttribute> Template
-				= AttributeFactory<TemplateAttribute>.Create();
+			public static readonly IAttributeFactory<DefaultControlAttribute> DefaultControl
+				= AttributeFactory<DefaultControlAttribute>.Create();
+			public static readonly IAttributeFactory<DefaultTemplateAttribute> DefaultTemplate
+				= AttributeFactory<DefaultTemplateAttribute>.Create();
+			public static readonly IAttributeFactory<SubModelAttribute> SubModel
+				= AttributeFactory<SubModelAttribute>.Create();
 		}
 		public static readonly Namespace Namespace = Namespace.Create<ModelPropertyAttribute>();
 		public static readonly TypeIdentifier AttributesProvider = TypeIdentifier.Create<AttributesProviderAttribute>();
 		public static readonly TypeIdentifier ModelProperty = TypeIdentifier.Create<ModelPropertyAttribute>();
-		public static readonly TypeIdentifier Control = TypeIdentifier.Create<ControlAttribute>();
-		public static readonly TypeIdentifier FallbackTemplate = TypeIdentifier.Create<TemplateAttribute>();
+		public static readonly TypeIdentifier DefaultControl = TypeIdentifier.Create<DefaultControlAttribute>();
+		public static readonly TypeIdentifier DefaultTemplate = TypeIdentifier.Create<DefaultTemplateAttribute>();
+		public static readonly TypeIdentifier SubModel = TypeIdentifier.Create<SubModelAttribute>();
 	}
 }

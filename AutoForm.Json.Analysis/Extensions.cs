@@ -47,24 +47,19 @@ namespace AutoForm.Json.Analysis
 			{
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Model.Name),
-					JsonDecorator<ITypeIdentifier>.Object(
-						model.Name,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(model.Name)),
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Model.Control),
-					JsonDecorator<ITypeIdentifier>.Object(
-						model.Control,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(model.Control)),
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Model.Template),
-					JsonDecorator<ITypeIdentifier>.Object(
-						model.Template,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(model.Template)),
 				JsonDecorator<PropertyIdentifier>.KeyValuePair(
 					nameof(Model.AttributesProvider),
-					JsonDecorator<PropertyIdentifier>.Object(
-						model.AttributesProvider,
-						JsonMembers)),
+					JsonDecorator<PropertyIdentifier>.String(model.AttributesProvider)),
+				JsonDecorator<ITypeIdentifier[]>.KeyValuePair(
+					nameof(Model.BaseModels),
+					JsonDecorator<ITypeIdentifier>.StringArray(model.BaseModels)),
 				JsonDecorator<Property[]>.KeyValuePair(
 					nameof(Model.Properties),
 					JsonDecorator<Property>.ObjectArray(
@@ -80,19 +75,16 @@ namespace AutoForm.Json.Analysis
 			{
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Control.Name),
-					JsonDecorator<ITypeIdentifier>.Object(
-						control.Name,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(control.Name)),
 				JsonDecorator<ITypeIdentifier[]>.KeyValuePair(
 					nameof(Control.Models),
-					JsonDecorator<ITypeIdentifier>.ObjectArray(
-						control.Models,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.StringArray(
+						control.Models)),
 				JsonDecorator<PropertyIdentifier[]>.KeyValuePair(
 					nameof(Control.Properties),
-					JsonDecorator<PropertyIdentifier>.ObjectArray(
+					JsonDecorator<PropertyIdentifier>.StringArray(
 						control.Properties,
-						JsonMembers))
+						p=>p.ToLongString())),
 			};
 
 			return members;
@@ -103,53 +95,16 @@ namespace AutoForm.Json.Analysis
 			{
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Template.Name),
-					JsonDecorator<ITypeIdentifier>.Object(
-						template.Name,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(template.Name)),
 				JsonDecorator<ITypeIdentifier[]>.KeyValuePair(
 					nameof(Template.Models),
-					JsonDecorator<ITypeIdentifier>.ObjectArray(
-						template.Models,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.StringArray(
+						template.Models)),
 				JsonDecorator<PropertyIdentifier[]>.KeyValuePair(
 					nameof(Control.Properties),
-					JsonDecorator<PropertyIdentifier>.ObjectArray(
+					JsonDecorator<PropertyIdentifier>.StringArray(
 						template.Properties,
-						JsonMembers))
-			};
-
-			return members;
-		}
-		private static IJson[] JsonMembers(this ITypeIdentifier identifier)
-		{
-			var members = new IJson[]
-			{
-				JsonDecorator<String>.KeyValuePair(
-					"Value",
-					JsonDecorator<String>.String(
-						identifier?.ToString())),
-				//JsonDecorator<INamespace>.KeyValuePair(
-				//	nameof(ITypeIdentifier.Namespace),
-				//	JsonDecorator<INamespace>.Object(
-				//		identifier.Namespace,
-				//		JsonMembers)),
-				//JsonDecorator<ITypeIdentifierName>.KeyValuePair(
-				//	nameof(ITypeIdentifier.Name),
-				//	JsonDecorator<ITypeIdentifierName>.Object(
-				//		identifier.Name,
-				//		JsonMembers))
-			};
-
-			return members;
-		}
-		private static IJson[] JsonMembers(this PropertyIdentifier propertyIdentifier)
-		{
-			var members = new IJson[]
-			{
-				JsonDecorator<String>.KeyValuePair(
-					nameof(PropertyIdentifier.Name),
-					JsonDecorator<String>.String(
-						propertyIdentifier.Name))
+						p=>p.ToLongString())),
 			};
 
 			return members;
@@ -164,60 +119,19 @@ namespace AutoForm.Json.Analysis
 						property.Order)),
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Property.Control),
-					JsonDecorator<ITypeIdentifier>.Object(
-						property.Control,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(property.Control)),
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Property.Template),
-					JsonDecorator<ITypeIdentifier>.Object(
-						property.Template,
-						JsonMembers)),
+					JsonDecorator<ITypeIdentifier>.String(property.Template)),
 				JsonDecorator<PropertyIdentifier>.KeyValuePair(
 					nameof(Property.Name),
-					JsonDecorator<PropertyIdentifier>.Object(
-						property.Name,
-						JsonMembers)),
+					JsonDecorator<PropertyIdentifier>.String(property.Name)),
+				JsonDecorator<ITypeIdentifier>.KeyValuePair(
+					"Location",
+					JsonDecorator<ITypeIdentifier>.String(property.Name.Model)),
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Property.Type),
-					JsonDecorator<ITypeIdentifier>.Object(
-						property.Type,
-						JsonMembers))
-			};
-
-			return members;
-		}
-		private static IJson[] JsonMembers(this ITypeIdentifierName identifierName)
-		{
-			var members = new IJson[]
-			{
-				JsonDecorator<IIdentifierPart[]>.KeyValuePair(
-					nameof(ITypeIdentifierName.Parts),
-					JsonDecorator<IIdentifierPart>.ObjectArray(identifierName.Parts.ToArray(), JsonMembers))
-			};
-
-			return members;
-		}
-		private static IJson[] JsonMembers(this INamespace @namespace)
-		{
-			var members = new IJson[]
-			{
-				JsonDecorator<IIdentifierPart[]>.KeyValuePair(
-					nameof(INamespace.Parts),
-					JsonDecorator<IIdentifierPart>.ObjectArray(@namespace.Parts.ToArray(), JsonMembers))
-			};
-
-			return members;
-		}
-		private static IJson[] JsonMembers(this IIdentifierPart identifierPart)
-		{
-			var members = new IJson[]
-			{
-				JsonDecorator<IdentifierParts.Kind>.KeyValuePair(
-					nameof(IIdentifierPart.Kind),
-					JsonDecorator<IdentifierParts.Kind>.String(identifierPart.Kind)),
-				JsonDecorator<String>.KeyValuePair(
-					nameof(IIdentifierPart.Value),
-					JsonDecorator<String>.String(identifierPart.Value))
+					JsonDecorator<ITypeIdentifier>.String(property.Type))
 			};
 
 			return members;

@@ -4,19 +4,19 @@ using System.Collections.Generic;
 namespace AutoForm.Attributes
 {
 	/// <summary>
-	/// Denotes the target as a fallback control for subcontrols whose model type is <c>modelType</c> or subcontrols of <c>members</c> of <c>modelType</c>.
+	/// Denotes the target as a fallback template for subcontrols whose model type is <c>modelType</c> or subcontrols of <c>members</c> of <c>modelType</c>.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-	public sealed class ControlAttribute : Attribute
+	public sealed class DefaultTemplateAttribute : Attribute
 	{
 		/// <param name="modelType">
-		/// When <paramref name="members"/> is not set, determines the model for which the targeted control is to be used.<br/>
-		/// When <paramref name="members"/> is set, determines the model whose members are to be rendered using the targeted control.
+		/// When <paramref name="members"/> is not set, determines the model for which the targeted template is to be used.<br/>
+		/// When <paramref name="members"/> is set, determines the model whose members are to be rendered using the targeted template.
 		/// </param>
 		/// <param name="members">
-		/// Determines the members of <paramref name="modelType"/> that are to be rendered using the targeted control.
+		/// Determines the members of <paramref name="modelType"/> that are to be rendered using the targeted template.
 		/// </param>
-		public ControlAttribute(Type modelType, params String[] members)
+		public DefaultTemplateAttribute(Type modelType, params String[] members)
 		{
 			_members = members ?? Array.Empty<String>();
 		}

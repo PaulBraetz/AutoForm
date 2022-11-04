@@ -18,9 +18,17 @@ namespace AutoForm.Analysis
 			Template = template;
 			Order = order;
 		}
-		public static Property Create(PropertyIdentifier name, ITypeIdentifier type, ITypeIdentifier control, ITypeIdentifier template, int order)
+		public static Property Create(PropertyIdentifier name, ITypeIdentifier type, int order)
 		{
-			return new Property(name, type, control, template, order);
+			return new Property(name, type, default, default, order);
+		}
+		public Property WithControl(ITypeIdentifier control)
+		{
+			return new Property(Name, Type, control, Template, Order);
+		}
+		public Property WithTemplate(ITypeIdentifier template)
+		{
+			return new Property(Name, Type, Control, template, Order);
 		}
 	}
 }

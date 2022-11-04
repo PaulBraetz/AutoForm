@@ -8,8 +8,8 @@ namespace TestApp.Templates
 	{
 	}
 
-	[FallbackTemplate(typeof(MyModel), nameof(MyModel.Name))]
+	[DefaultTemplate(typeof(IMyModel), nameof(IMyModel.Name))]
 	public sealed class StringTemplate : MyTemplate<String> { }
-	[FallbackTemplate(typeof(MyModel), nameof(MyModel.Age))]
+	[DefaultTemplate(typeof(IMyModel), nameof(IMyModel.Age))]
 	public sealed class ByteTemplate : MyTemplate<Byte> { }
 }

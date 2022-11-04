@@ -10,7 +10,6 @@ namespace AutoForm.Blazor.Analysis.Templates
 	internal sealed partial class SourceFactory
 	{
 		#region Placeholders
-		private const String GENERATED_DATE = "{" + nameof(GENERATED_DATE) + "}";
 		private const String MODEL_CONTROL_PAIRS = "{" + nameof(MODEL_CONTROL_PAIRS) + "}";
 		private const String MODEL_TEMPLATE_PAIRS = "{" + nameof(MODEL_TEMPLATE_PAIRS) + "}";
 		private const String CONTROLS = "{" + nameof(CONTROLS) + "}";
@@ -61,65 +60,45 @@ namespace AutoForm.Blazor.Analysis.Templates
 		}
 		#endregion
 
-		//#region Optimizable PropertyTypes
-		//private static readonly IEnumerable<ITypeIdentifier> OptimizablePropertyTypeIdentifiers = new List<ITypeIdentifier>()
-		//{
-		//    TypeIdentifier.Create<SByte>(),
-		//    TypeIdentifier.Create<Byte>(),
-		//    TypeIdentifier.Create<Int16>(),
-		//    TypeIdentifier.Create<UInt16>(),
-		//    TypeIdentifier.Create<Int32>(),
-		//    TypeIdentifier.Create<UInt32>(),
-		//    TypeIdentifier.Create<Int64>(),
-		//    TypeIdentifier.Create<UInt64>(),
-		//    TypeIdentifier.Create<Single>(),
-		//    TypeIdentifier.Create<Double>(),
-		//    TypeIdentifier.Create<Decimal>(),
-		//    TypeIdentifier.Create<String>(),
-		//    TypeIdentifier.Create<Boolean>(),
-		//    TypeIdentifier.Create<DateTime>(),
-		//    TypeIdentifier.Create<DateTimeOffset>(),
-		//    TypeIdentifier.Create<TimeSpan>(),
-		//    TypeIdentifier.Create<Guid>(),
-		//    TypeIdentifier.Create<Char>()
-		//}.AsReadOnly();
-		//#endregion
-
 		private readonly ModelSpace _modelSpace;
 		private readonly Error _error;
 		private readonly Boolean _isError;
 
 		private SourceFactory(ModelSpace modelSpace, Error error, Boolean isError)
 		{
-			if (!isError)
-			{
-				var defaultFallbackControls = AvailableDefaultControls
-					.Where(kvp => !modelSpace.Controls.SelectMany(c => c.Models).Contains(kvp.Key))
-					.GroupBy(kvp => kvp.Value)
-					.Select(group => Control.Create(group.Key).WithRange(group.Select(kvp => kvp.Key)));
-
-				modelSpace = modelSpace.WithFallbackControls(defaultFallbackControls).WithRequiredGeneratedControls();
-			}
-
 			_modelSpace = modelSpace;
 			_error = error;
 			_isError = isError;
 		}
+		private SourceFactory(ModelSpace modelSpace) : this(modelSpace, default, false)
+		{
+			var defaultFallbackControls = AvailableDefaultControls
+				.Where(kvp => !_modelSpace.Controls.SelectMany(c => c.Models).Contains(kvp.Key))
+				.GroupBy(kvp => kvp.Value)
+				.Select(group => Control.Create(group.Key).WithModels(group.Select(kvp => kvp.Key)));
+
+			_modelSpace = _modelSpace.WithFallbackControls(defaultFallbackControls).WithRequiredGeneratedControls();
+		}
+		private SourceFactory(Error error) : this(default, error, true)
+		{
+		}
 
 		public static SourceFactory Create(ModelSpace modelSpace)
 		{
-			return new SourceFactory(modelSpace, default, false);
+			return new SourceFactory(modelSpace);
 		}
 		public static SourceFactory Create(Error error)
 		{
-			return new SourceFactory(default, error, true);
+			return new SourceFactory(error);
 		}
 
 		public String Build()
 		{
-			return _isError ?
+			var result = _isError ?
 				GetError() :
 				GetControls();
+
+			return result;
 		}
 
 		#region Methods
@@ -177,14 +156,6 @@ namespace AutoForm.Blazor.Analysis.Templates
 		private IEnumerable<Control> GetControlsToBeGenerated()
 		{
 			return _modelSpace.RequiredGeneratedControls.Where(c => !AvailableDefaultControls.Values.Contains(c.Name));
-		}
-
-		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates(Control control)
-		{
-			return control.Models
-					.Select(t => new KeyValueTypesPairTemplate()
-						.WithKeyType(t)
-						.WithValueType(control.Name));
 		}
 
 		private IEnumerable<ControlTemplate> GetControlTemplates()

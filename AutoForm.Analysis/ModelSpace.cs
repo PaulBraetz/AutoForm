@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RhoMicro.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +7,21 @@ namespace AutoForm.Analysis
 {
 	internal readonly struct ModelSpace
 	{
+		private sealed class PropertyEqualityComparer : IEqualityComparer<Property>
+		{
+			public static readonly PropertyEqualityComparer Instance = new PropertyEqualityComparer();
+
+			public Boolean Equals(Property x, Property y)
+			{
+				return x.Name.Equals(y.Name);
+			}
+
+			public Int32 GetHashCode(Property obj)
+			{
+				return obj.Name.GetHashCode();
+			}
+		}
+
 		public readonly Model[] Models;
 		public readonly Control[] Controls;
 		public readonly Template[] Templates;
@@ -14,8 +30,8 @@ namespace AutoForm.Analysis
 		private ModelSpace(Model[] models, Control[] controls, Template[] templates, Control[] requiredGeneratedControls)
 		{
 			models.ThrowOnDuplicate(nameof(models));
-			controls.ThrowOnDuplicate(Attributes.Control);
-			templates.ThrowOnDuplicate(Attributes.FallbackTemplate);
+			controls.ThrowOnDuplicate(Attributes.DefaultControl);
+			templates.ThrowOnDuplicate(Attributes.DefaultTemplate);
 			requiredGeneratedControls.ThrowOnDuplicate("required generated control");
 
 			Models = models ?? Array.Empty<Model>();
@@ -49,66 +65,98 @@ namespace AutoForm.Analysis
 			return new ModelSpace(Models, Controls, Templates, RequiredGeneratedControls.Concat(requiredGeneratedControls).ToArray());
 		}
 
-		private IEnumerable<Model> ApplyFallbacksToModels()
+		private IEnumerable<Model> ApplyDefaultsToModels()
 		{
-			var generatedFallbackControls = Models.Select(m => Control.CreateGenerated(m.Name));
-			var availableControls = Controls.Where(c1 => !generatedFallbackControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedFallbackControls);
+			var generatedDefaultControls = Models.Select(m => Control.CreateGenerated(m.Name));
+			var availableControls = Controls.Where(c1 => !generatedDefaultControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedDefaultControls);
 
-			var fallbackAppliedModels = new List<Model>();
+			var modelDict = Models.ToDictionary(m => m.Name, m => m);
+			var propertyResolvedModels = Models
+				.Select(m =>
+					Model.Create(m.Name, m.BaseModels, m.AttributesProvider)
+					.WithControl(m.Control)
+					.WithTemplate(m.Template)
+					.WithProperties(ResolveProperties(m, modelDict)))
+				.ToArray();
 
-			foreach (var model in Models)
+			var defaultAppliedModels = applyDefaults(propertyResolvedModels, Templates);
+
+			return defaultAppliedModels;
+
+			IEnumerable<Model> applyDefaults(IEnumerable<Model> models, IEnumerable<Template> templates)
 			{
-				var control = model.Control;
-				if (control == default)
+				foreach (var model in models)
 				{
-					control = availableControls.SingleOrDefault(c => c.Models.Contains(model.Name)).Name;
-				}
+					var control = availableControls.SingleOrDefault(c => c.Models.Contains(model.Name)).Name;
+					var template = templates.SingleOrDefault(t => t.Models.Contains(model.Name)).Name;
 
-				var template = model.Template;
-				if (template == default)
-				{
-					template = Templates.SingleOrDefault(t => t.Models.Contains(model.Name)).Name;
-				}
+					var defaultAppliedProperties = new List<Property>();
 
-				var fallbackAppliedProperties = new List<Property>();
-
-				foreach (var property in model.Properties)
-				{
-					var subControl = property.Control;
-					if (subControl == default)
+					foreach (var property in model.Properties)
 					{
-						subControl = availableControls.SingleOrDefault(c => c.Models.Contains(property.Type)).Name;
+						var subControl = availableControls.SingleOrDefault(c => c.Properties.Contains(property.Name)).Name ??
+							availableControls.SingleOrDefault(c => c.Models.Contains(property.Type)).Name;
+
+						var subTemplate = templates.SingleOrDefault(c => c.Properties.Contains(property.Name)).Name ??
+							templates.SingleOrDefault(c => c.Models.Contains(property.Type)).Name;
+
+						var defaultAppliedProperty = property.WithControl(subControl).WithTemplate(subTemplate);
+
+						defaultAppliedProperties.Add(defaultAppliedProperty);
 					}
 
-					var subTemplate = property.Template;
-					if (subTemplate == default)
-					{
-						subTemplate = Templates.SingleOrDefault(t => t.Models.Contains(property.Type)).Name;
-					}
+					var defaultAppliedModel = Model.Create(model.Name, model.BaseModels, model.AttributesProvider)
+						.WithControl(control)
+						.WithTemplate(template)
+						.WithProperties(defaultAppliedProperties);
 
-					var fallbackAppliedProperty = Property.Create(property.Name, property.Type, subControl, subTemplate, property.Order);
-
-					fallbackAppliedProperties.Add(fallbackAppliedProperty);
+					yield return defaultAppliedModel;
 				}
-
-				var fallbackAppliedModel = Model.Create(model.Name, control, template, model.AttributesProvider).WithRange(fallbackAppliedProperties);
-
-				fallbackAppliedModels.Add(fallbackAppliedModel);
 			}
-
-			return fallbackAppliedModels;
 		}
 
-		public ModelSpace WithRequiredGeneratedControls(bool checkModelViability = false)
+		private static ISet<Property> ResolveProperties(Model model, IDictionary<ITypeIdentifier, Model> modelDict)
 		{
-			var fallbackAppliedModels = ApplyFallbacksToModels();
+			var baseModels = new HashSet<ITypeIdentifier>();
+			var properties = new HashSet<Property>(PropertyEqualityComparer.Instance);
 
-			var requiredGeneratedControls = fallbackAppliedModels
+			resolveProperties(model);
+
+			return properties;
+
+			void resolveProperties(Model baseModel)
+			{
+				if (baseModels.Add(baseModel.Name))
+				{
+					foreach (var baseBaseModelIdentifier in baseModel.BaseModels)
+					{
+						if (modelDict.TryGetValue(baseBaseModelIdentifier, out var baseBaseModel))
+						{
+							resolveProperties(baseBaseModel);
+						}
+						else
+						{
+							throw new Exception($"While attempting to resolve properties for {model.Name}: base model {baseBaseModelIdentifier} is not a model.");
+						}
+					}
+					foreach (var property in baseModel.Properties)
+					{
+						properties.Add(property);
+					}
+				}
+			}
+		}
+
+		public ModelSpace WithRequiredGeneratedControls(bool checkModelViability = true)
+		{
+			var defaultAppliedModels = ApplyDefaultsToModels();
+
+			var requiredGeneratedControls = defaultAppliedModels
 				.Where(m => m.Control.IsGenerated())
 				.Select(m => m.Name)
-				.Concat(fallbackAppliedModels
+				.Concat(defaultAppliedModels
 					.SelectMany(m => m.Properties)
-					.Where(p => p.Control.IsGenerated())
+					.Where(p => p.Control == default || p.Control.IsGenerated())
 					.Select(p => p.Type))
 				.Distinct()
 				.Select(Control.CreateGenerated);
@@ -118,7 +166,7 @@ namespace AutoForm.Analysis
 				var exceptions = new List<Exception>();
 				foreach (var requiredControlModel in requiredGeneratedControls.SelectMany(c => c.Models))
 				{
-					if (!fallbackAppliedModels.Any(m => m.Name == requiredControlModel))
+					if (!defaultAppliedModels.Any(m => m.Name == requiredControlModel))
 					{
 						exceptions.Add(new ArgumentException($"Unable to provide control for {requiredControlModel}"));
 					}
@@ -131,7 +179,7 @@ namespace AutoForm.Analysis
 			}
 
 			var modelSpace = Create()
-				.WithModels(fallbackAppliedModels)
+				.WithModels(defaultAppliedModels)
 				.WithFallbackControls(Controls)
 				.WithTemplates(Templates)
 				.WithRequiredGeneratedControls(requiredGeneratedControls);

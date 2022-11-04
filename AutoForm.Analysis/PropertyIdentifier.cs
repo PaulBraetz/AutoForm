@@ -28,14 +28,14 @@ namespace AutoForm.Analysis
 		public Boolean Equals(PropertyIdentifier other)
 		{
 			return Name == other.Name &&
-				   EqualityComparer<ITypeIdentifier>.Default.Equals(Model, other.Model);
+				TypeIdentifierEqualityComparer.Instance.Equals(Model, other.Model);
 		}
 
 		public override Int32 GetHashCode()
 		{
 			var hashCode = -1566092560;
 			hashCode = hashCode * -1521134295 + EqualityComparer<String>.Default.GetHashCode(Name);
-			hashCode = hashCode * -1521134295 + EqualityComparer<ITypeIdentifier>.Default.GetHashCode(Model);
+			hashCode = hashCode * -1521134295 + TypeIdentifierEqualityComparer.Instance.GetHashCode(Model);
 			return hashCode;
 		}
 
@@ -51,6 +51,10 @@ namespace AutoForm.Analysis
 		public override String ToString()
 		{
 			return Name;
+		}
+		public String ToLongString()
+		{
+			return $"{Model}.{Name}";
 		}
 	}
 }

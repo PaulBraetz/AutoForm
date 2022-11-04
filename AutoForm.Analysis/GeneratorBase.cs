@@ -37,11 +37,11 @@ namespace AutoForm.Analysis
 		private sealed class SyntaxContextReceiver : ISyntaxContextReceiver, IModelExtractorData
 		{
 			private HashSet<BaseTypeDeclarationSyntax> Models { get; } = new HashSet<BaseTypeDeclarationSyntax>();
-			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Models => Models;
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.DefaultModels => Models;
 			private HashSet<BaseTypeDeclarationSyntax> Controls { get; } = new HashSet<BaseTypeDeclarationSyntax>();
 			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Controls => Controls;
 			private HashSet<BaseTypeDeclarationSyntax> Templates { get; } = new HashSet<BaseTypeDeclarationSyntax>();
-			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.Templates => Templates;
+			IEnumerable<BaseTypeDeclarationSyntax> IModelExtractorData.DefaultTemplates => Templates;
 
 			public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
 			{
@@ -49,14 +49,19 @@ namespace AutoForm.Analysis
 				{
 					var semanticModel = context.SemanticModel;
 
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.Control))
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.DefaultControl))
 					{
 						Controls.Add(typeDeclaration);
 					}
 
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.FallbackTemplate))
+					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.DefaultTemplate))
 					{
 						Templates.Add(typeDeclaration);
+					}
+
+					if(typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.SubModel))
+					{
+						Models.Add(typeDeclaration);
 					}
 				}
 				else if (context.Node is PropertyDeclarationSyntax propertyDeclaration &&

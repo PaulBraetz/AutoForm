@@ -4,10 +4,11 @@ using RhoMicro.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AutoForm.Analysis
 {
-	internal readonly struct ModelExtractor
+	internal sealed class ModelExtractor
 	{
 		private readonly Compilation _compilation;
 		private readonly IModelExtractorData _data;
@@ -35,7 +36,7 @@ namespace AutoForm.Analysis
 		#region Modelspace Methods
 		private IEnumerable<Model> GetModels()
 		{
-			var models = _data.Models.Select(GetModel);
+			var models = _data.DefaultModels.Select(GetModel);
 
 			return models;
 		}
@@ -48,7 +49,7 @@ namespace AutoForm.Analysis
 		}
 		private IEnumerable<Template> GetTemplates()
 		{
-			var templateDeclarations = _data.Templates;
+			var templateDeclarations = _data.DefaultTemplates;
 			var templates = templateDeclarations.Select(GetTemplate);
 
 			return templates;
@@ -57,66 +58,46 @@ namespace AutoForm.Analysis
 		private Model GetModel(BaseTypeDeclarationSyntax typeDeclaration)
 		{
 			var properties = GetProperties(typeDeclaration);
-			var identifier = GetType(typeDeclaration);
+			var identifier = GetTypeIdentifier(typeDeclaration);
+			var baseModels = GetBaseModels(typeDeclaration);
 			var attributesProvider = GetAttributesProvider(typeDeclaration);
-			var control = GetControlIdentifier(typeDeclaration);
-			var template = GetTemplateIdentifier(typeDeclaration);
 
-			var model = Model.Create(identifier, control, template, attributesProvider)
-				.WithRange(properties);
+			var model = Model.Create(identifier, baseModels, attributesProvider)
+				.WithProperties(properties);
 
 			return model;
 		}
-		private ITypeIdentifier GetControlIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
+		private ITypeIdentifier[]  GetBaseModels(BaseTypeDeclarationSyntax modelDeclaration)
 		{
-			var declarationIdentifier = GetType(typeDeclaration);
-			
-			_data.Controls
-				.Select(a =>
-				{
-					var semanticModel = GetSemanticModel(a);
-					return (success: Attributes.Factories.Control.TryBuild(a, , out var attribute), attribute);
-				})
+			var semanticModel = GetSemanticModel(modelDeclaration);
+			var baseModels = modelDeclaration.AttributeLists
+				.SelectMany(l => l.Attributes)
+				.Select(a => (success: Attributes.Factories.SubModel.TryBuild(a, semanticModel, out var attribute), attribute))
+				.Where(t => t.success)
+				.Select(t => t.attribute.GetTypeParameter("baseModel") as ITypeIdentifier)
+				.Where(i => i != null)
+				.ToArray();
 
-			var semanticModel = GetSemanticModel(typeDeclaration);
-			var controlIdentifier = typeDeclaration.AttributeLists
-				.OfAttributeClasses(semanticModel, Attributes.UseControl)
-				.Select(a => (success: Attributes.Factories.UseControl.TryBuild(a, semanticModel, out var attribute), attribute))
-				.SingleOrDefault(t => t.success)
-				.attribute?
-				.GetTypeParameter("controlType") as ITypeIdentifier;
-
-			return controlIdentifier;
+			return baseModels;
 		}
-		private ITypeIdentifier GetTemplateIdentifier(BaseTypeDeclarationSyntax typeDeclaration)
+		private PropertyIdentifier GetAttributesProvider(BaseTypeDeclarationSyntax modelDeclaration)
 		{
-			var semanticModel = GetSemanticModel(typeDeclaration);
-			var templateIdentifier = typeDeclaration.AttributeLists
-				.OfAttributeClasses(semanticModel, Attributes.UseTemplate)
-				.Select(a => (success: Attributes.Factories.UseTemplate.TryBuild(a, semanticModel, out var attribute), attribute))
-				.SingleOrDefault(t => t.success)
-				.attribute?
-				.GetTypeParameter("templateType") as ITypeIdentifier;
-
-			return templateIdentifier;
-		}
-		private PropertyIdentifier GetAttributesProvider(BaseTypeDeclarationSyntax typeDeclaration)
-		{
-			var semanticModel = GetSemanticModel(typeDeclaration);
-			var providerProperty = typeDeclaration.ChildNodes()
+			var semanticModel = GetSemanticModel(modelDeclaration);
+			var providerProperty = modelDeclaration.ChildNodes()
 				.OfType<PropertyDeclarationSyntax>()
 				.Where(p => p.AttributeLists
 					.OfAttributeClasses(semanticModel, Attributes.AttributesProvider)
 					.Select(a => (success: Attributes.Factories.AttributesProvider.TryBuild(a, semanticModel, out var attribute), attribute))
 					.Any(t => t.success))
 				.SingleOrDefault();
+			var modelIdentifier = GetTypeIdentifier(modelDeclaration);
 			var identifier = providerProperty != null ?
-				PropertyIdentifier.Create(providerProperty.Identifier.ToString()) :
+				PropertyIdentifier.Create(providerProperty.Identifier.ToString(), modelIdentifier) :
 				default;
 
 			return identifier;
 		}
-		private Property GetProperty(PropertyDeclarationSyntax propertyDeclaration)
+		private Property GetProperty(PropertyDeclarationSyntax propertyDeclaration, BaseTypeDeclarationSyntax modelDeclaration)
 		{
 			var semanticModel = GetSemanticModel(propertyDeclaration);
 			var modelPropertyAttribute = propertyDeclaration.AttributeLists
@@ -125,24 +106,20 @@ namespace AutoForm.Analysis
 				.Single(t => t.success)
 				.attribute;
 
-			var control = modelPropertyAttribute.GetTypeParameter("controlType") as ITypeIdentifier;
+			var modelIdentifier = GetTypeIdentifier(modelDeclaration);
 
-			var template = modelPropertyAttribute.GetTypeParameter("templateType") as ITypeIdentifier;
-
-			var identifier = PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString());
-
-			var type = GetType(propertyDeclaration.Type);
-
+			var identifier = PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString(), modelIdentifier);
+			var type = GetTypeIdentifier(propertyDeclaration.Type);
 			var order = modelPropertyAttribute.Order;
 
-			var property = Property.Create(identifier, type, control, template, order);
+			var property = Property.Create(identifier, type, order);
 
 			return property;
 		}
-		private IEnumerable<Property> GetProperties(BaseTypeDeclarationSyntax typeDeclaration)
+		private IEnumerable<Property> GetProperties(BaseTypeDeclarationSyntax modelDeclaration)
 		{
-			var propertyDeclarations = GetPropertyDeclarations(typeDeclaration);
-			var properties = propertyDeclarations.Select(GetProperty);
+			var propertyDeclarations = GetPropertyDeclarations(modelDeclaration);
+			var properties = propertyDeclarations.Select(p => GetProperty(p, modelDeclaration));
 
 			return properties;
 		}
@@ -159,39 +136,52 @@ namespace AutoForm.Analysis
 
 			return propertyDeclarations;
 		}
-		private Control GetControl(BaseTypeDeclarationSyntax typeDeclaration)
+		private Control GetControl(BaseTypeDeclarationSyntax controlDeclaration)
 		{
-			var semanticModel = GetSemanticModel(typeDeclaration);
-			var modelTypes = typeDeclaration.AttributeLists
-					.OfAttributeClasses(semanticModel, Attributes.Control)
-					.Select(a => (success: Attributes.Factories.Control.TryBuild(a, semanticModel, out var attribute), attribute))
+			var semanticModel = GetSemanticModel(controlDeclaration);
+			var targets = controlDeclaration.AttributeLists
+					.OfAttributeClasses(semanticModel, Attributes.DefaultControl)
+					.Select(a => (success: Attributes.Factories.DefaultControl.TryBuild(a, semanticModel, out var attribute), attribute))
 					.Where(t => t.success)
-					.Select(t => t.attribute.GetTypeParameter("modelType") as ITypeIdentifier);
+					.Select(t => (model: t.attribute.GetTypeParameter("modelType") as ITypeIdentifier, members: t.attribute.Members.ToArray()));
 
-			var identifier = GetType(typeDeclaration);
+			var identifier = GetTypeIdentifier(controlDeclaration);
 
-			var template = Control.Create(identifier)
-				.WithRange(modelTypes);
+			var models = targets
+				.Where(t => t.members.Length == 0)
+				.Select(t => t.model);
+			var properties = targets
+				.Where(t => t.members.Length > 0)
+				.SelectMany(t => t.members.Select(m => PropertyIdentifier.Create(m, t.model)));
 
-			return template;
+			var control = Control.Create(identifier).WithModels(models).WithProperties(properties);
+
+			return control;
 		}
-		private Template GetTemplate(BaseTypeDeclarationSyntax typeDeclaration)
+		private Template GetTemplate(BaseTypeDeclarationSyntax templateDeclaration)
 		{
-			var semanticModel = GetSemanticModel(typeDeclaration);
-			var modelTypes = typeDeclaration.AttributeLists
-					.OfAttributeClasses(semanticModel, Attributes.FallbackTemplate)
-					.Select(a => (success: Attributes.Factories.Template.TryBuild(a, semanticModel, out var attribute), attribute))
+			var semanticModel = GetSemanticModel(templateDeclaration);
+			var targets = templateDeclaration.AttributeLists
+					.OfAttributeClasses(semanticModel, Attributes.DefaultTemplate)
+					.Select(a => (success: Attributes.Factories.DefaultTemplate.TryBuild(a, semanticModel, out var attribute), attribute))
 					.Where(t => t.success)
-					.Select(t => t.attribute.GetTypeParameter("modelType") as ITypeIdentifier);
+					.Select(t => (model: t.attribute.GetTypeParameter("modelType") as ITypeIdentifier, members: t.attribute.Members.ToArray()));
 
-			var identifier = GetType(typeDeclaration);
+			var identifier = GetTypeIdentifier(templateDeclaration);
 
-			var template = Template.Create(identifier).WithRange(modelTypes);
+			var models = targets
+				.Where(t => t.members.Length == 0)
+				.Select(t => t.model);
+			var properties = targets
+				.Where(t => t.members.Length > 0)
+				.SelectMany(t => t.members.Select(m => PropertyIdentifier.Create(m, t.model)));
+
+			var template = Template.Create(identifier).WithModels(models).WithProperties(properties);
 
 			return template;
 		}
 		#endregion
-		private TypeIdentifier GetType(TypeSyntax type)
+		private ITypeIdentifier GetTypeIdentifier(TypeSyntax type)
 		{
 			var semanticModel = _compilation.GetSemanticModel(type.SyntaxTree);
 			var symbol = semanticModel.GetDeclaredSymbol(type) as ITypeSymbol ??
@@ -201,7 +191,7 @@ namespace AutoForm.Analysis
 
 			return identifier;
 		}
-		private TypeIdentifier GetType(BaseTypeDeclarationSyntax declaration)
+		private ITypeIdentifier GetTypeIdentifier(BaseTypeDeclarationSyntax declaration)
 		{
 			var semanticModel = _compilation.GetSemanticModel(declaration.SyntaxTree);
 			var symbol = semanticModel.GetDeclaredSymbol(declaration) as ITypeSymbol ??
