@@ -36,9 +36,10 @@
 	<ItemGroup>
 		<Folder Include="AutoForm.Attributes\" />
 		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\TemplateAttribute.cs" Link="AutoForm.Attributes\TemplateAttribute.cs" />
-		<Compile Include="..\AutoForm.Attributes\ControlAttribute.cs" Link="AutoForm.Attributes\ControlAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\DefaultControlAttribute.cs" Link="AutoForm.Attributes\DefaultControlAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\DefaultTemplateAttribute.cs" Link="AutoForm.Attributes\DefaultTemplateAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\ModelPropertyAttribute.cs" Link="AutoForm.Attributes\ModelPropertyAttribute.cs" />
+		<Compile Include="..\AutoForm.Attributes\SubModelAttribute.cs" Link="AutoForm.Attributes\SubModelAttribute.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -63,6 +64,11 @@
 		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\Namespace.cs" Link="RhoMicro.CodeAnalysis\Namespace.cs" />
 		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifier.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifier.cs" />
 		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierName.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifierName.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\IdentifierPartEqualityComparer.cs" Link="RhoMicro.CodeAnalysis\IdentifierPartEqualityComparer.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\ImmutableArrayEqualityComparer.cs" Link="RhoMicro.CodeAnalysis\ImmutableArrayEqualityComparer.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\NamespaceEqualityComparer.cs" Link="RhoMicro.CodeAnalysis\NamespaceEqualityComparer.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierEqualityComparer.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifierEqualityComparer.cs" />
+		<Compile Include="..\..\CodeAnalysis\CodeAnalysis\TypeIdentifierNameEqualityComparer.cs" Link="RhoMicro.CodeAnalysis\TypeIdentifierNameEqualityComparer.cs" />
 	</ItemGroup>
 
 </Project>
