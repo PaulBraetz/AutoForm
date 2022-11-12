@@ -3,7 +3,7 @@
 
 AutoForm is a model-driven UI control generation tool for .Net. Using attributes and roslyn code generators, UI design for controls can be largely automated.
 
-*Note: this file has been generated on 12.11.2022 16:20:41 +01:00*
+*Note: this file has been generated on 12.11.2022 16:54:58 +01:00*
 
 ---
 ## **Features** ##
@@ -238,7 +238,7 @@ Implement a control for models of type `System.String` or subcontrol for `MyMode
 ```razor
 @inherits AutoForm.Blazor.Controls.Abstractions.ControlBase<String>
 
-<input @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())"  />
+<input class="form-control" @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())" />
 ```
 
 *Found here: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor)*
