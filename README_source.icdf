@@ -5,7 +5,7 @@
 
 AutoForm is a model-driven UI control generation tool for .Net. Using attributes and roslyn code generators, UI design for controls can be largely automated.
 
-*Note: this readme has been generated on {Print(DateTimeOffset.Now.ToString(System.Globalization.CultureInfo.GetCultureInfo("de-De")));}*
+*Note: this readme was generated on {Print(DateTimeOffset.Now.ToString(System.Globalization.CultureInfo.GetCultureInfo("de-De")));}*
 
 ---
 ## **Features** ##
