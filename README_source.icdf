@@ -68,9 +68,9 @@ Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analyzer -Version {vB
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor
 
-Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version \{vBlazor();\}`
+Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version {vBlazor();}`
 
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version \{vBlazor();\}`
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version {vBlazor();}`
 
 ## How To Use ##
 
