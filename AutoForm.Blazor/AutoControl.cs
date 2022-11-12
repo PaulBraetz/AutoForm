@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace AutoForm.Blazor
 {
 
-	public sealed class AutoControl<TModel> : ControlBase<TModel>
+	public sealed class AutoControl<TModel> : OptimizedControlBase<TModel>
 	{
 		private static readonly Type _controlType = GeneratedControls.ModelControlMap?.TryGetValue(typeof(TModel), out var controlType) ?? false ?
 			controlType :
-			throw new Exception($"Unable to locate control for {nameof(TModel)} of {typeof(TModel).FullName}. Make sure that {typeof(TModel).FullName} contains members annotated with {nameof(ModelPropertyAttribute)} or {nameof(AttributesProviderAttribute)}.");
+			throw new Exception($"Unable to locate control for {nameof(TModel)} of {typeof(TModel).FullName}. Make sure that {typeof(TModel).FullName} contains members annotated with {nameof(ModelPropertyAttribute)}.");
 
 		private static readonly Type? _templateType = GeneratedControls.ModelTemplateMap?.TryGetValue(typeof(TModel), out var templateType) ?? false ?
 			templateType :

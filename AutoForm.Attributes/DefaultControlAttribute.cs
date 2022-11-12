@@ -10,8 +10,7 @@ namespace AutoForm.Attributes
 	public sealed class DefaultControlAttribute : Attribute
 	{
 		/// <param name="modelType">
-		/// When <paramref name="members"/> is not set, determines the model for which the targeted control is to be used.<br/>
-		/// When <paramref name="members"/> is set, determines the model whose members are to be rendered using the targeted control.
+		/// Determines the model whose members are to be rendered using the targeted control.
 		/// </param>
 		/// <param name="members">
 		/// Determines the members of <paramref name="modelType"/> that are to be rendered using the targeted control.
@@ -19,6 +18,12 @@ namespace AutoForm.Attributes
 		public DefaultControlAttribute(Type modelType, params String[] members)
 		{
 			_members = members ?? Array.Empty<String>();
+		}
+		/// <param name="modelType">
+		/// Determines the model for which the targeted control is to be used.<br/>
+		/// </param>
+		public DefaultControlAttribute(Type modelType) : this(modelType, Array.Empty<String>())
+		{
 		}
 
 		private readonly String[] _members;

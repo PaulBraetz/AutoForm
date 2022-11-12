@@ -28,7 +28,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 @"		///<summary>
 		///Generated control for models of type <cref see=""" + MODEL_TYPE + @"""/>.
 		///</summary>
-		private sealed class " + CONTROL_TYPE_IDENTIFIER + @" : AutoForm.Blazor.Controls.Abstractions.ControlBase<" + MODEL_TYPE + @">
+		private sealed class " + CONTROL_TYPE_IDENTIFIER + @" : AutoForm.Blazor.Controls.Abstractions.OptimizedControlBase<" + MODEL_TYPE + @">
 		{
 			#pragma warning disable 1998
 			protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)

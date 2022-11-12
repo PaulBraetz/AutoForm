@@ -1,36 +1,12 @@
 ﻿@page "/"
 @using TestApp.Models
 
-<PageTitle>Index</PageTitle>
-
-<h1>TestApp For AutoForm Controls</h1>
-
-<h5>Try it out:</h5>
-
 <AutoForm.Blazor.AutoControl @bind-Value="Model" />
 
-<h5>Here is the data you entered:</h5>
-<dl>
-	<dt>
-		@nameof(MyModel.Age)
-	</dt>
-	<dd>
-		@Model.Age
-	</dd>
-	<dt>
-		@nameof(MyModel.Name)
-	</dt>
-	<dd>
-		@Model.Name
-	</dd>
-	<dt>
-		@nameof(MyModel.ToString)
-	</dt>
-	<dd>
-		@Model.ToString()
-	</dd>
-</dl>
+<span>
+	@(nameof(MyModel.Name)) : @(Model.Name)
+</span>
 
 @code {
-	private IMyModel Model { get; set; } = new MyModel();
+	private MyModel Model { get; set; } = new MyModel();
 }

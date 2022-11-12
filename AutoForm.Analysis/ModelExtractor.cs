@@ -60,9 +60,8 @@ namespace AutoForm.Analysis
 			var properties = GetProperties(typeDeclaration);
 			var identifier = GetTypeIdentifier(typeDeclaration);
 			var baseModels = GetBaseModels(typeDeclaration);
-			var attributesProvider = GetAttributesProvider(typeDeclaration);
 
-			var model = Model.Create(identifier, baseModels, attributesProvider)
+			var model = Model.Create(identifier, baseModels)
 				.WithProperties(properties);
 
 			return model;
@@ -79,23 +78,6 @@ namespace AutoForm.Analysis
 				.ToArray();
 
 			return baseModels;
-		}
-		private PropertyIdentifier GetAttributesProvider(BaseTypeDeclarationSyntax modelDeclaration)
-		{
-			var semanticModel = GetSemanticModel(modelDeclaration);
-			var providerProperty = modelDeclaration.ChildNodes()
-				.OfType<PropertyDeclarationSyntax>()
-				.Where(p => p.AttributeLists
-					.OfAttributeClasses(semanticModel, Attributes.AttributesProvider)
-					.Select(a => (success: Attributes.Factories.AttributesProvider.TryBuild(a, semanticModel, out var attribute), attribute))
-					.Any(t => t.success))
-				.SingleOrDefault();
-			var modelIdentifier = GetTypeIdentifier(modelDeclaration);
-			var identifier = providerProperty != null ?
-				PropertyIdentifier.Create(providerProperty.Identifier.ToString(), modelIdentifier) :
-				default;
-
-			return identifier;
 		}
 		private Property GetProperty(PropertyDeclarationSyntax propertyDeclaration, BaseTypeDeclarationSyntax modelDeclaration)
 		{

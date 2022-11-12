@@ -1,18 +1,24 @@
+
 # AutoForm #
 
 AutoForm is a model-driven UI control generation tool for .Net. Using attributes and roslyn code generators, UI design for controls can be largely automated.
 
-## Features ##
+*Note: this file has been generated on 12.11.2022 16:20:41 +01:00*
+
+---
+## **Features** ##
 
 * Attribute-based model discovery
 * Debug json generator
 * Blazor component generator
 
-## Versioning ##
+---
+## **Versioning** ##
 
 AutoForm uses [Semantic Versioning 2.0.0](https://semver.org/).
 
-## Installation ##
+---
+## **Installation** ##
 
 Currently, there are multiple packages published for generating code based on models:
 
@@ -23,253 +29,236 @@ Currently, there are multiple packages published for generating code based on mo
 
 In order to use the generators, models have to be annotated using the attributes found in AutoForm.Attributes. Since the generators rely on code semantics in order to discover models, you may implement your own attributes using the same namespace and attribute names as in AutoForm.Attributes. This is currently not reccomended, as the underlying processes are not hardened against faulty attribute declarations.
 
-### Installing AutoForm.Attributes ###
+
+<details>
+<summary>Installing AutoForm.Attributes</summary>
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Attributes
 
 Package Manager: `Install-Package RhoMicro.AutoForm.Attributes -Version 2.0.0`
 
 .Net CLI: `dotnet add package RhoMicro.AutoForm.Attributes --version 2.0.0`
+</details>
 
-### Installing the json generator ###
-
-Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Json.Analyzer
-
-Package Manager: `Install-Package RhoMicro.AutoForm.Json.Analyzer -Version 2.0.0`
-
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Json.Analyzer --version 2.0.0`
-
-### Installing the blazor generator ###
-
-Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor.Analyzer
-
-Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analyzer -Version 2.0.0`
-
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor.Analyzer --version 2.0.0`
-
-### Installing the blazor entry point ###
+<details>
+<summary>Installing AutoForm.Blazor</summary>
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor
 
-Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version 2.0.0`
+Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version 2.0.1`
 
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version 2.0.0`
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version 2.0.1`
+</details>
 
-## How To Use ##
+<details>
+<summary>Installing AutoForm.Blazor.Analysis</summary>
 
-Annotate your model with `AutoForm.Attributes.ModelAttribute` :
+Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor.Analysis
+
+Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analysis -Version 3.0.0`
+
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor.Analysis --version 3.0.0`
+</details>
+
+<details>
+<summary>Installing AutoForm.Json.Analysis</summary>
+
+Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Json.Analysis
+
+Package Manager: `Install-Package RhoMicro.AutoForm.Json.Analysis -Version 3.0.0`
+
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Json.Analysis --version 3.0.0`
+</details>
+
+---
+## **How To Use** ##
+
+*The following samples use the provided blazor generator.*
+
+### **Creating Models** ###
+
+Register a model by annotating at least one of its properties with the `ModelPropertyAttribute`:
+
 ```cs
-[Model]
-public class Model
+using AutoForm.Attributes;
+
+namespace TestApp.Models
 {
-  public Byte Age { get; set; }
-  public String? Name { get; set; }
+	public class MyModel
+	{
+		[ModelProperty]
+		public String? Name { get; set; }
+	}
 }
+
 ```
+
 *Found here: [TestApp.Models.MyModel](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/MyModel.cs)*
 
-The control generated for this model will look something like this:
-```cs
-private sealed class __Control_TestApp_Models_MyModel : ControlBase<TestApp.Models.MyModel>
-{
-  protected override void BuildRenderTree(RenderTreeBuilder __builder)
-  {
-    if(Value != null)
-    {
-      //Subcontrol for Age
-      __builder.OpenComponent<AutoForm.Blazor.Controls.ByteNumber>(0);
-      __builder.AddAttribute(1, "Value", RuntimeHelpers.TypeCheck<Byte>(Value.Age));
-      __builder.AddAttribute(2, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<Byte>>(EventCallback.Factory.Create<Byte>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Age = __value; ValueChanged.InvokeAsync(Value);}, Value.Age))));
-      __builder.CloseComponent();
+Access the generated control using the `AutoControl`:
 
-      //Subcontrol for Name
-      __builder.OpenComponent<AutoForm.Blazor.Controls.Text>(3);
-      __builder.AddAttribute(4, "Value", RuntimeHelpers.TypeCheck<String>(Value.Name));
-      __builder.AddAttribute(5, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<String>>(EventCallback.Factory.Create<String>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Name = __value; ValueChanged.InvokeAsync(Value);}, Value.Name))));
-      __builder.CloseComponent();
-    }
-  }
-}
-```
-
-Access the generated control using an `AutoForm.Blazor.AutoControl<MyModel>` :
 ```razor
-@using AutoForm.Blazor`
+@page "/"
+@using TestApp.Models
 
-<AutoControl @bind-Value="Model" />
+<AutoForm.Blazor.AutoControl @bind-Value="Model" />
+
+<span>
+	@(nameof(MyModel.Name)) : @(Model.Name)
+</span>
 
 @code {
-  MyModel Model { get; set; } = new MyModel();
+	private MyModel Model { get; set; } = new MyModel();
 }
 ```
-*Found here: [TestApp.Pages.Index](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Pages/Index.razor)*
 
-Note that default controls provided by AutoForm.Blazor, found in `AutoForm.Blazor.Controls`, will bind to the `oninput` event. This means that when using these controls, models will be updated with every keystroke instead of when a control loses focus, as is standard.
+*Found here: [TestApp.Pages.Index.razor](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Pages/Index.razor)*
 
-The html rendered will look something like this:
+Note that default controls provided by `AutoForm.Blazor`, found in `AutoForm.Blazor.Controls`, will bind to the `oninput` event. 
+This means that when using these controls, models will be updated with every keystroke instead of when a control loses focus, as is default.
 
-![Image Missing](https://static.rhomicro.com/files/images/github/autoform/1.png)
+### **Creating Templates** ###
 
-A template may be used in order surround the control with another component. For additional attributes on the control itself, an attributes provider can be used.
+Templates may be created in order surround a control with another component. They must semantically implement the following interface:
 
-#### Using a template ####
-
-Templates must implement the following properties:
 ```cs
-[Parameter]
-public TModel Value { get; set; }
+using Microsoft.AspNetCore.Components;
 
-[Parameter]
-public IEnumerable<KeyValuePair<String, Object>> Attributes { get; set; }
+namespace AutoForm.Blazor.Templates.Abstractions
+{
+	public abstract class TemplateBase<TModel> : ComponentBase
+	{
+		[Parameter]
+		public TModel? Value { get; set; }
+		[Parameter]
+		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+		[Parameter]
+		public RenderFragment? ChildContent { get; set; }
+	}
+}
 
-[Parameter]
-public RenderFragment? ChildContent { get; set; }
 ```
-where TModel is the model type whose control this template should be applied to. These properties enable the template to access the controls attributes as well as the models current value. The control will be passed to `ChildContent`.
-These properties are implemented in `AutoForm.Blazor.Templates.Abstractions.TemplateBase`.
 
-Create a template like so:
+*Found here: [AutoForm.Blazor.Templates.Abstractions.TemplateBase](https://github.com/PaulBraetz/AutoForm/blob/master/AutoForm.Blazor/Templates/Abstractions/TemplateBase.cs)*
+
+Here, TModel is the model type whose control this template should be applied to. These properties enable the template to access the controls attributes as well as the models current value. The control will be passed to `ChildContent`.
+
+*Note that templates must only provide properties that are semantically identical to those found in `TemplateBase`, as well as inherit from `ComponentBase`.*
+
+
+
+For uniform bootstrap template styling, a primitive base template may be created like so:
+
 ```razor
-@inherits AutoForm.Blazor.Templates.Abstractions.TemplateBase<String>
+@typeparam TModel
+@inherits AutoForm.Blazor.Templates.Abstractions.TemplateBase<TModel>
 
 <div class="input-group mb-3">
-  <span class="input-group-text" >Enter Value:</span>
-  @ChildContent
+	<span class="input-group-text" >@Text</span>
+	@ChildContent
 </div>
+
+@code{
+	private Object Text => Attributes?.SingleOrDefault(kvp => kvp.Key == "label").Value ??
+								"Enter Value:";
+}
 ```
+
 *Found here: [TestApp.Templates.MyTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/MyTemplate.razor)*
 
-Use the template like so:
-```cs
-[Model]
-public class Model
-{
-  public Byte Age { get; set; }
 
-  [AutoForm.Attributes.UseTemplate(typeof(Templates.MyTemplate))]
-  public String? Name { get; set; }
-}
-```
-*Found here: [TestApp.Models.MyModel](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/MyModel.cs)*
-
-The control generated for this model will now look something like this:
-```cs
-private sealed class __Control_TestApp_Models_MyModel : ControlBase<TestApp.Models.MyModel>
-{
-  protected override void BuildRenderTree(RenderTreeBuilder __builder)
-  {
-    if(Value != null)
-    {
-      //Subcontrol for Age
-      __builder.OpenComponent<AutoForm.Blazor.Controls.ByteNumber>(0);
-      __builder.AddAttribute(1, "Value", RuntimeHelpers.TypeCheck<Byte>(Value.Age));
-      __builder.AddAttribute(2, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<Byte>>(EventCallback.Factory.Create<Byte>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Age = __value; ValueChanged.InvokeAsync(Value);}, Value.Age))));
-      __builder.CloseComponent();
-
-      //Template for Name
-      __builder.OpenComponent<Templates.MyTemplate>(3);
-      __builder.AddAttribute(4, "Value", RuntimeHelpers.TypeCheck<System.String>(Value.Name));
-      __builder.AddAttribute(5, "ChildContent", (RenderFragment)(buildNameSubControl));
-      __builder.CloseComponent();
-
-      void buildNameSubControl(RenderTreeBuilder __builder)
-      {
-        //Subcontrol for Name
-        __builder.OpenComponent<AutoForm.Blazor.Controls.Text>(6);
-        __builder.AddAttribute(7, "Value", RuntimeHelpers.TypeCheck<System.String>(Value.Name));
-        __builder.AddAttribute(8, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<String>>(EventCallback.Factory.Create<System.String>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Name = __value; ValueChanged.InvokeAsync(Value);}, Value.Name))));
-        __builder.CloseComponent();
-      }
-    }
-  }
-}
-```
-
-The html rendered will now look something like this:
-
-![Image Missing](https://static.rhomicro.com/files/images/github/autoform/2.png)
-
-#### Using an attribute provider ####
-
-Attribute providers must implement a method "Get-PropertyIdentifier-Attributes()" for every property of the model that is not excluded from control generation. The return value must be assignable to `IEnumerable<KeyValuePair<String, Object>>`. A data structure `AttributeCollection` is provided in the `AutoForm.Blazor.Attributes` namespace that makes managing attributes a bit less cumbersome. It is not required in general to use this data structure, as generators should expect any type that is assignable to `IEnumerable<KeyValuePair<String, Object>>` to be returned from an attribute providers methods. We are going to use it here for simplicity.
-
-Create an attributes provider like so:
-```cs
-public class MyAttributesProvider
-{
-  public IEnumerable<KeyValuePair<String, Object>> GetNameAttributes()
-{
-    return new AttributeCollection("placeholder", "Name");
-  }
-
-  public IEnumerable<KeyValuePair<String, Object>> GetAgeAttributes()
-{
-    return new AttributeCollection("min", "0");
-  }
-}
-```
-*Found here: [TestApp.AttributesProviders.MyAttributesProvider](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/AttributesProviders/MyAttributesProvider.cs)*
-
-Create a property for accessing the attributes provider:
 
 ```cs
-[Model]
-public class Model
+using AutoForm.Attributes;
+using AutoForm.Blazor.Templates.Abstractions;
+using TestApp.Models;
+
+namespace TestApp.Templates
 {
-  public Byte Age { get; set; }
-
-  [AutoForm.Attributes.UseTemplate(typeof(Templates.MyTemplate))]
-  public String? Name { get; set; }
-
-  [AutoForm.Attributes.AttributesProvider]
-  public MyAttributesProvider AttributesProvider { get; } = new MyAttributesProvider();
+	public abstract partial class MyTemplate<TModel> : TemplateBase<TModel>
+	{
+	}
 }
-```
-*Found here: [TestApp.Models.MyModel](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/MyModel.cs)*
 
-The control generated for this model will now look something like this:
+```
+
+*Found here: [TestApp.Templates.MyTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/MyTemplate.razor.cs)*
+
+Implement a template for controls whose model is of type `System.String` or that control the `MyModel.Name` property:
+
 ```cs
-private sealed class __Control_TestApp_Models_MyModel : AutoForm.Blazor.Controls.Abstractions.ControlBase<TestApp.Models.MyModel>
+using AutoForm.Attributes;
+using TestApp.Models;
+
+namespace TestApp.Templates
 {
-  protected override void BuildRenderTree(RenderTreeBuilder __builder)
-  {
-    if(Value != null)
-    {
-      //Subcontrol for Age
-      __builder.OpenComponent<AutoForm.Blazor.Controls.ByteNumber>(0);
-      __builder.AddAttribute(1, "Value", RuntimeHelpers.TypeCheck<System.Byte>(Value.Age));
-      __builder.AddAttribute(2, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<System.Byte>>(EventCallback.Factory.Create<System.Byte>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Age = __value; ValueChanged.InvokeAsync(Value);}, Value.Age))));
-      __builder.AddAttribute(3, "Attributes", RuntimeHelpers.TypeCheck<IEnumerable<KeyValuePair<String, Object>>>(Value.AttributesProvider.GetAgeAttributes()));
-      __builder.CloseComponent();
-
-      //Template for Name
-      __builder.OpenComponent<TestApp.Templates.MyTemplate>(4);
-      __builder.AddAttribute(5, "Value", RuntimeHelpers.TypeCheck<System.String>(Value.Name));
-      __builder.AddAttribute(6, "Attributes", RuntimeHelpers.TypeCheck<IEnumerable<KeyValuePair<String, Object>>>(Value.AttributesProvider.GetNameAttributes()));
-      __builder.AddAttribute(7, "ChildContent", (Microsoft.AspNetCore.Components.RenderFragment)(buildNameSubControl));
-      __builder.CloseComponent();
-
-      void buildNameSubControl(RenderTreeBuilder __builder)
-      {
-        //Subcontrol for Name
-        __builder.OpenComponent<AutoForm.Blazor.Controls.Text>(8);
-        __builder.AddAttribute(9, "Value", RuntimeHelpers.TypeCheck<System.String>(Value.Name));
-        __builder.AddAttribute(10, "ValueChanged", RuntimeHelpers.TypeCheck<EventCallback<System.String>>(EventCallback.Factory.Create<System.String>(this, RuntimeHelpers.CreateInferredEventCallback(this, __value => { Value.Name = __value; ValueChanged.InvokeAsync(Value);}, Value.Name))));
-        __builder.AddAttribute(11, "Attributes", RuntimeHelpers.TypeCheck<IEnumerable<KeyValuePair<String, Object>>>(Value.AttributesProvider.GetNameAttributes()));
-        __builder.CloseComponent();
-      }
-    }
-  }
+	[DefaultTemplate(typeof(String))]
+	[DefaultTemplate(typeof(MyModel), nameof(MyModel.Name))]
+	public sealed class StringTemplate : MyTemplate<String> { }
 }
+
 ```
 
-The html rendered will now look something like this (notice the placeholder):
+*Found here: [TestApp.Templates.MyModelNameTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/StringTemplate.cs)*
 
-![Image Missing](https://static.rhomicro.com/files/images/github/autoform/3.png)
+### **Creating Controls** ###
 
-Adding some more attributes to our attribute provider as well as editing our templates, the html rendered will now look something like this:
+Controls may be declared in order to override default or generated controls. They must semantically implement the following interface:
 
-![Image Missing](https://static.rhomicro.com/files/images/github/autoform/4.png)
+```cs
+using Microsoft.AspNetCore.Components;
+
+namespace AutoForm.Blazor.Controls.Abstractions
+{
+	public abstract class ControlBase<TModel> : ComponentBase
+	{
+		[Parameter]
+		public TModel? Value { get; set; }
+
+		[Parameter]
+		public EventCallback<TModel> ValueChanged { get; set; }
+
+		[Parameter]
+		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+	}
+}
+
+```
+
+*Found here: [AutoForm.Blazor.Controls.Abstractions.ControlBase](https://github.com/PaulBraetz/AutoForm/blob/master/AutoForm.Blazor/Controls/Abstractions/ControlBase.cs)*
+
+Here, TModel is the model type this control should be applied to.
+
+*Note that controls must only provide properties that are semantically identical to those found in `ControlBase`, as well as inherit from `ComponentBase`.*
+
+
+
+Implement a control for models of type `System.String` or subcontrol for `MyModel.Name`:
+
+```razor
+@inherits AutoForm.Blazor.Controls.Abstractions.ControlBase<String>
+
+<input @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())"  />
+```
+
+*Found here: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor)*
+
+
+
+```cs
+using TestApp.Models;
+
+namespace TestApp.Controls
+{
+	[AutoForm.Attributes.DefaultControl(typeof(String))]
+	[AutoForm.Attributes.DefaultControl(typeof(MyModel), nameof(MyModel.Name))]
+	public partial class StringControl: AutoForm.Blazor.Controls.Abstractions.ControlBase<String>
+	{
+	}
+}
+
+```
+
+*Found here: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor.cs)*
 
 - - - -
-That's it for the basics, look around the `AutoForm.Attributes` namespace to find out more about how to use controls, fallback templates, ordering controls etc. This readme will likely be updated in the future to include more advanced instructions.

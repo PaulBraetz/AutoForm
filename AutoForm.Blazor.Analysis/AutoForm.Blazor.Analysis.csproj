@@ -15,7 +15,7 @@
 		<Description>Blazor component generator for Rhomicro.AutoForm.</Description>
 		<Copyright>2022</Copyright>
 		<PackageTags>Rhomicro</PackageTags>
-		<Version>2.0.0</Version>
+		<Version>3.0.0</Version>
 		<PackageId>RhoMicro.AutoForm.Blazor.Analysis</PackageId>
 		<AssemblyName>AutoForm.Blazor.Analysis</AssemblyName>
 		<RootNamespace>AutoForm.Blazor.Analysis</RootNamespace>
@@ -39,7 +39,6 @@
 
 	<ItemGroup>
 		<Folder Include="AutoForm.Attributes\" />
-		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\DefaultControlAttribute.cs" Link="AutoForm.Attributes\DefaultControlAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\DefaultTemplateAttribute.cs" Link="AutoForm.Attributes\DefaultTemplateAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\ModelPropertyAttribute.cs" Link="AutoForm.Attributes\ModelPropertyAttribute.cs" />

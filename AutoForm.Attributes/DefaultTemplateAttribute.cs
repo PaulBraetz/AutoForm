@@ -10,8 +10,7 @@ namespace AutoForm.Attributes
 	public sealed class DefaultTemplateAttribute : Attribute
 	{
 		/// <param name="modelType">
-		/// When <paramref name="members"/> is not set, determines the model for which the targeted template is to be used.<br/>
-		/// When <paramref name="members"/> is set, determines the model whose members are to be rendered using the targeted template.
+		/// Determines the model whose members are to be rendered using the targeted template.
 		/// </param>
 		/// <param name="members">
 		/// Determines the members of <paramref name="modelType"/> that are to be rendered using the targeted template.
@@ -19,6 +18,12 @@ namespace AutoForm.Attributes
 		public DefaultTemplateAttribute(Type modelType, params String[] members)
 		{
 			_members = members ?? Array.Empty<String>();
+		}
+		/// <param name="modelType">
+		/// Determines the model for which the targeted template is to be used.
+		/// </param>
+		public DefaultTemplateAttribute(Type modelType) : this(modelType, Array.Empty<String>())
+		{
 		}
 
 		private readonly String[] _members;

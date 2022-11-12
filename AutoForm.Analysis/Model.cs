@@ -11,10 +11,9 @@ namespace AutoForm.Analysis
 		public readonly ITypeIdentifier Control;
 		public readonly ITypeIdentifier Template;
 		public readonly ITypeIdentifier[] BaseModels;
-		public readonly PropertyIdentifier AttributesProvider;
 		public readonly Property[] Properties;
 
-		private Model(ITypeIdentifier name, ITypeIdentifier control, ITypeIdentifier template, ITypeIdentifier[] baseModels, Property[] properties, PropertyIdentifier attributesProvider)
+		private Model(ITypeIdentifier name, ITypeIdentifier control, ITypeIdentifier template, ITypeIdentifier[] baseModels, Property[] properties)
 		{
 			properties.ThrowOnDuplicate(nameof(properties));
 
@@ -23,33 +22,32 @@ namespace AutoForm.Analysis
 			Template = template;
 			BaseModels = baseModels;
 			Properties = properties ?? Array.Empty<Property>();
-			AttributesProvider = attributesProvider;
 		}
 
-		public static Model Create(ITypeIdentifier name, ITypeIdentifier[] baseModels, PropertyIdentifier attributesProvider)
+		public static Model Create(ITypeIdentifier name, ITypeIdentifier[] baseModels)
 		{
-			return new Model(name, default, default, baseModels, Array.Empty<Property>(), attributesProvider);
+			return new Model(name, default, default, baseModels, Array.Empty<Property>());
 		}
-		public static Model Create(ITypeIdentifier name, PropertyIdentifier attributesProvider)
+		public static Model Create(ITypeIdentifier name)
 		{
-			return Create(name, default, attributesProvider);
+			return Create(name, default);
 		}
 
 		public Model WithProperty(Property property)
 		{
-			return new Model(Name, Control, Template, BaseModels, Properties.Append(property).ToArray(), AttributesProvider);
+			return new Model(Name, Control, Template, BaseModels, Properties.Append(property).ToArray());
 		}
 		public Model WithControl(ITypeIdentifier control)
 		{
-			return new Model(Name, control, Template, BaseModels, Properties, AttributesProvider);
+			return new Model(Name, control, Template, BaseModels, Properties);
 		}
 		public Model WithTemplate(ITypeIdentifier template)
 		{
-			return new Model(Name, Control, template, BaseModels, Properties, AttributesProvider);
+			return new Model(Name, Control, template, BaseModels, Properties);
 		}
 		public Model WithProperties(IEnumerable<Property> properties)
 		{
-			return new Model(Name, Control, Template, BaseModels, Properties.Concat(properties).ToArray(), AttributesProvider);
+			return new Model(Name, Control, Template, BaseModels, Properties.Concat(properties).ToArray());
 		}
 	}
 }

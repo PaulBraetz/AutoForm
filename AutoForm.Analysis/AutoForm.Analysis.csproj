@@ -19,7 +19,6 @@
 
 	<ItemGroup>
 		<Folder Include="AutoForm.Attributes\" />
-		<Compile Include="..\AutoForm.Attributes\AttributesProviderAttribute.cs" Link="AutoForm.Attributes\AttributesProviderAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\DefaultControlAttribute.cs" Link="AutoForm.Attributes\DefaultControlAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\DefaultTemplateAttribute.cs" Link="AutoForm.Attributes\DefaultTemplateAttribute.cs" />
 		<Compile Include="..\AutoForm.Attributes\ModelPropertyAttribute.cs" Link="AutoForm.Attributes\ModelPropertyAttribute.cs" />

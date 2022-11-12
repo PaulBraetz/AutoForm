@@ -73,7 +73,7 @@ namespace AutoForm.Analysis
 			var modelDict = Models.ToDictionary(m => m.Name, m => m);
 			var propertyResolvedModels = Models
 				.Select(m =>
-					Model.Create(m.Name, m.BaseModels, m.AttributesProvider)
+					Model.Create(m.Name, m.BaseModels)
 					.WithControl(m.Control)
 					.WithTemplate(m.Template)
 					.WithProperties(ResolveProperties(m, modelDict)))
@@ -105,7 +105,7 @@ namespace AutoForm.Analysis
 						defaultAppliedProperties.Add(defaultAppliedProperty);
 					}
 
-					var defaultAppliedModel = Model.Create(model.Name, model.BaseModels, model.AttributesProvider)
+					var defaultAppliedModel = Model.Create(model.Name, model.BaseModels)
 						.WithControl(control)
 						.WithTemplate(template)
 						.WithProperties(defaultAppliedProperties);

@@ -54,9 +54,6 @@ namespace AutoForm.Json.Analysis
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Model.Template),
 					JsonDecorator<ITypeIdentifier>.String(model.Template)),
-				JsonDecorator<PropertyIdentifier>.KeyValuePair(
-					nameof(Model.AttributesProvider),
-					JsonDecorator<PropertyIdentifier>.String(model.AttributesProvider)),
 				JsonDecorator<ITypeIdentifier[]>.KeyValuePair(
 					nameof(Model.BaseModels),
 					JsonDecorator<ITypeIdentifier>.StringArray(model.BaseModels)),

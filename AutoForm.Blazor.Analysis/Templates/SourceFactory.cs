@@ -20,7 +20,6 @@ namespace AutoForm.Blazor.Analysis.Templates
 		private const String TEMPLATE_TYPE = "{" + nameof(TEMPLATE_TYPE) + "}";
 
 		private const String LINE_INDEX = "{" + nameof(LINE_INDEX) + "}";
-		private const String SUB_CONTROL_PASS_ATTRIBUTES = "{" + nameof(SUB_CONTROL_PASS_ATTRIBUTES) + "}";
 
 		private const String MODEL_TYPE = "{" + nameof(MODEL_TYPE) + "}";
 
@@ -227,20 +226,10 @@ namespace AutoForm.Blazor.Analysis.Templates
 				throw new Exception($"Unable to locate control for {property.Name}. Make sure a control for {property.Type} is registered.");
 			}
 
-			var subControlPassAttributesTemplate = GetSubControlPassAttributesTemplate(model);
-
 			return new SubControlTemplate()
 				.WithModel(model)
-				.WithProperty(property)
-				.WithSubControlPassAttributesTemplate(subControlPassAttributesTemplate);
+				.WithProperty(property);
 		}
-
-		private SubControlPassAttributesTemplate GetSubControlPassAttributesTemplate(Model model)
-		{
-			return new SubControlPassAttributesTemplate()
-				.WithAttributesProviderIdentifier(model.AttributesProvider);
-		}
-
 		#endregion
 	}
 }

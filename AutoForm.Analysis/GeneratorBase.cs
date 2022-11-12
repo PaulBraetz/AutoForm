@@ -67,7 +67,6 @@ namespace AutoForm.Analysis
 				else if (context.Node is PropertyDeclarationSyntax propertyDeclaration &&
 						propertyDeclaration.AttributeLists.HasAttributes(
 							context.SemanticModel,
-							Attributes.AttributesProvider,
 							Attributes.ModelProperty))
 				{
 					SyntaxNode parent = propertyDeclaration;

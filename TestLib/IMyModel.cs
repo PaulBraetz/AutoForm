@@ -7,8 +7,6 @@ namespace TestLib.Models
 	{
 		[ModelProperty]
 		Byte Age { get; set; }
-		[AttributesProvider]
-		MyAttributesProvider AttributesProvider { get; }
 		[ModelProperty]
 		String? Name { get; set; }
 
