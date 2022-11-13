@@ -12,5 +12,7 @@ namespace TestApp.Models
 		public Int32 ZipCode { get; set; }
 		[ModelProperty]
 		public String? Address { get; set; }
+		[ModelProperty]
+		public MyModel NestedModel { get; set; } = new MyModel();
 	}
 }

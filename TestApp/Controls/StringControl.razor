@@ -1,3 +1,3 @@
 ﻿@inherits AutoForm.Blazor.Controls.Abstractions.ControlBase<String>
 
-<input class="form-control" @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())" />
+<input class="form-control" type="text" @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())" />

@@ -1,15 +1,10 @@
 ﻿using AutoForm.Attributes;
-using TestLib.AttributesProviders;
 
 namespace TestLib.Models
 {
-	public interface IMyModel
+	public interface IExternalModel
 	{
 		[ModelProperty]
-		Byte Age { get; set; }
-		[ModelProperty]
 		String? Name { get; set; }
-
-		String ToString();
 	}
 }

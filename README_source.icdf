@@ -3,7 +3,11 @@
 }
 # AutoForm #
 
-AutoForm is a model-driven UI control generation tool for .Net. Using attributes and roslyn code generators, UI design for controls can be largely automated.
+AutoForm is a model-driven UI control (input component) generation tool for .Net. 
+Its aim is to decouple UI controls from each other.
+
+Similar to dependency injection, using controls managed by AutoForm forces decoupling from implementations, 
+so callers need only know the model for which they require a control.
 
 *Note: this readme has been generated on {Print(DateTimeOffset.Now.ToString(System.Globalization.CultureInfo.GetCultureInfo("de-De")));}*
 
@@ -74,7 +78,12 @@ Package Manager: `Install-Package RhoMicro.{project.name} -Version {project.vers
 ---
 ## **How To Use** ##
 
-*The following samples use the provided blazor generator.*{
+*The following samples use the provided blazor generator.*
+
+### **A Note on Attributes** ###
+
+While templates and controls used for the blazor generator are required to provide an `Attributes` property, generated controls will ignore any attributes passed to them.
+Default controls found in `AutoForm.Blazor.Controls` will honor attributes passed via the `Attributes` property.{
     void printSample(String name, String caption, String path)
     {
         var codeType = Path.GetExtension(path).Remove(0, 1);
@@ -91,7 +100,7 @@ Package Manager: `Install-Package RhoMicro.{project.name} -Version {project.vers
 {content}
 ```
 
-*Found here: [{name}]({url})*");
+*Source: [{name}]({url})*");
     }
 }
 
@@ -154,4 +163,80 @@ Here, TModel is the model type this control should be applied to.
     }
 }
 
-- - - -
+### **Result** ###
+
+The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `MyModel` will now look something like this:
+
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/1.png)
+
+### **Complex Models** ###
+
+{
+    foreach(var t in new[]
+    {
+        (name: "TestApp.Models.ComplexModel.cs", 
+         caption: 
+@"Models require all their marked properties to be assignable to a control. 
+This means thet composite models will require all their submodels to also be marked for control generation. 
+Note that this model requires a subcontrol for its `NestedModel` property. 
+Luckily, its type has already been marked as a model. Had it not been, the generator would have issued an error.", 
+         path: @"TestApp\Models\ComplexModel.cs")
+    })
+    {
+        printSample(t.name, t.caption, t.path);
+    }
+}
+
+### **Result** ###
+
+The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `ComplexModel` will now look something like this:
+
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/2.png)
+
+### **Sub Models** ###
+
+{
+    foreach(var t in new[]
+    {
+        (name: "TestApp.Models.SubModel.cs", 
+         caption: 
+@"Models may inherit their base types model properties. 
+Annotating a model with the `SubModelAttribute` will instruct the generator to enhance the generated control with subcontrols for properties found in the basetype.", 
+         path: @"TestApp\Models\SubModel.cs"),
+        (name: "TestApp.Templates.SubModel.NameTemplate.cs",
+         caption: "For this model, labeled subcontrols are created using templates:",
+         path: @"TestApp\Templates\SubModel\NameTemplate.cs"),
+        (name: "TestApp.Templates.SubModel.AgeTemplate.cs",
+         caption: "",
+         path: @"TestApp\Templates\SubModel\AgeTemplate.cs")
+    })
+    {
+        printSample(t.name, t.caption, t.path);
+    }
+}
+
+### **Result** ###
+
+The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `SubModel` will now look something like this:
+
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/3.png)
+
+---
+
+## **Planned Features** ##
+
+* Importing/Exporting types from and to other assemblies
+
+---
+
+## **License** ##
+
+This project is licensed to you under the [MIT License](https://github.com/PaulBraetz/AutoForm/blob/master/LICENSE)
+
+---
+
+## **Contributors** ##
+
+* [Paul Braetz](https://github.com/PaulBraetz/)
+
+---

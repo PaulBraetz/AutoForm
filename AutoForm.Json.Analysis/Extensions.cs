@@ -110,10 +110,6 @@ namespace AutoForm.Json.Analysis
 		{
 			var members = new IJson[]
 			{
-				JsonDecorator<Int32>.KeyValuePair(
-					nameof(Property.Order),
-					JsonDecorator<Int32>.Number(
-						property.Order)),
 				JsonDecorator<ITypeIdentifier>.KeyValuePair(
 					nameof(Property.Control),
 					JsonDecorator<ITypeIdentifier>.String(property.Control)),

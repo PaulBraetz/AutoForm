@@ -198,8 +198,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 		{
 			var exceptions = new List<Exception>();
 			var subControlTemplates = new List<SubControlTemplate>();
-			var properties = model.Properties.OrderBy(p => p.Order);
-			foreach (var property in properties)
+			foreach (var property in model.Properties)
 			{
 				try
 				{

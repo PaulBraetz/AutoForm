@@ -19,7 +19,7 @@ namespace AutoForm.Blazor.Controls.Abstractions
 			}
 		}
 
-		protected readonly string ElementName;
+		protected readonly String ElementName;
 		protected readonly String UpdatesAttributeName;
 
 		protected PrimitiveControlBase(String elementName, String updatesAttributeName = "value")

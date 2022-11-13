@@ -1,9 +1,13 @@
 
 # AutoForm #
 
-AutoForm is a model-driven UI control generation tool for .Net. Using attributes and roslyn code generators, UI design for controls can be largely automated.
+AutoForm is a model-driven UI control (input component) generation tool for .Net. 
+Its aim is to decouple UI controls from each other.
 
-*Note: this readme has been generated on 12.11.2022 16:55:46 +01:00*
+Similar to dependency injection, using controls managed by AutoForm forces decoupling from implementations, 
+so callers need only know the model for which they require a control.
+
+*Note: this readme has been generated on 13.11.2022 23:49:09 +01:00*
 
 ---
 ## **Features** ##
@@ -35,9 +39,9 @@ In order to use the generators, models have to be annotated using the attributes
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Attributes
 
-Package Manager: `Install-Package RhoMicro.AutoForm.Attributes -Version 2.0.0`
+Package Manager: `Install-Package RhoMicro.AutoForm.Attributes -Version 3.0.0`
 
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Attributes --version 2.0.0`
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Attributes --version 3.0.0`
 </details>
 
 <details>
@@ -45,9 +49,9 @@ Package Manager: `Install-Package RhoMicro.AutoForm.Attributes -Version 2.0.0`
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor
 
-Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version 2.0.1`
+Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version 2.1.0`
 
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version 2.0.1`
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor --version 2.1.0`
 </details>
 
 <details>
@@ -55,9 +59,9 @@ Package Manager: `Install-Package RhoMicro.AutoForm.Blazor -Version 2.0.1`
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Blazor.Analysis
 
-Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analysis -Version 3.0.0`
+Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analysis -Version 3.0.1`
 
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor.Analysis --version 3.0.0`
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Blazor.Analysis --version 3.0.1`
 </details>
 
 <details>
@@ -65,15 +69,20 @@ Package Manager: `Install-Package RhoMicro.AutoForm.Blazor.Analysis -Version 3.0
 
 Nuget Gallery: https://www.nuget.org/packages/RhoMicro.AutoForm.Json.Analysis
 
-Package Manager: `Install-Package RhoMicro.AutoForm.Json.Analysis -Version 3.0.0`
+Package Manager: `Install-Package RhoMicro.AutoForm.Json.Analysis -Version 3.0.1`
 
-.Net CLI: `dotnet add package RhoMicro.AutoForm.Json.Analysis --version 3.0.0`
+.Net CLI: `dotnet add package RhoMicro.AutoForm.Json.Analysis --version 3.0.1`
 </details>
 
 ---
 ## **How To Use** ##
 
 *The following samples use the provided blazor generator.*
+
+### **A Note on Attributes** ###
+
+While templates and controls used for the blazor generator are required to provide an `Attributes` property, generated controls will ignore any attributes passed to them.
+Default controls found in `AutoForm.Blazor.Controls` will honor attributes passed via the `Attributes` property.
 
 ### **Creating Models** ###
 
@@ -93,7 +102,7 @@ namespace TestApp.Models
 
 ```
 
-*Found here: [TestApp.Models.MyModel](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/MyModel.cs)*
+*Source: [TestApp.Models.MyModel](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/MyModel.cs)*
 
 Access the generated control using the `AutoControl`:
 
@@ -112,7 +121,7 @@ Access the generated control using the `AutoControl`:
 }
 ```
 
-*Found here: [TestApp.Pages.Index.razor](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Pages/Index.razor)*
+*Source: [TestApp.Pages.Index.razor](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Pages/Index.razor)*
 
 Note that default controls provided by `AutoForm.Blazor`, found in `AutoForm.Blazor.Controls`, will bind to the `oninput` event. 
 This means that when using these controls, models will be updated with every keystroke instead of when a control loses focus, as is default.
@@ -129,17 +138,17 @@ namespace AutoForm.Blazor.Templates.Abstractions
 	public abstract class TemplateBase<TModel> : ComponentBase
 	{
 		[Parameter]
-		public TModel? Value { get; set; }
+		public virtual TModel? Value { get; set; }
 		[Parameter]
-		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+		public virtual IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
 		[Parameter]
-		public RenderFragment? ChildContent { get; set; }
+		public virtual RenderFragment? ChildContent { get; set; }
 	}
 }
 
 ```
 
-*Found here: [AutoForm.Blazor.Templates.Abstractions.TemplateBase](https://github.com/PaulBraetz/AutoForm/blob/master/AutoForm.Blazor/Templates/Abstractions/TemplateBase.cs)*
+*Source: [AutoForm.Blazor.Templates.Abstractions.TemplateBase](https://github.com/PaulBraetz/AutoForm/blob/master/AutoForm.Blazor/Templates/Abstractions/TemplateBase.cs)*
 
 Here, TModel is the model type whose control this template should be applied to. These properties enable the template to access the controls attributes as well as the models current value. The control will be passed to `ChildContent`.
 
@@ -164,7 +173,7 @@ For uniform bootstrap template styling, a primitive base template may be created
 }
 ```
 
-*Found here: [TestApp.Templates.MyTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/MyTemplate.razor)*
+*Source: [TestApp.Templates.MyTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/MyTemplate.razor)*
 
 
 
@@ -182,7 +191,7 @@ namespace TestApp.Templates
 
 ```
 
-*Found here: [TestApp.Templates.MyTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/MyTemplate.razor.cs)*
+*Source: [TestApp.Templates.MyTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/MyTemplate.razor.cs)*
 
 Implement a template for controls whose model is of type `System.String` or that control the `MyModel.Name` property:
 
@@ -199,7 +208,7 @@ namespace TestApp.Templates
 
 ```
 
-*Found here: [TestApp.Templates.MyModelNameTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/StringTemplate.cs)*
+*Source: [TestApp.Templates.MyModelNameTemplate](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/StringTemplate.cs)*
 
 ### **Creating Controls** ###
 
@@ -213,19 +222,19 @@ namespace AutoForm.Blazor.Controls.Abstractions
 	public abstract class ControlBase<TModel> : ComponentBase
 	{
 		[Parameter]
-		public TModel? Value { get; set; }
+		public virtual TModel? Value { get; set; }
 
 		[Parameter]
-		public EventCallback<TModel> ValueChanged { get; set; }
+		public virtual EventCallback<TModel> ValueChanged { get; set; }
 
 		[Parameter]
-		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+		public virtual IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
 	}
 }
 
 ```
 
-*Found here: [AutoForm.Blazor.Controls.Abstractions.ControlBase](https://github.com/PaulBraetz/AutoForm/blob/master/AutoForm.Blazor/Controls/Abstractions/ControlBase.cs)*
+*Source: [AutoForm.Blazor.Controls.Abstractions.ControlBase](https://github.com/PaulBraetz/AutoForm/blob/master/AutoForm.Blazor/Controls/Abstractions/ControlBase.cs)*
 
 Here, TModel is the model type this control should be applied to.
 
@@ -238,20 +247,21 @@ Implement a control for models of type `System.String` or subcontrol for `MyMode
 ```razor
 @inherits AutoForm.Blazor.Controls.Abstractions.ControlBase<String>
 
-<input class="form-control" @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())" />
+<input class="form-control" type="text" @attributes="Attributes" value="@Value" @onchange="v=>ValueChanged.InvokeAsync(Value = v.Value?.ToString())" />
 ```
 
-*Found here: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor)*
+*Source: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor)*
 
 
 
 ```cs
+using AutoForm.Attributes;
 using TestApp.Models;
 
 namespace TestApp.Controls
 {
-	[AutoForm.Attributes.DefaultControl(typeof(String))]
-	[AutoForm.Attributes.DefaultControl(typeof(MyModel), nameof(MyModel.Name))]
+	[DefaultControl(typeof(String))]
+	[DefaultControl(typeof(MyModel), nameof(MyModel.Name))]
 	public partial class StringControl: AutoForm.Blazor.Controls.Abstractions.ControlBase<String>
 	{
 	}
@@ -259,6 +269,146 @@ namespace TestApp.Controls
 
 ```
 
-*Found here: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor.cs)*
+*Source: [TestApp.Controls.MyModelNameControl](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Controls/StringControl.razor.cs)*
 
-- - - -
+### **Result** ###
+
+The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `MyModel` will now look something like this:
+
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/1.png)
+
+### **Complex Models** ###
+
+
+
+Models require all their marked properties to be assignable to a control. 
+This means thet composite models will require all their submodels to also be marked for control generation. 
+Note that this model requires a subcontrol for its `NestedModel` property. 
+Luckily, its type has already been marked as a model. Had it not been, the generator would have issued an error.
+
+```cs
+using AutoForm.Attributes;
+
+namespace TestApp.Models
+{
+	public sealed class ComplexModel
+	{
+		[ModelProperty]
+		public String? Street { get; set; }
+		[ModelProperty]
+		public String? City { get; set; }
+		[ModelProperty]
+		public Int32 ZipCode { get; set; }
+		[ModelProperty]
+		public String? Address { get; set; }
+		[ModelProperty]
+		public MyModel NestedModel { get; set; } = new MyModel();
+	}
+}
+
+```
+
+*Source: [TestApp.Models.ComplexModel.cs](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/ComplexModel.cs)*
+
+### **Result** ###
+
+The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `ComplexModel` will now look something like this:
+
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/2.png)
+
+### **Sub Models** ###
+
+
+
+Models may inherit their base types model properties. 
+Annotating a model with the `SubModelAttribute` will instruct the generator to enhance the generated control with subcontrols for properties found in the basetype.
+
+```cs
+using AutoForm.Attributes;
+
+namespace TestApp.Models
+{
+	//Inherit subcontrols for all properties of MyModel
+	[SubModel(typeof(MyModel))]
+	//Inherit subcontrols for specific properties in MyModel
+	[SubModel(typeof(MyModel), nameof(MyModel.Name))]
+	public class SubModel : MyModel
+	{
+		[ModelProperty]
+		public Int32 Age { get; set; }
+	}
+}
+
+```
+
+*Source: [TestApp.Models.SubModel.cs](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Models/SubModel.cs)*
+
+For this model, labeled subcontrols are created using templates:
+
+```cs
+using AutoForm.Attributes;
+
+namespace TestApp.Templates.SubModel
+{
+	[DefaultTemplate(typeof(Models.SubModel), nameof(Models.SubModel.Name))]
+	public sealed class NameTemplate : MyTemplate<string>
+    {
+        public override IEnumerable<KeyValuePair<string, object>>? Attributes { get; set; }
+            = new Dictionary<string, object>()
+            {
+                {"label", nameof(Models.SubModel.Name) }
+            };
+    }
+}
+
+```
+
+*Source: [TestApp.Templates.SubModel.NameTemplate.cs](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/SubModel/NameTemplate.cs)*
+
+
+
+```cs
+using AutoForm.Attributes;
+
+namespace TestApp.Templates.SubModel
+{
+    [DefaultTemplate(typeof(Models.SubModel), nameof(Models.SubModel.Age))]
+    public sealed class AgeTemplate : MyTemplate<int>
+    {
+        public override IEnumerable<KeyValuePair<string, object>>? Attributes { get; set; }
+            = new Dictionary<string, object>()
+            {
+                {"label", nameof(Models.SubModel.Age) }
+            };
+    }
+}
+
+```
+
+*Source: [TestApp.Templates.SubModel.AgeTemplate.cs](https://github.com/PaulBraetz/AutoForm/blob/master/TestApp/Templates/SubModel/AgeTemplate.cs)*
+
+### **Result** ###
+
+The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `SubModel` will now look something like this:
+
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/3.png)
+
+---
+
+## **Planned Features** ##
+
+* Importing/Exporting types from and to other assemblies
+
+---
+
+## **License** ##
+
+This project is licensed to you under the [MIT License](https://github.com/PaulBraetz/AutoForm/blob/master/LICENSE)
+
+---
+
+## **Contributors** ##
+
+* [Paul Braetz](https://github.com/PaulBraetz/)
+
+---

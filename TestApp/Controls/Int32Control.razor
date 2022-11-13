@@ -1,0 +1,15 @@
+﻿@using AutoForm.Blazor.Controls.Abstractions
+@using AutoForm.Blazor.Controls
+@inherits OptimizedControlBase<Int32>
+
+<Int32Number Attributes="attributes" Value="Value" ValueChanged="ValueChanged" />
+
+@code {
+	private readonly Dictionary<String, Object> attributes = new Dictionary<String, Object>()
+	{
+		{"class", "form-control"},
+		{"type", "number"},
+		{"min", Int32.MinValue},
+		{"max", Int32.MaxValue}
+	};
+}

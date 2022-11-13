@@ -9,14 +9,8 @@ namespace AutoForm.Attributes
 	[AttributeUsage(AttributeTargets.Property, Inherited = false)]
 	public sealed class ModelPropertyAttribute : Attribute
 	{
-		/// <param name="order">
-		/// Defines the order in which the control for this property is to be rendered
-		/// </param>
-		public ModelPropertyAttribute(Int32 order = 0)
+		public ModelPropertyAttribute()
 		{
-			Order = order;
 		}
-
-		public Int32 Order { get; }
 	}
 }

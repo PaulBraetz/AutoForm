@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace AutoForm.Analysis
 {
@@ -71,79 +72,105 @@ namespace AutoForm.Analysis
 			var availableControls = Controls.Where(c1 => !generatedDefaultControls.Any(c2 => c2.Name == c1.Name)).Concat(generatedDefaultControls);
 
 			var modelDict = Models.ToDictionary(m => m.Name, m => m);
-			var propertyResolvedModels = Models
-				.Select(m =>
-					Model.Create(m.Name, m.BaseModels)
-					.WithControl(m.Control)
-					.WithTemplate(m.Template)
-					.WithProperties(ResolveProperties(m, modelDict)))
-				.ToArray();
 
-			var defaultAppliedModels = applyDefaults(propertyResolvedModels, Templates);
+			var propertyControls = availableControls
+				.SelectMany(c => c.Properties.ToDictionary(p => p, p => c.Name))
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+			var propertyTemplates = Templates
+				.SelectMany(t => t.Properties.ToDictionary(p => p, p => t.Name))
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+			var modelControls = availableControls
+				.SelectMany(c => c.Models.ToDictionary(m => m, p => c.Name))
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+			var modelTemplates = Templates
+				.SelectMany(t => t.Models.ToDictionary(m => m, p => t.Name))
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+			var basePropertyMap = Models
+				.SelectMany(m => m.Properties.ToDictionary(p => p.Name, p => p))
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+			var defaultAppliedModels = Models
+				.Select(resolveBaseProperties)
+				.Select(resolveProperties)
+				.Select(m => modelControls.TryGetValue(m.Name, out var control) ? m.WithControl(control) : m)
+				.Select(m => modelTemplates.TryGetValue(m.Name, out var template) ? m.WithTemplate(template) : m);
 
 			return defaultAppliedModels;
 
-			IEnumerable<Model> applyDefaults(IEnumerable<Model> models, IEnumerable<Template> templates)
+			Model resolveBaseProperties(Model model)
 			{
-				foreach (var model in models)
+				var baseModels = new HashSet<ITypeIdentifier>();
+				var baseProperties = new HashSet<PropertyIdentifier>();
+
+				resolve(model);
+
+				model = model.WithBaseProperties(baseProperties);
+
+				return model;
+
+				void resolve(Model baseModel)
 				{
-					var control = availableControls.SingleOrDefault(c => c.Models.Contains(model.Name)).Name;
-					var template = templates.SingleOrDefault(t => t.Models.Contains(model.Name)).Name;
-
-					var defaultAppliedProperties = new List<Property>();
-
-					foreach (var property in model.Properties)
+					if (baseModels.Add(baseModel.Name))
 					{
-						var subControl = availableControls.SingleOrDefault(c => c.Properties.Contains(property.Name)).Name ??
-							availableControls.SingleOrDefault(c => c.Models.Contains(property.Type)).Name;
+						foreach (var baseBaseModelIdentifier in baseModel.BaseModels)
+						{
+							if (modelDict.TryGetValue(baseBaseModelIdentifier, out var baseBaseModel))
+							{
+								resolve(baseBaseModel);
+							}
+							else
+							{
+								throw new Exception($"While attempting to resolve properties for {model.Name}: base model {baseBaseModelIdentifier} is not a model.");
+							}
+						}
 
-						var subTemplate = templates.SingleOrDefault(c => c.Properties.Contains(property.Name)).Name ??
-							templates.SingleOrDefault(c => c.Models.Contains(property.Type)).Name;
+						foreach (var property in baseModel.Properties)
+						{
+							baseProperties.Add(property.Name);
+						}
 
-						var defaultAppliedProperty = property.WithControl(subControl).WithTemplate(subTemplate);
-
-						defaultAppliedProperties.Add(defaultAppliedProperty);
+						foreach (var baseProperty in baseModel.BaseProperties)
+						{
+							baseProperties.Add(baseProperty);
+						}
 					}
-
-					var defaultAppliedModel = Model.Create(model.Name, model.BaseModels)
-						.WithControl(control)
-						.WithTemplate(template)
-						.WithProperties(defaultAppliedProperties);
-
-					yield return defaultAppliedModel;
 				}
 			}
-		}
 
-		private static ISet<Property> ResolveProperties(Model model, IDictionary<ITypeIdentifier, Model> modelDict)
-		{
-			var baseModels = new HashSet<ITypeIdentifier>();
-			var properties = new HashSet<Property>(PropertyEqualityComparer.Instance);
-
-			resolveProperties(model);
-
-			return properties;
-
-			void resolveProperties(Model baseModel)
+			Model resolveProperties(Model model)
 			{
-				if (baseModels.Add(baseModel.Name))
+				var properties = new HashSet<Property>(PropertyEqualityComparer.Instance);
+
+				foreach (var propertyName in model.BaseProperties)
 				{
-					foreach (var baseBaseModelIdentifier in baseModel.BaseModels)
+					if (!basePropertyMap.TryGetValue(propertyName, out var property))
 					{
-						if (modelDict.TryGetValue(baseBaseModelIdentifier, out var baseBaseModel))
-						{
-							resolveProperties(baseBaseModel);
-						}
-						else
-						{
-							throw new Exception($"While attempting to resolve properties for {model.Name}: base model {baseBaseModelIdentifier} is not a model.");
-						}
+						throw new Exception($"Unable to resolve base property {propertyName.Model}.{propertyName.Name} for model {model.Name}.");
 					}
-					foreach (var property in baseModel.Properties)
+
+					var inheritedPropertyName = property.Name.WithModel(model.Name);
+					var propertyType = property.Type;
+
+					if (propertyControls.TryGetValue(inheritedPropertyName, out var control) ||
+						modelControls.TryGetValue(propertyType, out control))
 					{
-						properties.Add(property);
+						property = property.WithControl(control);
 					}
+
+					if (propertyTemplates.TryGetValue(inheritedPropertyName, out var template) ||
+						modelTemplates.TryGetValue(propertyType, out template))
+					{
+						property = property.WithTemplate(template);
+					}
+
+					properties.Add(property);
 				}
+
+				model = model.RedefineProperties(properties);
+
+				return model;
 			}
 		}
 

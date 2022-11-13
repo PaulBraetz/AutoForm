@@ -60,11 +60,25 @@ namespace AutoForm.Analysis
 			var properties = GetProperties(typeDeclaration);
 			var identifier = GetTypeIdentifier(typeDeclaration);
 			var baseModels = GetBaseModels(typeDeclaration);
+			var baseProperties = GetBaseProperties(typeDeclaration);
 
-			var model = Model.Create(identifier, baseModels)
-				.WithProperties(properties);
+			var model = Model.Create(identifier, baseModels, baseProperties)
+				.AddProperties(properties);
 
 			return model;
+		}
+		private PropertyIdentifier[] GetBaseProperties(BaseTypeDeclarationSyntax modelDeclaration)
+		{
+			var semanticModel = GetSemanticModel(modelDeclaration);
+			var baseProperties = modelDeclaration.AttributeLists
+				.SelectMany(l => l.Attributes)
+				.Select(a => (success: Attributes.Factories.SubModel.TryBuild(a, semanticModel, out var attribute), attribute))
+				.Where(t => t.success)
+				.Select(t => (type: t.attribute.GetTypeParameter("baseModel") as ITypeIdentifier, members: t.attribute.Members))
+				.SelectMany(t => t.members.Select(m => PropertyIdentifier.Create(m, t.type)))
+				.ToArray();
+
+			return baseProperties;
 		}
 		private ITypeIdentifier[]  GetBaseModels(BaseTypeDeclarationSyntax modelDeclaration)
 		{
@@ -72,7 +86,7 @@ namespace AutoForm.Analysis
 			var baseModels = modelDeclaration.AttributeLists
 				.SelectMany(l => l.Attributes)
 				.Select(a => (success: Attributes.Factories.SubModel.TryBuild(a, semanticModel, out var attribute), attribute))
-				.Where(t => t.success)
+				.Where(t => t.success && !t.attribute.Members.Any())
 				.Select(t => t.attribute.GetTypeParameter("baseModel") as ITypeIdentifier)
 				.Where(i => i != null)
 				.ToArray();
@@ -92,9 +106,8 @@ namespace AutoForm.Analysis
 
 			var identifier = PropertyIdentifier.Create(propertyDeclaration.Identifier.ToString(), modelIdentifier);
 			var type = GetTypeIdentifier(propertyDeclaration.Type);
-			var order = modelPropertyAttribute.Order;
 
-			var property = Property.Create(identifier, type, order);
+			var property = Property.Create(identifier, type);
 
 			return property;
 		}

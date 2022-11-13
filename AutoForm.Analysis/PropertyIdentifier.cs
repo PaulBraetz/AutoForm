@@ -20,6 +20,11 @@ namespace AutoForm.Analysis
 			return new PropertyIdentifier(name, model);
 		}
 
+		public PropertyIdentifier WithModel(ITypeIdentifier model)
+		{
+			return new PropertyIdentifier(Name, model);
+		}
+
 		public override Boolean Equals(Object obj)
 		{
 			return obj is PropertyIdentifier identifier && Equals(identifier);

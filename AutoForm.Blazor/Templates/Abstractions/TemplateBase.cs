@@ -5,10 +5,10 @@ namespace AutoForm.Blazor.Templates.Abstractions
 	public abstract class TemplateBase<TModel> : ComponentBase
 	{
 		[Parameter]
-		public TModel? Value { get; set; }
+		public virtual TModel? Value { get; set; }
 		[Parameter]
-		public IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
+		public virtual IEnumerable<KeyValuePair<String, Object>>? Attributes { get; set; }
 		[Parameter]
-		public RenderFragment? ChildContent { get; set; }
+		public virtual RenderFragment? ChildContent { get; set; }
 	}
 }
