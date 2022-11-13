@@ -219,7 +219,7 @@ Annotating a model with the `SubModelAttribute` will instruct the generator to e
 
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `SubModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/30.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/40.png)
 
 ---
 
