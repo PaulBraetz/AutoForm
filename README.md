@@ -7,7 +7,7 @@ Its aim is to decouple UI controls from each other.
 Similar to dependency injection, using controls managed by AutoForm forces decoupling from implementations, 
 so callers need only know the model for which they require a control.
 
-*Note: this readme has been generated on 13.11.2022 23:49:09 +01:00*
+*Note: this readme was generated on 13.11.2022 23:54:29 +01:00*
 
 ---
 ## **Features** ##
@@ -275,7 +275,7 @@ namespace TestApp.Controls
 
 The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `MyModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/1.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/10.png)
 
 ### **Complex Models** ###
 
@@ -314,7 +314,7 @@ namespace TestApp.Models
 
 The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `ComplexModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/2.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/20.png)
 
 ### **Sub Models** ###
 
@@ -391,7 +391,7 @@ namespace TestApp.Templates.SubModel
 
 The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `SubModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/3.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/30.png)
 
 ---
 

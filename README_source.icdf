@@ -167,7 +167,7 @@ Here, TModel is the model type this control should be applied to.
 
 The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `MyModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/1.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/10.png)
 
 ### **Complex Models** ###
 
@@ -191,7 +191,7 @@ Luckily, its type has already been marked as a model. Had it not been, the gener
 
 The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `ComplexModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/2.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/20.png)
 
 ### **Sub Models** ###
 
@@ -219,7 +219,7 @@ Annotating a model with the `SubModelAttribute` will instruct the generator to e
 
 The html rendered by `AutoForm.Blazor.AutoControl` for modely of type `SubModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/3.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/30.png)
 
 ---
 
