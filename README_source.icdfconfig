@@ -1,0 +1,24 @@
+{
+  "InterpretationData": {
+    "Source": "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\AutoForm\\README_source.icdf",
+    "Target": "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\AutoForm\\Readme.md"
+  },
+  "Discriminator": {
+    "FullName": "Libs.Dom.Discriminators\u002BSimplified",
+    "Assembly": "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\InterstitialCodeDocumentFormat\\Libs\\Dom\\bin\\Release\\net6.0\\publish\\Dom.dll",
+    "Dependencies": []
+  },
+  "Parser": {
+    "FullName": "Libs.Parser.Simplified.Parser",
+    "Assembly": "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\InterstitialCodeDocumentFormat\\Libs\\Parser.Simplified\\bin\\Release\\net6.0\\publish\\Parser.Simplified.dll",
+    "Dependencies": []
+  },
+  "Interpreter": {
+    "FullName": "Libs.Interpreter.Simplified.CSharpInterpreter",
+    "Assembly": "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\InterstitialCodeDocumentFormat\\Libs\\Interpreter.Simplified\\bin\\Release\\net6.0\\publish\\Interpreter.Simplified.dll",
+    "Dependencies": [
+      "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\InterstitialCodeDocumentFormat\\Libs\\Interpreter.Simplified\\bin\\Release\\net6.0\\publish\\Microsoft.CodeAnalysis.dll",
+      "C:\\Users\\Personal\\Documents\\Projects\\PaulBraetz\\InterstitialCodeDocumentFormat\\Libs\\Interpreter.Simplified\\bin\\Release\\net6.0\\publish\\Microsoft.CodeAnalysis.CSharp.dll"
+    ]
+  }
+}

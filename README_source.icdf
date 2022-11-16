@@ -1,7 +1,6 @@
 {
     var source = new FileInfo(Context.Source);
-}
-# AutoForm #
+}# AutoForm #
 
 AutoForm is a model-driven UI control (input component) generation tool for .Net. 
 Its aim is to decouple UI controls from each other.
