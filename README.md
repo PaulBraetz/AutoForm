@@ -6,7 +6,7 @@ Its aim is to decouple UI controls from each other.
 Similar to dependency injection, using controls managed by AutoForm forces decoupling from implementations, 
 so callers need only know the model for which they require a control.
 
-*Note: this readme was generated on 16.11.2022 12:25:50 +01:00*
+*Note: this readme was generated on 16.11.2022 12:37:00 +01:00*
 
 ---
 ## **Features** ##
