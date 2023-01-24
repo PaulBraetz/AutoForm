@@ -1,8 +1,8 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
@@ -32,25 +32,10 @@ namespace AutoForm.Analysis
 			return control;
 		}
 
-		public static Control Create(ITypeIdentifier model)
-		{
-			return new Control(model, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
-		}
-		public Control WithModel(ITypeIdentifier modelIdentifier)
-		{
-			return new Control(Name, Models.Append(modelIdentifier).ToArray(), Properties);
-		}
-		public Control WithModels(IEnumerable<ITypeIdentifier> models)
-		{
-			return new Control(Name, Models.Concat(models).ToArray(), Properties);
-		}
-		public Control WithProperty(PropertyIdentifier property)
-		{
-			return new Control(Name, Models, Properties.Append(property).ToArray());
-		}
-		public Control WithProperties(IEnumerable<PropertyIdentifier> properties)
-		{
-			return new Control(Name, Models, Properties.Concat(properties).ToArray());
-		}
+		public static Control Create(ITypeIdentifier model) => new Control(model, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
+		public Control WithModel(ITypeIdentifier modelIdentifier) => new Control(Name, Models.Append(modelIdentifier).ToArray(), Properties);
+		public Control WithModels(IEnumerable<ITypeIdentifier> models) => new Control(Name, Models.Concat(models).ToArray(), Properties);
+		public Control WithProperty(PropertyIdentifier property) => new Control(Name, Models, Properties.Append(property).ToArray());
+		public Control WithProperties(IEnumerable<PropertyIdentifier> properties) => new Control(Name, Models, Properties.Concat(properties).ToArray());
 	}
 }

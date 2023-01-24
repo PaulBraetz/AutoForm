@@ -1,6 +1,6 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+﻿using System;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -8,10 +8,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 	{
 		private readonly struct ErrorTemplate
 		{
-			private ErrorTemplate(Error error)
-			{
-				_error = error;
-			}
+			private ErrorTemplate(Error error) => _error = error;
 
 			private readonly Error _error;
 
@@ -21,23 +18,17 @@ namespace AutoForm.Blazor.Analysis.Templates
 " + ERROR_MESSAGE + @"
 */";
 
-			public ErrorTemplate WithError(Error error)
-			{
-				return new ErrorTemplate(error);
-			}
+			public ErrorTemplate WithError(Error error) => new ErrorTemplate(error);
 
 			public String Build()
 			{
-				var errorMessage = String.Join("\n\n", (IEnumerable<Exception>)_error.Exceptions);
+				var errorMessage = String.Join("\n\n", _error.Exceptions);
 
 				return TEMPLATE
 					.Replace(ERROR_MESSAGE, errorMessage);
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+			public override String ToString() => Build();
 		}
 	}
 }

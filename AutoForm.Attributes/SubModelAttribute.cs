@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AutoForm.Attributes
 {
@@ -17,10 +16,7 @@ namespace AutoForm.Attributes
 		/// Determines the members of <paramref name="baseModel"/> whose control is to be used 
 		/// in controls used for corresponding members of the targeted model.
 		/// </param>
-		public SubModelAttribute(Type baseModel, params String[] members)
-		{
-			_members = members ?? Array.Empty<String>();
-		}
+		public SubModelAttribute(Type baseModel, params String[] members) => _members = members ?? Array.Empty<String>();
 		/// <param name="baseModel">
 		/// Determines the base model type of the target.
 		/// </param>
@@ -29,11 +25,9 @@ namespace AutoForm.Attributes
 		}
 
 		private readonly String[] _members;
-		public IEnumerable<String> Members
-		{
-			get
-			{
-				for (var i = 0; i < _members.Length; i++)
+		public IEnumerable<String> Members {
+			get {
+				for(var i = 0; i < _members.Length; i++)
 				{
 					var member = _members[i];
 					yield return member;
@@ -44,11 +38,10 @@ namespace AutoForm.Attributes
 		private readonly IDictionary<String, Object> _typeProperties = new Dictionary<String, Object>();
 		public void SetTypeParameter(String parameterName, Object type)
 		{
-			if (_typeProperties.ContainsKey(parameterName))
+			if(_typeProperties.ContainsKey(parameterName))
 			{
 				_typeProperties[parameterName] = type;
-			}
-			else
+			} else
 			{
 				_typeProperties.Add(parameterName, type);
 			}

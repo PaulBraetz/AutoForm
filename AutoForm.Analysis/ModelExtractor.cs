@@ -1,10 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RhoMicro.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
@@ -80,7 +80,7 @@ namespace AutoForm.Analysis
 
 			return baseProperties;
 		}
-		private ITypeIdentifier[]  GetBaseModels(BaseTypeDeclarationSyntax modelDeclaration)
+		private ITypeIdentifier[] GetBaseModels(BaseTypeDeclarationSyntax modelDeclaration)
 		{
 			var semanticModel = GetSemanticModel(modelDeclaration);
 			var baseModels = modelDeclaration.AttributeLists

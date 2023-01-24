@@ -1,7 +1,9 @@
-﻿using AutoForm.Analysis;
-using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Linq;
+
+using AutoForm.Analysis;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Json.Analysis
 {

@@ -1,9 +1,9 @@
 ﻿using AutoForm.Analysis;
 using AutoForm.Blazor.Analysis.Templates;
+
 using Microsoft.CodeAnalysis;
+
 using RhoMicro.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 
 namespace AutoForm.Blazor.Analysis
 {
@@ -12,15 +12,9 @@ namespace AutoForm.Blazor.Analysis
 	{
 		private const System.String FILE_NAME = "AutoForm_Blazor";
 
-		protected override void OnError(GeneratorExecutionContext context, Error error)
-		{
-			AddSource(context, SourceFactory.Create(error));
-		}
+		protected override void OnError(GeneratorExecutionContext context, Error error) => AddSource(context, SourceFactory.Create(error));
 
-		protected override void OnModelSpaceCreated(GeneratorExecutionContext context, ModelSpace modelSpace)
-		{
-			AddSource(context, SourceFactory.Create(modelSpace));
-		}
+		protected override void OnModelSpaceCreated(GeneratorExecutionContext context, ModelSpace modelSpace) => AddSource(context, SourceFactory.Create(modelSpace));
 
 		private void AddSource(GeneratorExecutionContext context, SourceFactory factory)
 		{

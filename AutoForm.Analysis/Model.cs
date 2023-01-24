@@ -1,7 +1,8 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
@@ -28,47 +29,17 @@ namespace AutoForm.Analysis
 			BaseProperties = baseProperties ?? Array.Empty<PropertyIdentifier>();
 		}
 
-		public static Model Create(ITypeIdentifier name, ITypeIdentifier[] baseModels, PropertyIdentifier[] baseProperties)
-		{
-			return new Model(name, default, default, baseModels, Array.Empty<Property>(), baseProperties);
-		}
-		public static Model Create(ITypeIdentifier name)
-		{
-			return Create(name, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
-		}
+		public static Model Create(ITypeIdentifier name, ITypeIdentifier[] baseModels, PropertyIdentifier[] baseProperties) => new Model(name, default, default, baseModels, Array.Empty<Property>(), baseProperties);
+		public static Model Create(ITypeIdentifier name) => Create(name, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
 
-		public Model AddProperty(Property property)
-		{
-			return new Model(Name, Control, Template, BaseModels, Properties.Append(property).ToArray(), BaseProperties);
-		}
-		public Model WithControl(ITypeIdentifier control)
-		{
-			return new Model(Name, control, Template, BaseModels, Properties, BaseProperties);
-		}
-		public Model WithTemplate(ITypeIdentifier template)
-		{
-			return new Model(Name, Control, template, BaseModels, Properties, BaseProperties);
-		}
+		public Model AddProperty(Property property) => new Model(Name, Control, Template, BaseModels, Properties.Append(property).ToArray(), BaseProperties);
+		public Model WithControl(ITypeIdentifier control) => new Model(Name, control, Template, BaseModels, Properties, BaseProperties);
+		public Model WithTemplate(ITypeIdentifier template) => new Model(Name, Control, template, BaseModels, Properties, BaseProperties);
 		[Obsolete("Use AddProperties instead.")]
-		public Model WithProperties(IEnumerable<Property> properties)
-		{
-			return AddProperties(properties);
-		}
-		public Model AddProperties(IEnumerable<Property> properties)
-		{
-			return new Model(Name, Control, Template, BaseModels, Properties.Concat(properties).ToArray(), BaseProperties);
-		}
-		public Model RedefineProperties(IEnumerable<Property> properties)
-		{
-			return new Model(Name, Control, Template, BaseModels, properties.ToArray(), BaseProperties);
-		}
-		public Model AddBaseProperties(IEnumerable<PropertyIdentifier> baseProperties)
-		{
-			return new Model(Name, Control, Template, BaseModels, Properties, BaseProperties.Concat(baseProperties).ToArray());
-		}
-		public Model WithBaseProperties(IEnumerable<PropertyIdentifier> baseProperties)
-		{
-			return new Model(Name, Control, Template, BaseModels, Properties, baseProperties.ToArray());
-		}
+		public Model WithProperties(IEnumerable<Property> properties) => AddProperties(properties);
+		public Model AddProperties(IEnumerable<Property> properties) => new Model(Name, Control, Template, BaseModels, Properties.Concat(properties).ToArray(), BaseProperties);
+		public Model RedefineProperties(IEnumerable<Property> properties) => new Model(Name, Control, Template, BaseModels, properties.ToArray(), BaseProperties);
+		public Model AddBaseProperties(IEnumerable<PropertyIdentifier> baseProperties) => new Model(Name, Control, Template, BaseModels, Properties, BaseProperties.Concat(baseProperties).ToArray());
+		public Model WithBaseProperties(IEnumerable<PropertyIdentifier> baseProperties) => new Model(Name, Control, Template, BaseModels, Properties, baseProperties.ToArray());
 	}
 }

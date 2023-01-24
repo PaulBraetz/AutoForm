@@ -1,10 +1,12 @@
 ﻿using AutoForm.Attributes;
 
-namespace TestApp.Models
+namespace TestApp.Models;
+
+public class MyModel
 {
-	public class MyModel
-	{
-		[ModelProperty]
-		public String? Name { get; set; }
+	[ModelProperty]
+	public String? Name {
+		get;
+		set;
 	}
 }

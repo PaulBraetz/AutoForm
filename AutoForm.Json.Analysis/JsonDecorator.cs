@@ -13,17 +13,16 @@ namespace AutoForm.Json.Analysis
 		}
 
 		public readonly T OriginalValue;
-		public String Json { get; }
-
-		public override String ToString()
-		{
-			return Json;
+		public String Json {
+			get;
 		}
+
+		public override String ToString() => Json;
 
 		public static JsonDecorator<T> Null()
 		{
 			var json = "null";
-			var decorator = new JsonDecorator<T>(default(T), json);
+			var decorator = new JsonDecorator<T>(default, json);
 
 			return decorator;
 		}
@@ -89,21 +88,9 @@ namespace AutoForm.Json.Analysis
 		}
 #pragma warning restore
 
-		public Boolean Equals(JsonDecorator<T> other)
-		{
-			return Json == other.Json;
-		}
-		public override Int32 GetHashCode()
-		{
-			return 1403951835 + EqualityComparer<String>.Default.GetHashCode(Json);
-		}
-		public static Boolean operator ==(JsonDecorator<T> left, JsonDecorator<T> right)
-		{
-			return left.Equals(right);
-		}
-		public static Boolean operator !=(JsonDecorator<T> left, JsonDecorator<T> right)
-		{
-			return !(left == right);
-		}
+		public Boolean Equals(JsonDecorator<T> other) => Json == other.Json;
+		public override Int32 GetHashCode() => 1403951835 + EqualityComparer<String>.Default.GetHashCode(Json);
+		public static Boolean operator ==(JsonDecorator<T> left, JsonDecorator<T> right) => left.Equals(right);
+		public static Boolean operator !=(JsonDecorator<T> left, JsonDecorator<T> right) => !(left == right);
 	}
 }

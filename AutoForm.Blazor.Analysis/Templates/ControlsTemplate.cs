@@ -45,18 +45,9 @@ namespace AutoForm.Blazor
 }
 #pragma warning restore 1591";
 
-			public ControlsTemplate WithModelControlPairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates)
-			{
-				return new ControlsTemplate(modelControlPairTemplates.ToArray(), _modelTemplatePairTemplates, _controlTemplates);
-			}
-			public ControlsTemplate WithModelTemplatePairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelTemplatePairTemplates)
-			{
-				return new ControlsTemplate(_modelControlPairTemplates, modelTemplatePairTemplates.ToArray(), _controlTemplates);
-			}
-			public ControlsTemplate WithControlTemplates(IEnumerable<ControlTemplate> controlTemplates)
-			{
-				return new ControlsTemplate(_modelControlPairTemplates, _modelTemplatePairTemplates, controlTemplates.ToArray());
-			}
+			public ControlsTemplate WithModelControlPairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelControlPairTemplates) => new ControlsTemplate(modelControlPairTemplates.ToArray(), _modelTemplatePairTemplates, _controlTemplates);
+			public ControlsTemplate WithModelTemplatePairTemplates(IEnumerable<KeyValueTypesPairTemplate> modelTemplatePairTemplates) => new ControlsTemplate(_modelControlPairTemplates, modelTemplatePairTemplates.ToArray(), _controlTemplates);
+			public ControlsTemplate WithControlTemplates(IEnumerable<ControlTemplate> controlTemplates) => new ControlsTemplate(_modelControlPairTemplates, _modelTemplatePairTemplates, controlTemplates.ToArray());
 
 			public String Build()
 			{
@@ -72,10 +63,7 @@ namespace AutoForm.Blazor
 				return template;
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+			public override String ToString() => Build();
 		}
 	}
 }

@@ -1,7 +1,6 @@
-﻿namespace TestApp.Templates
+﻿namespace TestApp.Templates;
+
+[AutoForm.Attributes.DefaultTemplate(typeof(Int32))]
+public sealed class Int32Template : MyTemplate<Int32>
 {
-	[AutoForm.Attributes.DefaultTemplate(typeof(Int32))]
-	public sealed class Int32Template:MyTemplate<Int32>
-	{
-	}
 }

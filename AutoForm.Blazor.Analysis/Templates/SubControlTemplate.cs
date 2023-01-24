@@ -1,5 +1,6 @@
-﻿using AutoForm.Analysis;
-using System;
+﻿using System;
+
+using AutoForm.Analysis;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -59,10 +60,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 				return template;
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+			public override String ToString() => Build();
 		}
 	}
 }

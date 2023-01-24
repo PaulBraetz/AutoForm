@@ -1,8 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
@@ -13,15 +15,14 @@ namespace AutoForm.Analysis
 
 		public void Execute(GeneratorExecutionContext context)
 		{
-			if (context.SyntaxContextReceiver is IModelExtractorData data)
+			if(context.SyntaxContextReceiver is IModelExtractorData data)
 			{
 				try
 				{
 					var extractor = new ModelExtractor(context.Compilation, data);
 					var modelSpace = extractor.ExtractModelSpace();
 					OnModelSpaceCreated(context, modelSpace);
-				}
-				catch (Exception ex)
+				} catch(Exception ex)
 				{
 					var error = Error.Create().WithFlattened(ex);
 					OnError(context, error);
@@ -29,10 +30,7 @@ namespace AutoForm.Analysis
 				}
 			}
 		}
-		public virtual void Initialize(GeneratorInitializationContext context)
-		{
-			context.RegisterForSyntaxNotifications(() => new SyntaxContextReceiver());
-		}
+		public virtual void Initialize(GeneratorInitializationContext context) => context.RegisterForSyntaxNotifications(() => new SyntaxContextReceiver());
 
 		private sealed class SyntaxContextReceiver : ISyntaxContextReceiver, IModelExtractorData
 		{
@@ -45,37 +43,36 @@ namespace AutoForm.Analysis
 
 			public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
 			{
-				if (context.Node is BaseTypeDeclarationSyntax typeDeclaration)
+				if(context.Node is BaseTypeDeclarationSyntax typeDeclaration)
 				{
 					var semanticModel = context.SemanticModel;
 
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.DefaultControl))
+					if(typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.DefaultControl))
 					{
-						Controls.Add(typeDeclaration);
+						_ = Controls.Add(typeDeclaration);
 					}
 
-					if (typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.DefaultTemplate))
+					if(typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.DefaultTemplate))
 					{
-						Templates.Add(typeDeclaration);
+						_ = Templates.Add(typeDeclaration);
 					}
 
 					if(typeDeclaration.AttributeLists.HasAttributes(semanticModel, Attributes.SubModel))
 					{
-						Models.Add(typeDeclaration);
+						_ = Models.Add(typeDeclaration);
 					}
-				}
-				else if (context.Node is PropertyDeclarationSyntax propertyDeclaration &&
-						propertyDeclaration.AttributeLists.HasAttributes(
-							context.SemanticModel,
-							Attributes.ModelProperty))
+				} else if(context.Node is PropertyDeclarationSyntax propertyDeclaration &&
+						  propertyDeclaration.AttributeLists.HasAttributes(
+							  context.SemanticModel,
+							  Attributes.ModelProperty))
 				{
 					SyntaxNode parent = propertyDeclaration;
-					while (!(parent is BaseTypeDeclarationSyntax))
+					while(!(parent is BaseTypeDeclarationSyntax))
 					{
 						parent = parent.Parent;
 					}
 
-					Models.Add((BaseTypeDeclarationSyntax)parent);
+					_ = Models.Add((BaseTypeDeclarationSyntax)parent);
 				}
 			}
 		}

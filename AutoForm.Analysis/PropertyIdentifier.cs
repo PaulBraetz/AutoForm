@@ -1,34 +1,26 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
 	internal readonly struct PropertyIdentifier : IEquatable<PropertyIdentifier>
 	{
-		public readonly string Name;
+		public readonly String Name;
 		public readonly ITypeIdentifier Model;
 
-		private PropertyIdentifier(string name, ITypeIdentifier model) : this()
+		private PropertyIdentifier(String name, ITypeIdentifier model) : this()
 		{
 			Name = name;
 			Model = model;
 		}
 
-		public static PropertyIdentifier Create(string name, ITypeIdentifier model)
-		{
-			return new PropertyIdentifier(name, model);
-		}
+		public static PropertyIdentifier Create(String name, ITypeIdentifier model) => new PropertyIdentifier(name, model);
 
-		public PropertyIdentifier WithModel(ITypeIdentifier model)
-		{
-			return new PropertyIdentifier(Name, model);
-		}
+		public PropertyIdentifier WithModel(ITypeIdentifier model) => new PropertyIdentifier(Name, model);
 
-		public override Boolean Equals(Object obj)
-		{
-			return obj is PropertyIdentifier identifier && Equals(identifier);
-		}
+		public override Boolean Equals(Object obj) => obj is PropertyIdentifier identifier && Equals(identifier);
 
 		public Boolean Equals(PropertyIdentifier other)
 		{
@@ -44,22 +36,10 @@ namespace AutoForm.Analysis
 			return hashCode;
 		}
 
-		public static Boolean operator ==(PropertyIdentifier left, PropertyIdentifier right)
-		{
-			return left.Equals(right);
-		}
+		public static Boolean operator ==(PropertyIdentifier left, PropertyIdentifier right) => left.Equals(right);
 
-		public static Boolean operator !=(PropertyIdentifier left, PropertyIdentifier right)
-		{
-			return !(left == right);
-		}
-		public override String ToString()
-		{
-			return Name;
-		}
-		public String ToLongString()
-		{
-			return $"{Model}.{Name}";
-		}
+		public static Boolean operator !=(PropertyIdentifier left, PropertyIdentifier right) => !(left == right);
+		public override String ToString() => Name;
+		public String ToLongString() => $"{Model}.{Name}";
 	}
 }

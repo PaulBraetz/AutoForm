@@ -1,8 +1,9 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -41,18 +42,9 @@ namespace AutoForm.Blazor.Analysis.Templates
             #pragma warning restore 1998
 		}";
 
-			public ControlTemplate WithModelType(ITypeIdentifier modelType)
-			{
-				return new ControlTemplate(modelType, _subControlTemplates, _controlType);
-			}
-			public ControlTemplate WithControlType(ITypeIdentifier controlType)
-			{
-				return new ControlTemplate(_modelType, _subControlTemplates, controlType);
-			}
-			public ControlTemplate WithSubControlTemplates(IEnumerable<SubControlTemplate> subControlTemplates)
-			{
-				return new ControlTemplate(_modelType, subControlTemplates.ToArray(), _controlType);
-			}
+			public ControlTemplate WithModelType(ITypeIdentifier modelType) => new ControlTemplate(modelType, _subControlTemplates, _controlType);
+			public ControlTemplate WithControlType(ITypeIdentifier controlType) => new ControlTemplate(_modelType, _subControlTemplates, controlType);
+			public ControlTemplate WithSubControlTemplates(IEnumerable<SubControlTemplate> subControlTemplates) => new ControlTemplate(_modelType, subControlTemplates.ToArray(), _controlType);
 			public String Build()
 			{
 				var lineIndex = 0;
@@ -65,7 +57,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 					.Replace(CONTROL_TYPE_IDENTIFIER, _controlType.ToString());
 
 				var regex = new Regex(Regex.Escape(LINE_INDEX));
-				while (regex.IsMatch(template))
+				while(regex.IsMatch(template))
 				{
 					template = regex.Replace(template, lineIndex.ToString(), 1);
 					lineIndex++;
@@ -74,10 +66,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 				return template;
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+			public override String ToString() => Build();
 		}
 	}
 }

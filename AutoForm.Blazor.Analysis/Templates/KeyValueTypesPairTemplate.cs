@@ -1,5 +1,6 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -18,15 +19,9 @@ namespace AutoForm.Blazor.Analysis.Templates
 
 			private const String TEMPLATE = "			{typeof(" + MODEL_TYPE + "), typeof(" + CONTROL_TYPE + ")}";
 
-			public KeyValueTypesPairTemplate WithKeyType(ITypeIdentifier modelType)
-			{
-				return new KeyValueTypesPairTemplate(modelType, MappedType);
-			}
+			public KeyValueTypesPairTemplate WithKeyType(ITypeIdentifier modelType) => new KeyValueTypesPairTemplate(modelType, MappedType);
 
-			public KeyValueTypesPairTemplate WithValueType(ITypeIdentifier controlType)
-			{
-				return new KeyValueTypesPairTemplate(ModelType, controlType);
-			}
+			public KeyValueTypesPairTemplate WithValueType(ITypeIdentifier controlType) => new KeyValueTypesPairTemplate(ModelType, controlType);
 
 			public String Build()
 			{
@@ -35,10 +30,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 					.Replace(CONTROL_TYPE, MappedType.ToString());
 			}
 
-			public override String ToString()
-			{
-				return Build();
-			}
+			public override String ToString() => Build();
 		}
 	}
 }

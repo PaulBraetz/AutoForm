@@ -16,17 +16,8 @@ namespace AutoForm.Analysis
 			Control = control;
 			Template = template;
 		}
-		public static Property Create(PropertyIdentifier name, ITypeIdentifier type)
-		{
-			return new Property(name, type, default, default);
-		}
-		public Property WithControl(ITypeIdentifier control)
-		{
-			return new Property(Name, Type, control, Template);
-		}
-		public Property WithTemplate(ITypeIdentifier template)
-		{
-			return new Property(Name, Type, Control, template);
-		}
+		public static Property Create(PropertyIdentifier name, ITypeIdentifier type) => new Property(name, type, default, default);
+		public Property WithControl(ITypeIdentifier control) => new Property(Name, Type, control, Template);
+		public Property WithTemplate(ITypeIdentifier template) => new Property(Name, Type, Control, template);
 	}
 }

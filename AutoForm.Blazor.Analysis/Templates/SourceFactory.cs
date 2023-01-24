@@ -1,9 +1,11 @@
-﻿using AutoForm.Analysis;
-using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
+using AutoForm.Analysis;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Blazor.Analysis.Templates
 {
@@ -53,10 +55,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 			{TypeIdentifier.Create<Double>(), GetDefaultControl("DoubleNumber") },
 			{TypeIdentifier.Create<Decimal>(), GetDefaultControl("DecimalNumber") }
 		});
-		private static ITypeIdentifier GetDefaultControl(String name)
-		{
-			return TypeIdentifier.Create(TypeIdentifierName.Create().AppendNamePart(name), ControlsNamespace);
-		}
+		private static ITypeIdentifier GetDefaultControl(String name) => TypeIdentifier.Create(TypeIdentifierName.Create().AppendNamePart(name), ControlsNamespace);
 		#endregion
 
 		private readonly ModelSpace _modelSpace;
@@ -82,14 +81,8 @@ namespace AutoForm.Blazor.Analysis.Templates
 		{
 		}
 
-		public static SourceFactory Create(ModelSpace modelSpace)
-		{
-			return new SourceFactory(modelSpace);
-		}
-		public static SourceFactory Create(Error error)
-		{
-			return new SourceFactory(error);
-		}
+		public static SourceFactory Create(ModelSpace modelSpace) => new SourceFactory(modelSpace);
+		public static SourceFactory Create(Error error) => new SourceFactory(error);
 
 		public String Build()
 		{
@@ -101,10 +94,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 		}
 
 		#region Methods
-		private String GetError()
-		{
-			return GetErrorTemplate().Build();
-		}
+		private String GetError() => GetErrorTemplate().Build();
 
 		private ErrorTemplate GetErrorTemplate()
 		{
@@ -112,10 +102,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 				.WithError(_error);
 		}
 
-		private String GetControls()
-		{
-			return GetControlsTemplate().Build();
-		}
+		private String GetControls() => GetControlsTemplate().Build();
 
 		private ControlsTemplate GetControlsTemplate()
 		{
@@ -129,10 +116,7 @@ namespace AutoForm.Blazor.Analysis.Templates
 				.WithModelTemplatePairTemplates(modelTemplatePairTemplates);
 		}
 
-		private IEnumerable<KeyValueTypesPairTemplate> GetModelTemplatePairTemplates()
-		{
-			return _modelSpace.Templates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
-		}
+		private IEnumerable<KeyValueTypesPairTemplate> GetModelTemplatePairTemplates() => _modelSpace.Templates.SelectMany(t => t.Models.Select(m => new KeyValueTypesPairTemplate().WithKeyType(m).WithValueType(t.Name)));
 		private IEnumerable<KeyValueTypesPairTemplate> GetModelControlPairTemplates()
 		{
 			var requiredDefaulControlTypes = GetRequiredDefaultControlTypes();
@@ -152,29 +136,25 @@ namespace AutoForm.Blazor.Analysis.Templates
 				.Except(GetControlsToBeGenerated().SelectMany(c => c.Models));
 		}
 
-		private IEnumerable<Control> GetControlsToBeGenerated()
-		{
-			return _modelSpace.RequiredGeneratedControls.Where(c => !AvailableDefaultControls.Values.Contains(c.Name));
-		}
+		private IEnumerable<Control> GetControlsToBeGenerated() => _modelSpace.RequiredGeneratedControls.Where(c => !AvailableDefaultControls.Values.Contains(c.Name));
 
 		private IEnumerable<ControlTemplate> GetControlTemplates()
 		{
 			var result = new List<ControlTemplate>();
 			var exceptions = new List<Exception>();
 			var defaults = AvailableDefaultControls.Select(kvp => kvp.Value);
-			foreach (var requiredControl in _modelSpace.RequiredGeneratedControls.Where(c => !defaults.Contains(c.Name)))
+			foreach(var requiredControl in _modelSpace.RequiredGeneratedControls.Where(c => !defaults.Contains(c.Name)))
 			{
 				try
 				{
 					result.Add(GetControlTemplate(requiredControl));
-				}
-				catch (Exception ex)
+				} catch(Exception ex)
 				{
 					exceptions.Add(ex);
 				}
 			}
 
-			if (exceptions.Any())
+			if(exceptions.Any())
 			{
 				var message = String.Join("\n\n", exceptions.Select(e => e.Message));
 				throw new AggregateException(message, exceptions);
@@ -198,19 +178,18 @@ namespace AutoForm.Blazor.Analysis.Templates
 		{
 			var exceptions = new List<Exception>();
 			var subControlTemplates = new List<SubControlTemplate>();
-			foreach (var property in model.Properties)
+			foreach(var property in model.Properties)
 			{
 				try
 				{
 					subControlTemplates.Add(GetSubControlTemplate(model, property));
-				}
-				catch (Exception ex)
+				} catch(Exception ex)
 				{
 					exceptions.Add(ex);
 				}
 			}
 
-			if (exceptions.Any())
+			if(exceptions.Any())
 			{
 				var message = $"Error while generating control for {model.Name}:\n{String.Join("\n", exceptions.Select(e => e.Message))}";
 				throw new AggregateException(message, exceptions);
@@ -220,12 +199,9 @@ namespace AutoForm.Blazor.Analysis.Templates
 		}
 		private SubControlTemplate GetSubControlTemplate(Model model, Property property)
 		{
-			if (property.Control == default)
-			{
-				throw new Exception($"Unable to locate control for {property.Name}. Make sure a control for {property.Type} is registered.");
-			}
-
-			return new SubControlTemplate()
+			return property.Control == default
+				? throw new Exception($"Unable to locate control for {property.Name}. Make sure a control for {property.Type} is registered.")
+				: new SubControlTemplate()
 				.WithModel(model)
 				.WithProperty(property);
 		}

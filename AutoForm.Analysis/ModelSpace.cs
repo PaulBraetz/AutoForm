@@ -1,8 +1,8 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
@@ -12,15 +12,9 @@ namespace AutoForm.Analysis
 		{
 			public static readonly PropertyEqualityComparer Instance = new PropertyEqualityComparer();
 
-			public Boolean Equals(Property x, Property y)
-			{
-				return x.Name.Equals(y.Name);
-			}
+			public Boolean Equals(Property x, Property y) => x.Name.Equals(y.Name);
 
-			public Int32 GetHashCode(Property obj)
-			{
-				return obj.Name.GetHashCode();
-			}
+			public Int32 GetHashCode(Property obj) => obj.Name.GetHashCode();
 		}
 
 		public readonly Model[] Models;
@@ -41,30 +35,15 @@ namespace AutoForm.Analysis
 			RequiredGeneratedControls = requiredGeneratedControls ?? Array.Empty<Control>();
 		}
 
-		public static ModelSpace Create()
-		{
-			return new ModelSpace(Array.Empty<Model>(), Array.Empty<Control>(), Array.Empty<Template>(), Array.Empty<Control>());
-		}
+		public static ModelSpace Create() => new ModelSpace(Array.Empty<Model>(), Array.Empty<Control>(), Array.Empty<Template>(), Array.Empty<Control>());
 
-		public ModelSpace WithModels(IEnumerable<Model> models)
-		{
-			return new ModelSpace(Models.Concat(models).ToArray(), Controls, Templates, RequiredGeneratedControls);
-		}
+		public ModelSpace WithModels(IEnumerable<Model> models) => new ModelSpace(Models.Concat(models).ToArray(), Controls, Templates, RequiredGeneratedControls);
 
-		public ModelSpace WithFallbackControls(IEnumerable<Control> controls)
-		{
-			return new ModelSpace(Models, Controls.Concat(controls).ToArray(), Templates, RequiredGeneratedControls);
-		}
+		public ModelSpace WithFallbackControls(IEnumerable<Control> controls) => new ModelSpace(Models, Controls.Concat(controls).ToArray(), Templates, RequiredGeneratedControls);
 
-		public ModelSpace WithTemplates(IEnumerable<Template> templates)
-		{
-			return new ModelSpace(Models, Controls, Templates.Concat(templates).ToArray(), RequiredGeneratedControls);
-		}
+		public ModelSpace WithTemplates(IEnumerable<Template> templates) => new ModelSpace(Models, Controls, Templates.Concat(templates).ToArray(), RequiredGeneratedControls);
 
-		private ModelSpace WithRequiredGeneratedControls(IEnumerable<Control> requiredGeneratedControls)
-		{
-			return new ModelSpace(Models, Controls, Templates, RequiredGeneratedControls.Concat(requiredGeneratedControls).ToArray());
-		}
+		private ModelSpace WithRequiredGeneratedControls(IEnumerable<Control> requiredGeneratedControls) => new ModelSpace(Models, Controls, Templates, RequiredGeneratedControls.Concat(requiredGeneratedControls).ToArray());
 
 		private IEnumerable<Model> ApplyDefaultsToModels()
 		{
@@ -112,28 +91,27 @@ namespace AutoForm.Analysis
 
 				void resolve(Model baseModel)
 				{
-					if (baseModels.Add(baseModel.Name))
+					if(baseModels.Add(baseModel.Name))
 					{
-						foreach (var baseBaseModelIdentifier in baseModel.BaseModels)
+						foreach(var baseBaseModelIdentifier in baseModel.BaseModels)
 						{
-							if (modelDict.TryGetValue(baseBaseModelIdentifier, out var baseBaseModel))
+							if(modelDict.TryGetValue(baseBaseModelIdentifier, out var baseBaseModel))
 							{
 								resolve(baseBaseModel);
-							}
-							else
+							} else
 							{
 								throw new Exception($"While attempting to resolve properties for {model.Name}: base model {baseBaseModelIdentifier} is not a model.");
 							}
 						}
 
-						foreach (var property in baseModel.Properties)
+						foreach(var property in baseModel.Properties)
 						{
-							baseProperties.Add(property.Name);
+							_ = baseProperties.Add(property.Name);
 						}
 
-						foreach (var baseProperty in baseModel.BaseProperties)
+						foreach(var baseProperty in baseModel.BaseProperties)
 						{
-							baseProperties.Add(baseProperty);
+							_ = baseProperties.Add(baseProperty);
 						}
 					}
 				}
@@ -143,9 +121,9 @@ namespace AutoForm.Analysis
 			{
 				var properties = new HashSet<Property>(PropertyEqualityComparer.Instance);
 
-				foreach (var propertyName in model.BaseProperties)
+				foreach(var propertyName in model.BaseProperties)
 				{
-					if (!basePropertyMap.TryGetValue(propertyName, out var property))
+					if(!basePropertyMap.TryGetValue(propertyName, out var property))
 					{
 						throw new Exception($"Unable to resolve base property {propertyName.Model}.{propertyName.Name} for model {model.Name}.");
 					}
@@ -153,19 +131,19 @@ namespace AutoForm.Analysis
 					var inheritedPropertyName = property.Name.WithModel(model.Name);
 					var propertyType = property.Type;
 
-					if (propertyControls.TryGetValue(inheritedPropertyName, out var control) ||
+					if(propertyControls.TryGetValue(inheritedPropertyName, out var control) ||
 						modelControls.TryGetValue(propertyType, out control))
 					{
 						property = property.WithControl(control);
 					}
 
-					if (propertyTemplates.TryGetValue(inheritedPropertyName, out var template) ||
+					if(propertyTemplates.TryGetValue(inheritedPropertyName, out var template) ||
 						modelTemplates.TryGetValue(propertyType, out template))
 					{
 						property = property.WithTemplate(template);
 					}
 
-					properties.Add(property);
+					_ = properties.Add(property);
 				}
 
 				model = model.RedefineProperties(properties);
@@ -174,7 +152,7 @@ namespace AutoForm.Analysis
 			}
 		}
 
-		public ModelSpace WithRequiredGeneratedControls(bool checkModelViability = true)
+		public ModelSpace WithRequiredGeneratedControls(Boolean checkModelViability = true)
 		{
 			var defaultAppliedModels = ApplyDefaultsToModels();
 
@@ -188,18 +166,18 @@ namespace AutoForm.Analysis
 				.Distinct()
 				.Select(Control.CreateGenerated);
 
-			if (checkModelViability)
+			if(checkModelViability)
 			{
 				var exceptions = new List<Exception>();
-				foreach (var requiredControlModel in requiredGeneratedControls.SelectMany(c => c.Models))
+				foreach(var requiredControlModel in requiredGeneratedControls.SelectMany(c => c.Models))
 				{
-					if (!defaultAppliedModels.Any(m => m.Name == requiredControlModel))
+					if(!defaultAppliedModels.Any(m => m.Name == requiredControlModel))
 					{
 						exceptions.Add(new ArgumentException($"Unable to provide control for {requiredControlModel}"));
 					}
 				}
 
-				if (exceptions.Any())
+				if(exceptions.Any())
 				{
 					throw new AggregateException(exceptions);
 				}

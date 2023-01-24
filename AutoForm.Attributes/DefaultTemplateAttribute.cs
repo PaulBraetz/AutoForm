@@ -15,10 +15,7 @@ namespace AutoForm.Attributes
 		/// <param name="members">
 		/// Determines the members of <paramref name="modelType"/> that are to be rendered using the targeted template.
 		/// </param>
-		public DefaultTemplateAttribute(Type modelType, params String[] members)
-		{
-			_members = members ?? Array.Empty<String>();
-		}
+		public DefaultTemplateAttribute(Type modelType, params String[] members) => _members = members ?? Array.Empty<String>();
 		/// <param name="modelType">
 		/// Determines the model for which the targeted template is to be used.
 		/// </param>
@@ -27,11 +24,9 @@ namespace AutoForm.Attributes
 		}
 
 		private readonly String[] _members;
-		public IEnumerable<String> Members
-		{
-			get
-			{
-				for (var i = 0; i < _members.Length; i++)
+		public IEnumerable<String> Members {
+			get {
+				for(var i = 0; i < _members.Length; i++)
 				{
 					var member = _members[i];
 					yield return member;
@@ -42,11 +37,10 @@ namespace AutoForm.Attributes
 		private readonly IDictionary<String, Object> _typeProperties = new Dictionary<String, Object>();
 		public void SetTypeParameter(String parameterName, Object type)
 		{
-			if (_typeProperties.ContainsKey(parameterName))
+			if(_typeProperties.ContainsKey(parameterName))
 			{
 				_typeProperties[parameterName] = type;
-			}
-			else
+			} else
 			{
 				_typeProperties.Add(parameterName, type);
 			}

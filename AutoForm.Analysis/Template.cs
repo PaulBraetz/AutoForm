@@ -1,7 +1,8 @@
-﻿using RhoMicro.CodeAnalysis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using RhoMicro.CodeAnalysis;
 
 namespace AutoForm.Analysis
 {
@@ -21,25 +22,10 @@ namespace AutoForm.Analysis
 			Properties = properties ?? Array.Empty<PropertyIdentifier>();
 		}
 
-		public static Template Create(ITypeIdentifier identifier)
-		{
-			return new Template(identifier, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
-		}
-		public Template WithModel(ITypeIdentifier model)
-		{
-			return new Template(Name, Models.Append(model).ToArray(), Properties);
-		}
-		public Template WithModels(IEnumerable<ITypeIdentifier> models)
-		{
-			return new Template(Name, Models.Concat(models).ToArray(), Properties);
-		}
-		public Template WithProperty(PropertyIdentifier property)
-		{
-			return new Template(Name, Models, Properties.Append(property).ToArray());
-		}
-		public Template WithProperties(IEnumerable<PropertyIdentifier> properties)
-		{
-			return new Template(Name, Models, Properties.Concat(properties).ToArray());
-		}
+		public static Template Create(ITypeIdentifier identifier) => new Template(identifier, Array.Empty<ITypeIdentifier>(), Array.Empty<PropertyIdentifier>());
+		public Template WithModel(ITypeIdentifier model) => new Template(Name, Models.Append(model).ToArray(), Properties);
+		public Template WithModels(IEnumerable<ITypeIdentifier> models) => new Template(Name, Models.Concat(models).ToArray(), Properties);
+		public Template WithProperty(PropertyIdentifier property) => new Template(Name, Models, Properties.Append(property).ToArray());
+		public Template WithProperties(IEnumerable<PropertyIdentifier> properties) => new Template(Name, Models, Properties.Concat(properties).ToArray());
 	}
 }

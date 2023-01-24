@@ -1,14 +1,15 @@
 ﻿using AutoForm.Attributes;
 
-namespace TestApp.Templates.SubModel
+namespace TestApp.Templates.SubModel;
+
+[DefaultTemplate(typeof(Models.SubModel), nameof(Models.SubModel.Age))]
+public sealed class AgeTemplate : MyTemplate<Int32>
 {
-    [DefaultTemplate(typeof(Models.SubModel), nameof(Models.SubModel.Age))]
-    public sealed class AgeTemplate : MyTemplate<int>
-    {
-        public override IEnumerable<KeyValuePair<string, object>>? Attributes { get; set; }
-            = new Dictionary<string, object>()
-            {
-                {"label", nameof(Models.SubModel.Age) }
-            };
-    }
+	public override IEnumerable<KeyValuePair<String, Object>>? Attributes {
+		get; set;
+	}
+		= new Dictionary<String, Object>()
+		{
+				{"label", nameof(Models.SubModel.Age) }
+		};
 }
