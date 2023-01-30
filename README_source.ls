@@ -12,7 +12,7 @@ InterpreterInfo.PackageHash.Algorithm.Name:md5
 
 {
 	//Data
-	DocumentContext.IntermediateResultFilePath = @"Intermediate.cs";
+	//DocumentContext.IntermediateResultFilePath = @"Intermediate.cs";
     DocumentContext.TargetFilePath = "README.md";
 
 	var template = new
@@ -34,17 +34,18 @@ InterpreterInfo.PackageHash.Algorithm.Name:md5
 			}
 	};
 	var featureSections = template.Features.Select(f=>(f.name, depth: 2, content:f.content));
-	IDictionary<string, (string name, int depth, Action content, Guid id)> sections = null;
-	sections = new (string name, int depth, Action content)[]
-	{
-		(name: "Description", depth: 1, content: description),
-		(name: "Table of Contents", depth: 1, content: tableOfContents),
+	Dictionary<string, (string index, string name, int depth, Guid id, Action content)> sections = new();
+
+    var sectionDefinitions = new (string name, int depth, Action content)[]
+    {
+        (name: "Table of Contents", depth: 1, content: tableOfContents),
+        (name: "Description", depth: 1, content: description),
         (name: "Versioning", depth: 1, content:versioning),
-		(name: "Features", depth: 1, content: features)
-	}.Concat(featureSections)
-	.Concat(new (string name, int depth, Action content)[]
-	{
-		(name: "Installation", depth: 1, content:installation),
+        (name: "Features", depth: 1, content: features)
+    }.Concat(featureSections)
+    .Concat(new (string name, int depth, Action content)[]
+    {
+        (name: "Installation", depth: 1, content:installation),
         (name: "How To Use", depth: 1, content:howToUse),
         (name: "A Note on Attributes", depth: 2, content:aNoteOnAttributes),
         (name: "Creating Models", depth: 2, content:creatingModels),
@@ -56,44 +57,54 @@ InterpreterInfo.PackageHash.Algorithm.Name:md5
         (name: "Submodels", depth: 2, content:subModels),
         (name: "Submodels Result", depth: 2, content:result3),
         (name: "Planned Features", depth: 1, content:plannedFeatures),
-		(name: "License", depth: 1, content:license),
-		(name: "Contributors", depth: 1, content:contributors)
-	})
-	.ToDictionary(t=>t.name, t=>(t.name, t.depth, t.content, id: Guid.NewGuid()));
+        (name: "License", depth: 1, content:license),
+        (name: "Contributors", depth: 1, content:contributors)
+    });
+
+    var sectionStack = new Stack<Int32>();
+
+    foreach(var section in sectionDefinitions)
+    {
+        if(sectionStack.Count < section.depth)
+        {
+            sectionStack.Push(1);
+        }else if(sectionStack.Count == section.depth)
+        {
+            var siblingIndex = sectionStack.Pop();
+            sectionStack.Push(siblingIndex + 1);
+        }else
+        {
+            while(sectionStack.Count > section.depth)
+            {
+                sectionStack.Pop();
+                var lastOnThisDepth = sectionStack.Pop();
+                sectionStack.Push(lastOnThisDepth + 1);
+            }
+        }
+
+        var index = sectionStack.Select(s=>$"{s}.").Aggregate((s1, s2) =>s2+s1);
+        sections.Add(section.name, (index, section.name, section.depth, id: Guid.NewGuid(), section.content));
+    }
+
 	//End Data
 
 	//Functions
     void sectionHeader(String name){
         var section = sections[name];
+
+        var toC = sections["Table of Contents"];
+        var index = toC.id == section.id?
+            section.index:
+            $"[{section.index}](#{toC.id} \"Jump to Table of Contents\")";
+        
         var tokens = String.Concat(Enumerable.Repeat('#', section.depth+1));
-        var line = $"\n\n---\n{tokens} {section.name} <a name=\"{section.id}\"></a>\n\n";
+        var line = $"\n\n---\n{tokens} {index} {section.name} <a name=\"{section.id}\"></a>\n\n";
         Print(line);
-    }    
+    }
     void tableOfContents(){
-        var sectionStack = new Stack<Int32>();
-
-        foreach(var section in sections.Values)
-        {
-            if(sectionStack.Count < section.depth)
-            {
-                sectionStack.Push(1);
-            }else if(sectionStack.Count == section.depth)
-            {
-                var siblingIndex = sectionStack.Pop();
-                sectionStack.Push(siblingIndex + 1);
-            }else
-            {
-                while(sectionStack.Count > section.depth)
-                {
-                    sectionStack.Pop();
-                    var lastOnThisDepth = sectionStack.Pop();
-                    sectionStack.Push(lastOnThisDepth + 1);
-                }
-            }
-
+        foreach(var section in sections.Values){
             var indentation = section.depth > 1 ? "\t" : String.Empty;
-            var index = sectionStack.Select(s=>$"{s}.").Aggregate((s1, s2) =>s2+s1);
-            var line = $"{indentation}{index} [{section.name}](#{section.id})\n\n";
+            var line = $"{indentation}{section.index} [{section.name}](#{section.id})\n\n";
             Print(line);
         }
     }

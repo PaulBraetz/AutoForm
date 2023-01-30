@@ -1,10 +1,57 @@
 # AutoForm
-*Note: this readme was generated on 30.01.2023 16:51:55 +00:00 using README_template.ls*
+*Note: this readme was generated on 30.01.2023 17:29:23 +00:00 using README_template.ls*
 
 
 
 ---
-## Description <a name="bb80fcd6-f412-4898-a73f-fdc5353b8431"></a>
+## 1. Table of Contents <a name="e21e9dfd-3547-4e01-b5c2-cdc5fae4732e"></a>
+
+1. [Table of Contents](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e)
+
+2. [Description](#9f038bc2-2496-40df-9e95-366f22523ff3)
+
+3. [Versioning](#ceddd59a-2e99-489f-9ec8-0dd709f8acfb)
+
+4. [Features](#22c1796f-9ff0-4fd8-9f3e-17b272c16c4e)
+
+	4.1. [Attribute-based model discovery](#3c4f08a9-921e-4d94-b573-eef28d4ca462)
+
+	4.2. [Debug json generator](#3afee274-eda3-44dd-9325-10ded914c5f4)
+
+	4.3. [Blazor component generator](#f945ab2c-c6f2-46ec-bdb8-52d020423158)
+
+5. [Installation](#fd4b421d-1108-4020-88db-cbaed32141be)
+
+6. [How To Use](#86105a66-817d-4a50-96ba-189bff2ae6b7)
+
+	6.1. [A Note on Attributes](#fe932ea4-edfe-4df9-9032-e9cef65ea1a5)
+
+	6.2. [Creating Models](#84da5365-a1b2-4ca6-8607-058b84f79f47)
+
+	6.3. [Creating Templates](#8fbe3f4f-f340-421c-bfc3-1a436e34c543)
+
+	6.4. [Creating Controls](#25e721b1-1d8f-48ff-aa47-cdb951d2335b)
+
+	6.5. [First Results](#3fe397da-ebe6-4349-b798-582a50460608)
+
+	6.6. [Complex Models](#2ec6d282-a923-4bd8-9fdc-4885b9580f3f)
+
+	6.7. [Complex Models Result](#08bd4a6a-0103-4629-bf1b-515e6892541b)
+
+	6.8. [Submodels](#0aa38c6d-1f14-44e9-9fcf-e570e9685c27)
+
+	6.9. [Submodels Result](#42bea92e-1c3d-435d-bef2-aba7ae03fd3b)
+
+7. [Planned Features](#f5d1eaf0-1c90-4b93-a18d-4afd7ff30145)
+
+8. [License](#cdf6e4fa-86e0-4d70-9c47-4a271f2bd4f8)
+
+9. [Contributors](#223b1065-aa63-4256-98f5-53e182ac91c5)
+
+
+
+---
+## [2.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Description <a name="9f038bc2-2496-40df-9e95-366f22523ff3"></a>
 
 
 AutoForm is a model-driven UI control (input component) generation tool for .Net. 
@@ -15,61 +62,14 @@ so callers need only know the model for which they require a control.
 
 
 ---
-## Table of Contents <a name="689bce63-ad1d-4beb-8b2b-ee6398bc46fd"></a>
-
-1. [Description](#bb80fcd6-f412-4898-a73f-fdc5353b8431)
-
-2. [Table of Contents](#689bce63-ad1d-4beb-8b2b-ee6398bc46fd)
-
-3. [Versioning](#63810087-f374-4663-b1f4-e9668d3652f8)
-
-4. [Features](#3d6ce4b6-0279-49ac-a932-13fa37934922)
-
-	4.1. [Attribute-based model discovery](#eabd7843-ef43-4422-95ce-bba4f4f0c63e)
-
-	4.2. [Debug json generator](#d7ecc0a9-b52e-4b04-a064-fdf81ec5c75b)
-
-	4.3. [Blazor component generator](#98630836-6f65-492c-9391-3be2d688e4f7)
-
-5. [Installation](#10f79cba-d49c-4381-ad7c-9b43b4e273c0)
-
-6. [How To Use](#df24d9b0-d5fb-4317-89bb-2c6a5f2749ca)
-
-	6.1. [A Note on Attributes](#03719944-4b29-4581-afe9-5d664667a3ed)
-
-	6.2. [Creating Models](#5c68bb4d-1dae-44b3-8539-1990f7ce3b9f)
-
-	6.3. [Creating Templates](#dc8d6411-f6d8-45e2-8835-d3df36567be3)
-
-	6.4. [Creating Controls](#bd850c9e-8ef1-4a0e-9cab-28c3859aa8c6)
-
-	6.5. [First Results](#dbff0d1c-a9e9-44f8-ad14-5982ce4c3018)
-
-	6.6. [Complex Models](#7028f0e0-7f29-43ae-a590-e8694852f927)
-
-	6.7. [Complex Models Result](#9e3aa67a-6423-47e4-a347-67c6a086f187)
-
-	6.8. [Submodels](#bc589980-4078-4287-ae2e-4e3c69bea409)
-
-	6.9. [Submodels Result](#1b5c2d91-9cfd-4b61-9b8e-3abeefb39bc5)
-
-7. [Planned Features](#7421ddb1-24e5-4737-a977-ee6149f2b05f)
-
-8. [License](#c3ec6b49-3ec4-4287-bfc0-102a6f23d215)
-
-9. [Contributors](#dbdf899c-da5e-4a1c-bb23-c52884230777)
-
-
-
----
-## Versioning <a name="63810087-f374-4663-b1f4-e9668d3652f8"></a>
+## [3.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Versioning <a name="ceddd59a-2e99-489f-9ec8-0dd709f8acfb"></a>
 
 
 AutoForm uses [Semantic Versioning 2.0.0](https://semver.org/).
 
 
 ---
-## Features <a name="3d6ce4b6-0279-49ac-a932-13fa37934922"></a>
+## [4.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Features <a name="22c1796f-9ff0-4fd8-9f3e-17b272c16c4e"></a>
 
 * Attribute-based model discovery
 * Debug json generator
@@ -77,28 +77,28 @@ AutoForm uses [Semantic Versioning 2.0.0](https://semver.org/).
 
 
 ---
-### Attribute-based model discovery <a name="eabd7843-ef43-4422-95ce-bba4f4f0c63e"></a>
+### [4.1.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Attribute-based model discovery <a name="3c4f08a9-921e-4d94-b573-eef28d4ca462"></a>
 
 
 TODO: describe attribute discovery here.
 
 
 ---
-### Debug json generator <a name="d7ecc0a9-b52e-4b04-a064-fdf81ec5c75b"></a>
+### [4.2.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Debug json generator <a name="3afee274-eda3-44dd-9325-10ded914c5f4"></a>
 
 
 TODO: describe json generator here
 
 
 ---
-### Blazor component generator <a name="98630836-6f65-492c-9391-3be2d688e4f7"></a>
+### [4.3.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Blazor component generator <a name="f945ab2c-c6f2-46ec-bdb8-52d020423158"></a>
 
 
 TODO: describe blazor generator here
 
 
 ---
-## Installation <a name="10f79cba-d49c-4381-ad7c-9b43b4e273c0"></a>
+## [5.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Installation <a name="fd4b421d-1108-4020-88db-cbaed32141be"></a>
 
 Currently, there are multiple packages published for generating code based on models:
 
@@ -158,14 +158,14 @@ Package Manager: `Install-Package RhoMicro.AutoForm.Json.Analysis -Version 3.0.1
 
 
 ---
-## How To Use <a name="df24d9b0-d5fb-4317-89bb-2c6a5f2749ca"></a>
+## [6.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") How To Use <a name="86105a66-817d-4a50-96ba-189bff2ae6b7"></a>
 
 
 *The following samples use the provided blazor generator.*
 
 
 ---
-### A Note on Attributes <a name="03719944-4b29-4581-afe9-5d664667a3ed"></a>
+### [6.1.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") A Note on Attributes <a name="fe932ea4-edfe-4df9-9032-e9cef65ea1a5"></a>
 
 
 While templates and controls used for the blazor generator are required to provide an `Attributes` property, generated controls will ignore any attributes passed to them.
@@ -173,7 +173,7 @@ Default controls found in `AutoForm.Blazor.Controls` will honor attributes passe
 
 
 ---
-### Creating Models <a name="5c68bb4d-1dae-44b3-8539-1990f7ce3b9f"></a>
+### [6.2.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Creating Models <a name="84da5365-a1b2-4ca6-8607-058b84f79f47"></a>
 
 
 
@@ -224,7 +224,7 @@ This means that when using these controls, models will be updated with every key
 
 
 ---
-### Creating Templates <a name="dc8d6411-f6d8-45e2-8835-d3df36567be3"></a>
+### [6.3.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Creating Templates <a name="8fbe3f4f-f340-421c-bfc3-1a436e34c543"></a>
 
 
 
@@ -314,7 +314,7 @@ public sealed class StringTemplate : MyTemplate<String>
 
 
 ---
-### Creating Controls <a name="bd850c9e-8ef1-4a0e-9cab-28c3859aa8c6"></a>
+### [6.4.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Creating Controls <a name="25e721b1-1d8f-48ff-aa47-cdb951d2335b"></a>
 
 
 
@@ -380,7 +380,7 @@ public partial class StringControl : AutoForm.Blazor.Controls.Abstractions.Contr
 
 
 ---
-### First Results <a name="dbff0d1c-a9e9-44f8-ad14-5982ce4c3018"></a>
+### [6.5.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") First Results <a name="3fe397da-ebe6-4349-b798-582a50460608"></a>
 
 
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `MyModel` will now look something like this:
@@ -389,7 +389,7 @@ The html rendered by `AutoForm.Blazor.AutoControl` for models of type `MyModel` 
 
 
 ---
-### Complex Models <a name="7028f0e0-7f29-43ae-a590-e8694852f927"></a>
+### [6.6.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Complex Models <a name="2ec6d282-a923-4bd8-9fdc-4885b9580f3f"></a>
 
 
 
@@ -432,7 +432,7 @@ public sealed class ComplexModel
 
 
 ---
-### Complex Models Result <a name="9e3aa67a-6423-47e4-a347-67c6a086f187"></a>
+### [6.7.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Complex Models Result <a name="08bd4a6a-0103-4629-bf1b-515e6892541b"></a>
 
 
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `ComplexModel` will now look something like this:
@@ -441,7 +441,7 @@ The html rendered by `AutoForm.Blazor.AutoControl` for models of type `ComplexMo
 
 
 ---
-### Submodels <a name="bc589980-4078-4287-ae2e-4e3c69bea409"></a>
+### [6.8.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Submodels <a name="0aa38c6d-1f14-44e9-9fcf-e570e9685c27"></a>
 
 
 
@@ -521,7 +521,7 @@ public sealed class AgeTemplate : MyTemplate<Int32>
 
 
 ---
-### Submodels Result <a name="1b5c2d91-9cfd-4b61-9b8e-3abeefb39bc5"></a>
+### [6.9.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Submodels Result <a name="42bea92e-1c3d-435d-bef2-aba7ae03fd3b"></a>
 
 
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `SubModel` will now look something like this:
@@ -529,19 +529,19 @@ The html rendered by `AutoForm.Blazor.AutoControl` for models of type `SubModel`
 ![Missing Image](https://static.rhomicro.com/files/images/github/autoform/40.png)
 
 ---
-## Planned Features <a name="7421ddb1-24e5-4737-a977-ee6149f2b05f"></a>
+## [7.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Planned Features <a name="f5d1eaf0-1c90-4b93-a18d-4afd7ff30145"></a>
 
 
 * Importing/Exporting types from and to other assemblies
 
 
 ---
-## License <a name="c3ec6b49-3ec4-4287-bfc0-102a6f23d215"></a>
+## [8.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") License <a name="cdf6e4fa-86e0-4d70-9c47-4a271f2bd4f8"></a>
 
 This software is licensed to you under the [MIT](LICENSE) license.
 
 
 ---
-## Contributors <a name="dbdf899c-da5e-4a1c-bb23-c52884230777"></a>
+## [9.](#e21e9dfd-3547-4e01-b5c2-cdc5fae4732e "Jump to Table of Contents") Contributors <a name="223b1065-aa63-4256-98f5-53e182ac91c5"></a>
 
 * [Paul Brätz](https://github.com/PaulBraetz/ "Go to Profile")
