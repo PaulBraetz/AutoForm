@@ -1,16 +1,47 @@
-ParserInfo.PackageName:CSharpParser
-ParserInfo.PackageVersion:0.0.1
-ParserInfo.Arguments:
-ParserInfo.PackageHash:/vIX6UeP/VK9bkvHl9WnpQ==
-ParserInfo.PackageHash.Algorithm.Name:md5
+using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
-InterpreterInfo.PackageName:CSharpInterpreter
-InterpreterInfo.PackageVersion:0.0.1
-InterpreterInfo.Arguments:
-InterpreterInfo.PackageHash:sKNuClGw26LrIFcTW2fs/w==
-InterpreterInfo.PackageHash.Algorithm.Name:md5
-
+namespace MyDocument
 {
+	public sealed class Document
+	{
+		public sealed class Context
+		{
+			public Context()
+			{
+
+			}
+
+			public String TargetFilePath { get; set; }
+
+			public String IntermediateResultFilePath { get; set; }
+		}
+
+		public Document(Action<String> print)
+		{
+			if(print == null)
+			{
+				throw new ArgumentNullException("print");
+			}
+
+			Print = o => print.Invoke(o?.ToString() ?? String.Empty); 
+		}
+
+		private readonly Action<Object> Print;
+		public Context DocumentContext { get; } = new Context();
+
+		public void Execute()
+		{
+/*0->6860*/
+
 	//Data
 	DocumentContext.IntermediateResultFilePath = @"Intermediate.cs";
     DocumentContext.TargetFilePath = "README.md";
@@ -182,37 +213,61 @@ Package Manager: `Install-Package RhoMicro.{project.name} -Version {project.vers
     }
     
 	void description() =>
-}
+
+/*6860->7176*/
+Print.Invoke(@"
 AutoForm is a model-driven UI control (input component) generation tool for .Net. 
 Its aim is to decouple UI controls from each other.
 
 Similar to dependency injection, using controls managed by AutoForm forces decoupling from implementations, 
 so callers need only know the model for which they require a control.
-{
+");
+/*7176->7197*/
+
 	void feature1() =>
-}
+
+/*7197->7239*/
+Print.Invoke(@"
 TODO: describe attribute discovery here.
-{
+");
+/*7239->7260*/
+
 	void feature2() =>
-}
+
+/*7260->7296*/
+Print.Invoke(@"
 TODO: describe json generator here
-{
+");
+/*7296->7317*/
+
 	void feature3() =>
-}
+
+/*7317->7355*/
+Print.Invoke(@"
 TODO: describe blazor generator here
-{
+");
+/*7355->7381*/
+
     void versioning() =>
-}
+
+/*7381->7446*/
+Print.Invoke(@"
 AutoForm uses [Semantic Versioning 2.0.0](https://semver.org/).
-{    
+");
+/*7446->7481*/
+    
     void plannedFeatures() =>
-}
+
+/*7481->7539*/
+Print.Invoke(@"
 * Importing/Exporting types from and to other assemblies
-{
+");
+/*7539->8022*/
+
     void printSample(String name, String caption, String path)
     {
         var codeType = Path.GetExtension(path).Remove(0, 1);
-        var url =  @$"https://github.com/PaulBraetz/AutoForm/blob/master/{path.Replace('\\\\', '/')}";
+        var url =  @$"https://github.com/PaulBraetz/AutoForm/blob/master/{path.Replace('\\', '/')}";
             
         using var reader = new StreamReader(File.OpenRead(path));
         var content = reader.ReadToEnd();
@@ -231,15 +286,23 @@ AutoForm uses [Semantic Versioning 2.0.0](https://semver.org/).
     }
 
     void aNoteOnAttributes() =>
-}
+
+/*8022->8307*/
+Print.Invoke(@"
 While templates and controls used for the blazor generator are required to provide an `Attributes` property, generated controls will ignore any attributes passed to them.
 Default controls found in `AutoForm.Blazor.Controls` will honor attributes passed via the `Attributes` property.
-{
+");
+/*8307->8332*/
+
 
     void howToUse() =>
-}
+
+/*8332->8392*/
+Print.Invoke(@"
 *The following samples use the provided blazor generator.*
-{
+");
+/*8392->11813*/
+
 
     void creatingModels(){
         foreach(var t in new[]
@@ -305,11 +368,15 @@ This means that when using these controls, models will be updated with every key
     }
 
     void result1() =>
-}
+
+/*11813->12012*/
+Print.Invoke(@"
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `MyModel` will now look something like this:
 
 ![Missing Image](https://static.rhomicro.com/files/images/github/autoform/10.png)
-{
+");
+/*12012->12715*/
+
     void complexModels(){
         foreach(var t in new[]
         {
@@ -327,11 +394,15 @@ The html rendered by `AutoForm.Blazor.AutoControl` for models of type `MyModel` 
     }
 
     void result2() =>
-}
+
+/*12715->12919*/
+Print.Invoke(@"
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `ComplexModel` will now look something like this:
 
 ![Missing Image](https://static.rhomicro.com/files/images/github/autoform/20.png)
-{
+");
+/*12919->13812*/
+
     void subModels(){
         foreach(var t in new[]
         {
@@ -351,7 +422,13 @@ The html rendered by `AutoForm.Blazor.AutoControl` for models of type `ComplexMo
     }
 
     void result3() =>
-}
+
+/*13812->14011*/
+Print.Invoke(@"
 The html rendered by `AutoForm.Blazor.AutoControl` for models of type `SubModel` will now look something like this:
 
-![Missing Image](https://static.rhomicro.com/files/images/github/autoform/40.png)
+![Missing Image](https://static.rhomicro.com/files/images/github/autoform/40.png)");
+
+		}
+	}
+}
