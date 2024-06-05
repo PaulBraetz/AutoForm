@@ -57,7 +57,7 @@
 AutoForm is a model-driven UI control (input component) generation tool for .Net. 
 Its aim is to decouple UI controls from each other.
 
-Similar to dependency injection, using controls managed by AutoForm forces decoupling from implementations, 
+Using controls managed by AutoForm forces decoupling from implementations, 
 so callers need only know the model for which they require a control.
 
 
